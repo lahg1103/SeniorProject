@@ -1,0 +1,37 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="reset.css">
+    <link rel="stylesheet" href="style.css">
+    {% block head %}{% endblock %}
+</head>
+<body id="main">
+    <header>
+        <h1>[Working Title]</h1>
+    </header>
+    <main>
+        {% block body %}{% endblock %}
+    </main>
+    <footer>
+        <p id="copy">
+            &copy; <span class="year"></span>
+        </p>
+    </footer>
+    <script>
+        function replaceText(element, text) {
+            // for when you need to replace various instances of an element's text
+            element.forEach(element => {
+                element.textContent = text;
+            });
+        }
+        window.addEventListener("DOMContentLoaded", ()=>{
+            let year = new Date().getFullYear();
+            let htmlYear = Array.from(document.getElementsByClassName('year'));
+            
+            replaceText(htmlYear, year);
+            
+        })
+    </script>
+</body>
+</html>
