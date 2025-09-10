@@ -9,11 +9,17 @@
 <body id="main">
     <header>
         <h1>[Working Title]</h1>
+        <nav>
+            <ul>
+                {% block nav %} {% endblock %}
+            </ul>
+        </nav>
     </header>
     <main>
         {% block body %}{% endblock %}
     </main>
     <footer>
+        {% block footer %} {% endblock %}
         <p id="copy">
             &copy; <span class="year"></span>
         </p>
