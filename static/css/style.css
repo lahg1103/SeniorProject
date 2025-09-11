@@ -37,6 +37,16 @@ em {
     --spacer1x : 6rem;
 }
 
+/* animations */
+@keyframes bounce {
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(0.2rem);
+    }
+}
+
 
 /* general */
 body {
@@ -167,6 +177,13 @@ footer {
     position: absolute;
     white-space: nowrap;
     width: 1px;
+}
+.bounce {
+    animation-name: bounce;
+    animation-duration: 2s;
+    animation-delay: 300ms;
+    animation-direction: alternate;
+    animation-iteration-count: infinite;
 }
 
 /* media queries */
