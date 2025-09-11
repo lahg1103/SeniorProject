@@ -1,9 +1,22 @@
 {% extends 'base.html' %}
 
-{% block head %}
-<title>[Working Title]</title>
+{% block nav %}
+    <li style="--i: 0">Test</li>
+    <li style="--i: 1">test</li>
+    <li style="--i: 2">test</li>
+    <li style="--i: 3">test</li>
+    <li style="--i: 4">test</li>
 {% endblock %}
 
 {% block body %}
-<h2>Travel made easy</h2>
+<section class="landing">
+    <div class="text-wrapper">
+        <h2 class="hero serif">Travel with <em>Confidence</em></h2>
+        <h2 class="hero serif"><em>Your Itinerary</em> Curated.</h2>
+    </div>
+    <div class="text-arrow-wrapper">
+        <h3 class="subheader uppercase">Enter Voyage</h3>
+        <img src="{{ url_for('static', filename='images/arrow.svg') }}" alt="downward pointed arrow" class="light-fill">
+    </div>
+</section>
 {% endblock %}

@@ -4,17 +4,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    {% block head %}{% endblock %}
+    <title> Voyage {% block title %} {% endblock %} </title>
 </head>
-<body id="main">
+<body>
     <header>
-        <h1>[Working Title]</h1>
-        <nav>
-            <ul>
+        <div class="title-wrapper">
+            <h1 class="serif">Voyage</h1>
+            <h2 class="subheader uppercase">Precision Meets Paradise</h2>
+        </div>
+        <button class="hamburger-wrapper">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></soan>
+        </button>
+    </header>
+    <nav class="hidden">
+            <ul class="stagger">
                 {% block nav %} {% endblock %}
             </ul>
-        </nav>
-    </header>
+    </nav>
     <main>
         {% block body %}{% endblock %}
     </main>
@@ -25,16 +33,64 @@
         </p>
     </footer>
     <script>
+
+        /**
+         * Replaces the text content of multiple elements with a single string.
+         *
+         * Ideal for batch updates—like swapping out placeholder copy,
+         * syncing headlines across sections.
+         *
+         * @param {NodeList | HTMLElement[]} elements - A list of elements to update.
+         * @param {string} text - The new text to apply to each element.
+        */
         function replaceText(element, text) {
-            // for when you need to replace various instances of an element's text
-            element.forEach(element => {
-                element.textContent = text;
+            element.forEach(e => {
+                e.textContent = text;
             });
         }
+
+        /**
+         * Applies a negative top margin to visually overlap an element
+         * without affecting its DOM flow or layout siblings.
+         *
+         * @param {HTMLElement} element - The target element to apply the margin to.
+         * @param {number} height - The amount of negative margin in pixels.
+         * @param {boolean} restorePadding - If true, adds equivalent top padding.
+        */
+        function negativeMargin(element, height, restorePadding = false) {
+            const root = document.documentElement;
+            const computedStyles = getComputedStyle(root);
+            const spacer = computedStyles.getPropertyValue('--spacer');
+
+
+            element.forEach(e =>{
+                e.style.marginTop = `calc(-${height}px - ( 2 * ${spacer}))`;
+                if (restorePadding) {
+                e.style.paddingTop = `calc(${height}px + (2 * ${spacer}))`;
+            }
+            });
+            
+        }
+
         window.addEventListener("DOMContentLoaded", ()=>{
+            // overlapping the landing with the header, visually
+            let landing = Array.from(document.getElementsByClassName('landing'));
+            let headerHeight = document.querySelector('header').getBoundingClientRect().height;
+            negativeMargin(landing, headerHeight, true);
+
+            // hamburger icon animation helper
+            let hamburger = Array.from(document.getElementsByClassName('hamburger-wrapper'));
+            let nav = document.querySelector('nav');
+            hamburger.forEach(burger =>{
+                burger.addEventListener('click', ()=> {
+                burger.classList.toggle('active');
+                nav.classList.toggle('active');
+            })
+            });
+
+            // copyright at the bottom
             let year = new Date().getFullYear();
             let htmlYear = Array.from(document.getElementsByClassName('year'));
-            
             replaceText(htmlYear, year);
             
         })

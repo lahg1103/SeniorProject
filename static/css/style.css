@@ -3,11 +3,38 @@
 
 /* typography */
 @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
-
+.serif {
+    font-family: 'EB Garamond', serif;
+}
+.uppercase {
+    text-transform: uppercase;
+}
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', sans-serif;
+}
+h1 {
+    font-size: 1.75rem;
+}
+.subheader {
+    font-family: 'Hanken Grotesk', sans-serif;
+}
+.hero {
+    font-size: 2.5rem;
+}
+em {
+    font-style: italic;
+}
 
 /* root */
 :root {
     font-size: 16px;
+    --mainLight : rgb(230, 238, 245);
+    --mainDark : rgb(6, 13, 12);
+    --accentOne : rgb(103, 111, 124);
+    --accentTwo : rgb(200, 62, 33);
+    --headerGradient : linear-gradient(90deg,rgba(6, 13, 12, 0.1) 10%, rgba(6, 13, 12, 0.75) 50%, rgba(6, 13, 12, 0.1) 90%);
+    --spacer: 0.75rem;
+    --spacer1x : 6rem;
 }
 
 
@@ -17,16 +44,138 @@ body {
     text-rendering: optimizeLegibility;
     font-family: 'Hanken Grotesk', sans-serif;
     font-style: normal;
+
+    overflow-x: clip;
+
+    color: var(--mainLight);
+    background-color: var(--mainDark);
+
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-rows: auto;
+    gap: 1.5rem;
+    position: relative;
 }
-h1, h2, h3, h4, h5, h6 {
-    font-family: 'Inter', sans-serif;
+header {
+    position: sticky;
+    z-index: 999;
+    background-color: transparent;
+    background-image: var(--headerGradient);
+    grid-column: 1/13;
+    padding-inline: var(--spacer1x);
+    padding-block: var(--spacer);
+
+    display: flex;
+    align-items: center;
+
+    backdrop-filter: blur(4px);
 }
-.subheader {
-    font-family: 'Hanken Grotesk', sans-serif;
+header .title-wrapper {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    margin-inline: auto;
+}
+.hamburger-wrapper {
+    height: auto;
+    width: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.hamburger-line {
+    height: 2px;
+    width: 80%;
+
+    background-color: var(--mainLight);
+    
+    margin-block: 0.25rem;
+    border: none;
+    border-radius: 1.5px;
+    transition: 200ms ease-in-out;
+}
+.hamburger-wrapper.active span {
+    margin: 0;
+    padding: 0;
+
+}
+.hamburger-wrapper.active span:nth-child(2) {
+    transform: 
+                rotate(45deg) 
+                translateX(0.1rem);
+}
+.hamburger-wrapper.active span:last-child {
+    transform: 
+                rotate(-45deg) 
+                translateX(0.1rem);
+}
+.hamburger-wrapper.active span:nth-child(1) {
+    opacity: 0;
 }
 
+main {
+    grid-column: 1/13;
+}
+footer {
+    grid-column: 1/13;
+    text-align: center;
+    padding-block: var(--spacer);
+    padding-inline: var(--spacer1x);
+}
+
+.landing::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../images/terrace.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    opacity: 0.5;
+    z-index: -1;
+}
+.landing {
+    
+    background-image: linear-gradient(transparent 80%, var(--mainDark) 100%);
+    position: relative;
+    padding: var(--spacer1x);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    min-height: 60vh;
+}
+.landing .text-wrapper {
+    margin: auto;
+    text-align: center;
+}
+.landing .text-arrow-wrapper {
+    text-align: center;
+}
+
+/* cosmetic */
+.hidden {
+    clip: rect(0 0 0 0);
+    clip-path: inset (50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+}
 
 /* media queries */
+/* accessibility */
+@media (prefers-reduced-motion: no-preference) {
+    html {
+        scroll-behavior: smooth;
+    }
+}
 /* DESKTOP */
 @media screen and (width > 600px) {
     body {
