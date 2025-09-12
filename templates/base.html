@@ -9,18 +9,24 @@
 <body>
     <header>
         <div class="title-wrapper">
-            <h1 class="serif">Voyage</h1>
+            <h1 class="serif"><a href="{{ url_for('index') }}">Voyage</a></h1>
             <h2 class="subheader uppercase">Precision Meets Paradise</h2>
         </div>
         <button class="hamburger-wrapper">
             <span class="hamburger-line"></span>
             <span class="hamburger-line"></span>
-            <span class="hamburger-line"></soan>
+            <span class="hamburger-line"></span>
         </button>
     </header>
     <nav class="hidden">
-            <ul class="stagger">
-                {% block nav %} {% endblock %}
+            <ul class="stagger subheader">
+                {% for page in pages %}
+                    {% if page.endpoint != current_page %}
+                        <li style="--i: {{ loop.index0 }}">
+                            <a href="{{ url_for(page.endpoint) }}">{{ page.name }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
             </ul>
     </nav>
     <main>
@@ -61,15 +67,31 @@
             const root = document.documentElement;
             const computedStyles = getComputedStyle(root);
             const spacer = computedStyles.getPropertyValue('--spacer');
+            
+            let updatedHeight = function(h, el) {
+                let newHeight = `calc( ${h}px + (2 * ${height}px))`;
+                el.style.height = newHeight;
+            }
 
-
-            element.forEach(e =>{
+            if (Array.isArray(element)) {
+                element.forEach(e =>{
                 e.style.marginTop = `calc(-${height}px - ( 2 * ${spacer}))`;
                 if (restorePadding) {
-                e.style.paddingTop = `calc(${height}px + (2 * ${spacer}))`;
+                e.style.paddingTop = `calc(2 * (${height}px + (2 * ${spacer})))`;
+                let currentHeight = e.getBoundingClientRect().height;
+                updatedHeight(currentHeight, e);
             }
             });
-            
+            }
+            else {
+                element.style.marginTop = `calc(-${height}px - ( 2 * ${spacer}))`;
+                if (restorePadding) {
+                element.style.paddingTop = `calc(2 * (${height}px + (2 * ${spacer})))`;
+                }
+                console.log(element.style.paddingTop);
+                let currentHeight = element.style.height;
+                updatedHeight(currentHeight, element);
+            }
         }
 
         window.addEventListener("DOMContentLoaded", ()=>{
@@ -78,15 +100,19 @@
             let headerHeight = document.querySelector('header').getBoundingClientRect().height;
             negativeMargin(landing, headerHeight, true);
 
+
             // hamburger icon animation helper
             let hamburger = Array.from(document.getElementsByClassName('hamburger-wrapper'));
             let nav = document.querySelector('nav');
             hamburger.forEach(burger =>{
                 burger.addEventListener('click', ()=> {
                 burger.classList.toggle('active');
+                nav.classList.toggle('hidden');
                 nav.classList.toggle('active');
             })
             });
+
+            negativeMargin(nav, headerHeight);
 
             // copyright at the bottom
             let year = new Date().getFullYear();

@@ -1,12 +1,5 @@
 {% extends 'base.html' %}
 
-{% block nav %}
-    <li style="--i: 0">Test</li>
-    <li style="--i: 1">test</li>
-    <li style="--i: 2">test</li>
-    <li style="--i: 3">test</li>
-    <li style="--i: 4">test</li>
-{% endblock %}
 
 {% block body %}
 <section class="landing">
@@ -18,5 +11,8 @@
         <h3 class="subheader uppercase">Enter Voyage</h3>
         <img src="{{ url_for('static', filename='images/arrow.svg') }}" alt="downward pointed arrow" class="bounce">
     </div>
+</section>
+<section>
+    
 </section>
 {% endblock %}
