@@ -30,6 +30,7 @@ em {
     font-size: 12px;
     --mainLight : rgb(230, 238, 245);
     --mainDark : rgb(6, 13, 12);
+    --secondaryDark : rgb(3, 28, 6);
     --accentOne : rgb(103, 111, 124);
     --accentTwo : rgb(200, 62, 33);
     --headerGradient : linear-gradient(90deg,rgba(6, 13, 12, 0.1) 10%, rgba(6, 13, 12, 0.75) 50%, rgba(6, 13, 12, 0.1) 90%);
@@ -58,7 +59,7 @@ body {
     overflow-x: clip;
 
     color: var(--mainLight);
-    background-color: var(--mainDark);
+    background-color: var(--secondaryDark);
 
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
