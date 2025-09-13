@@ -1,4 +1,4 @@
-# Travel Itinerary ✈️
+# Voyage Travel Itinerary ✈️
 
 
 **University of Texas Rio Grande Valley's Senior Project for Fall Semester 2025**
