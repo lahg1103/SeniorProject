@@ -264,6 +264,13 @@ footer {
 button.cta {
     padding: var(--spacer);
 }
+.cta:hover .boune-hover {
+    animation-name: bounce;
+    animation-duration: 1.5s;
+    animation-delay: 300ms;
+    animation-direction: alternate;
+    animation-iteration-count: infinite;
+}
 
 /* backgrounds */
 

@@ -22,7 +22,11 @@
             <h2 class="subheader">Zero Stress.</h2>
             <p>Your trip, tailored to impress.</p>
             <p>Your itinerary is waiting.</p>
-            <button class="cta">Curate Trip <img src="{{ url_for('static', filename='images/arrow.svg') }}" alt="arrow"></button>
+            <a href="{{ url_for('questionnaire') }}" class="cta">
+                <button>
+                    Curate Trip <img src="{{ url_for('static', filename='images/arrow.svg') }}" alt="arrow" class="bounce-hover up-facing">
+                </button>
+            </a>
         </div>
     </div>
 
@@ -33,7 +37,11 @@
         <div class="text">
             <h2 class="subheader">Discover How Effortless Travel Can Be.</h2>
             <p>We design every detail with clarity and care.</p>
-            <button class="cta">Our Story <img src="{{ url_for('static', filename='images/arrow.svg') }}" alt="arrow"></button>
+            <a href="{{ url_for('about') }}" class="cta">
+                <button>
+                    Our Story <img src="{{ url_for('static', filename='images/arrow.svg') }}" alt="arrow" class="bounce-hover up-facing">
+                </button>
+            </a> 
         </div>
     </div>
 </section>

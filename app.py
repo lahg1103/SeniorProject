@@ -5,7 +5,6 @@ app = Flask(__name__)
 pages = [{'name': 'Home', 'endpoint': 'index'},
          {'name': 'Start Planning', 'endpoint': 'questionnaire'},
          {'name': 'About', 'endpoint': 'about'},
-         {'name': 'FAQ', 'endpoint': 'FAQ'},
          {'name': 'Contact', 'endpoint': 'contact'}
          ]
 
@@ -20,11 +19,6 @@ def about():
 @app.route('/questionnaire')
 def questionnaire():
     return render_template('questionnaire.html', pages=pages, current_page=request.endpoint)
-
-@app.route('/FAQ')
-def FAQ():
-    return render_template('faq.html', pages=pages, current_page=request.endpoint)
-
 
 @app.route('/contact')
 def contact():
