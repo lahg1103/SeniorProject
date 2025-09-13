@@ -12,7 +12,29 @@
         <img src="{{ url_for('static', filename='images/arrow.svg') }}" alt="downward pointed arrow" class="bounce">
     </div>
 </section>
-<section>
-    
+<section class="information">
+    <div class="card">
+        <div class="picture">
+            <img src="{{ url_for('static', filename='images/beach-pier.jpg') }}" alt="beach pier leading to ocean with waves splashing on it">
+        </div>
+        <div class="text">
+            <h2 class="subheader">Curated Experiences.</h2>
+            <h2 class="subheader">Zero Stress.</h2>
+            <p>Your trip, tailored to impress.</p>
+            <p>Your itinerary is waiting.</p>
+            <button class="cta">Curate Trip <img src="{{ url_for('static', filename='images/arrow.svg') }}" alt="arrow"></button>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="picture">
+            <img src="{{ url_for('static', filename='images/luggage.jpg') }}" alt="">
+        </div>
+        <div class="text">
+            <h2 class="subheader">Discover How Effortless Travel Can Be.</h2>
+            <p>We design every detail with clarity and care.</p>
+            <button class="cta">Our Story <img src="{{ url_for('static', filename='images/arrow.svg') }}" alt="arrow"></button>
+        </div>
+    </div>
 </section>
 {% endblock %}

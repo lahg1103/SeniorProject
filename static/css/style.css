@@ -30,12 +30,13 @@ em {
     font-size: 12px;
     --mainLight : rgb(230, 238, 245);
     --mainDark : rgb(6, 13, 12);
-    --secondaryDark : rgb(3, 28, 6);
+    --secondaryDark : rgb(15, 20, 20);
     --accentOne : rgb(103, 111, 124);
     --accentTwo : rgb(200, 62, 33);
     --headerGradient : linear-gradient(90deg,rgba(6, 13, 12, 0.1) 10%, rgba(6, 13, 12, 0.75) 50%, rgba(6, 13, 12, 0.1) 90%);
     --spacer: 0.75rem;
     --spacer1x : 6rem;
+    --radius : 6px;
 }
 
 /* animations */
@@ -145,7 +146,7 @@ nav {
     align-items: center;
     grid-column: 1/13;
     height: 100%;
-    background-color: var(--mainDark);
+    background-color: var(--secondaryDark);
     z-index: 100;
 }
 nav.active {
@@ -202,7 +203,7 @@ footer {
     z-index: -1;
 }
 .landing {
-    background-image: linear-gradient(transparent 80%, var(--mainDark) 100%);
+    background-image: linear-gradient(transparent 80%, var(--secondaryDark) 100%);
     position: relative;
     padding: var(--spacer1x);
     display: flex;
@@ -235,6 +236,49 @@ footer {
     animation-direction: alternate;
     animation-iteration-count: infinite;
 }
+.information {
+    margin-block: var(--spacer1x);
+}
+.card {
+    margin-block: var(--spacer);
+    padding-inline: var(--spacer1x);
+}
+.card .picture, .card .text {
+    border-radius: var(--radius);
+    overflow: clip;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.card .picture::before {
+    content: '';
+    position: absolute;
+
+}
+.card .cta {
+    background-color: var(--accentOne);
+    margin-top: auto;
+    margin-inline: auto;
+    width: fit-content;
+}
+button.cta {
+    padding: var(--spacer);
+}
+
+/* backgrounds */
+
+.questionnaire::before {
+    background-image: url('../images/boat-dinner.jpg');
+}
+.about::before {
+    background-image: url('../images/light-house.jpg');
+}
+.faq::before {
+    background-image: url('../images/coastal-city.jpg');
+}
+.contact::before {
+    background-image: url('../images/little-boats.jpg');
+}
 
 /* media queries */
 /* accessibility */
@@ -247,5 +291,12 @@ footer {
 @media screen and (width > 600px) {
     :root {
         font-size: 24px;
+    }
+
+    /* layout */
+    .card {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--spacer);
     }
 }

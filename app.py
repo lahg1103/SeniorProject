@@ -2,12 +2,12 @@ from flask import *
 
 app = Flask(__name__)
 
-pages = [{'name': 'About', 'endpoint': 'about'},
-         {'name': 'Home', 'endpoint': 'index'},
+pages = [{'name': 'Home', 'endpoint': 'index'},
          {'name': 'Start Planning', 'endpoint': 'questionnaire'},
-         {'name': 'Contact', 'endpoint': 'contact'},
+         {'name': 'About', 'endpoint': 'about'},
          {'name': 'FAQ', 'endpoint': 'FAQ'},
-         {'name': 'Philosophy', 'endpoint': 'philosophy'}]
+         {'name': 'Contact', 'endpoint': 'contact'}
+         ]
 
 @app.route('/')
 def index():
@@ -25,9 +25,6 @@ def questionnaire():
 def FAQ():
     return render_template('faq.html', pages=pages, current_page=request.endpoint)
 
-@app.route('/philosophy')
-def philosophy():
-    return render_template('philosophy.html', pages=pages, current_page=request.endpoint)
 
 @app.route('/contact')
 def contact():
