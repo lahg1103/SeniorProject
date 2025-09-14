@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Voyage",
+  "version": "1.0",
+  "short_name": "Voyage",
+  "description": "A bespoke travel planning experience with curated itineraries and elegant design.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#e6eef5",
+  "theme_color": "#676f7c",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "images/icons/web-app-manifest-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "images/icons/web-app-manifest-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

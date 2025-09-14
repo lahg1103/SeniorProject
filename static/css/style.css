@@ -28,10 +28,10 @@ em {
 /* root */
 :root {
     font-size: 12px;
-    --mainLight : rgb(230, 238, 245);
+    --mainLight : #e6eef5;
     --mainDark : rgb(6, 13, 12);
     --secondaryDark : rgb(15, 20, 20);
-    --accentOne : rgb(103, 111, 124);
+    --accentOne : #676f7c;
     --accentTwo : rgb(200, 62, 33);
     --headerGradient : linear-gradient(90deg,rgba(6, 13, 12, 0.1) 10%, rgba(6, 13, 12, 0.75) 50%, rgba(6, 13, 12, 0.1) 90%);
     --spacer: 0.75rem;
@@ -40,12 +40,17 @@ em {
 }
 
 /* animations */
+@property --bounce {
+    syntax: '<length>';
+    initial-value: 0rem;
+    inherits: false;
+}
 @keyframes bounce {
     from {
-        transform: translateY(0);
+        --bounce: 0rem;
     }
     to {
-        transform: translateY(0.2rem);
+        --bounce: 0.2rem;
     }
 }
 
@@ -218,6 +223,11 @@ footer {
 }
 .landing .text-arrow-wrapper {
     text-align: center;
+    display: flex;
+    border: 1px solid var(--mainLight);
+    border-radius: var(--radius);
+    padding: var(--spacer);
+    gap: var(--spacer);
 }
 
 /* cosmetic */
@@ -230,11 +240,7 @@ footer {
     visibility: hidden;
 }
 .bounce {
-    animation-name: bounce;
-    animation-duration: 1.5s;
-    animation-delay: 300ms;
-    animation-direction: alternate;
-    animation-iteration-count: infinite;
+    animation: bounce 1.5s 300ms infinite alternate;
 }
 .information {
     margin-block: var(--spacer1x);
@@ -261,15 +267,18 @@ footer {
     margin-inline: auto;
     width: fit-content;
 }
-button.cta {
+.cta {
     padding: var(--spacer);
 }
-.cta:hover .boune-hover {
+.cta:hover .bounce-hover {
     animation-name: bounce;
     animation-duration: 1.5s;
     animation-delay: 300ms;
     animation-direction: alternate;
     animation-iteration-count: infinite;
+}
+.up-facing {
+    transform: var(--bounce, translateY(0.25rem)) rotate(-137deg);
 }
 
 /* backgrounds */
