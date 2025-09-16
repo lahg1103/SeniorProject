@@ -31,11 +31,17 @@
                 {% for page in pages %}
                     {% if page.endpoint != current_page %}
                         <li style="--i: {{ loop.index0 }}">
-                            <a href="{{ url_for(page.endpoint) }}">{{ page.name }}</a>
+                            <a href="{{ url_for(page.endpoint) }}" class="nav-link uppercase">{{ page.name }}</a>
                         </li>
                     {% endif %}
                 {% endfor %}
             </ul>
+            <a href="{{ url_for('index') }}">
+                <div class="logo-wrapper">
+                    <img src="{{ url_for('static', filename='images/icons/favicon.svg') }}" alt="voyage logo" class="spin">
+                </div>
+            </a>
+            
     </nav>
     <main>
         {% block body %}{% endblock %}

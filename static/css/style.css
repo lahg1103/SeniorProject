@@ -22,7 +22,7 @@ h2 {
     font-family: 'Hanken Grotesk', sans-serif;
 }
 .hero {
-    font-size: 2.5rem;
+    font-size: clamp(2.5rem, 6vw, 12rem);
 }
 em {
     font-style: italic;
@@ -51,11 +51,19 @@ em {
         transform: translateY(0.2rem);
     }
 }
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
 
 
 /* general */
 body {
-    font-size: 1rem;
+    font-size: 1.12rem;
     text-rendering: optimizeLegibility;
     font-family: 'Hanken Grotesk', sans-serif;
     font-style: normal;
@@ -155,6 +163,7 @@ nav {
     height: 100%;
     background-color: var(--secondaryDark);
     z-index: 100;
+    padding-block: var(--spacer1x);
 }
 nav.active {
     height: 100vh;
@@ -183,6 +192,33 @@ nav ul {
     justify-content: space-around;
     padding-block: var(--spacer1x);
     height: 100%;
+}
+.nav-link {
+    position: relative;
+    font-size: clamp(1.5rem, 3vw, 4rem);
+}
+.nav-link::after {
+    content: '';
+    position: absolute;
+    background-color: var(--mainLight);
+    height: 2px;
+    width: 0%;
+    left: 0;
+    bottom: -0.1rem;
+    transition: width 300ms ease-in-out;
+}
+.nav-link:hover::after {
+    width: 100%;
+    transition: width 300ms ease-in-out;
+}
+.logo-wrapper {
+    max-width: calc(2.5 * var(--spacer1x));
+}
+.spin {
+    animation-name: spin;
+    animation-duration: 14s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
 }
 
 main {
@@ -217,7 +253,7 @@ footer {
     flex-direction: column;
     align-items: center;
     width: 100%;
-    min-height: 60vh;
+    min-height: 100vh;
     max-height: 100vh;
 }
 .landing .text-wrapper {
@@ -328,11 +364,15 @@ section {
     width: 1.15rem;
     height: auto;
     transition: 600ms ease-in-out;
+    z-index: 5;
 }
 .arrow-wrapper {
     position: relative;
     width: auto;
     height: 100%;
+}
+.text-arrow-wrapper h3 {
+    z-index: 1;
 }
 .text-arrow-wrapper:hover .arrow {
     transform: rotate(-90deg);
@@ -351,7 +391,7 @@ section {
     background-color: var(--mainLight);
     padding: 1rem;
     border-radius: 50%;
-    z-index: -1;
+    z-index: 0;
     transition: height 800ms ease-in-out,
                 width 800ms ease-in-out;
 }
@@ -384,6 +424,15 @@ section {
 .contact::before {
     background-image: url('../images/little-boats.jpg');
 }
+.fourOfour::before {
+    background-image: none;
+}
+.landing.fourOfour {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
 
 /* media queries */
 /* accessibility */
@@ -396,8 +445,10 @@ section {
 /* EVERYTHING BREAKS AT 610PX FIX THIS LATER */
 
 /* DESKTOP */
-@media screen and (width > 600px) {
-
+@media screen and (width > 700px) {
+    :root {
+        font-size: 14px;
+    }
     /* layout */
     .card {
         gap: var(--spacer);
