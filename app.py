@@ -1,13 +1,10 @@
 from flask import *
-from config.context import *
+from config import context
+
+pages = context.pages
+itinerary_form_fields = context.itinerary_form_fields
 
 app = Flask(__name__)
-
-pages = [{'name': 'Home', 'endpoint': 'index'},
-         {'name': 'Start Planning', 'endpoint': 'questionnaire'},
-         {'name': 'About', 'endpoint': 'about'},
-         {'name': 'Contact', 'endpoint': 'contact'}
-         ]
 
 @app.route('/')
 def index():

@@ -3,6 +3,7 @@ __pycache__/
 *.pyc
 
 # environment files
+venv/
 .env
 
 # SQLite databases
