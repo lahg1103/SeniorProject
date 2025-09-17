@@ -3,7 +3,7 @@ from config import context
 
 pages = context.pages
 itineraryfields = context.itineraryfields
-data = [{'name': 'test', 'result': 'data did not update!'}]
+data = {'name': 'test', 'result': 'data did not update!'}
 
 app = Flask(__name__)
 
@@ -25,14 +25,13 @@ def process_itinerary():
     global data
     data = request.get_json()
     # REF DO SOMETHING REF TEST THE DATA REF DO SOMETHING
-    print("Received itinerary:", data)
     # SQLITE HERE I REPEAT.
     return('', 204)
 
 @app.route('/success')
 def success():
     #SQLITE HERE TOO
-    return render_template('itinerary.html', results=data)
+    return render_template('itinerary.html', results=data, pages=pages)
 
 @app.route('/contact')
 def contact():
