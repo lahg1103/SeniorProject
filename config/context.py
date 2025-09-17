@@ -6,6 +6,9 @@ pages = [{'name': 'Home', 'endpoint': 'index'},
          {'name': 'About', 'endpoint': 'about'},
          {'name': 'Contact', 'endpoint': 'contact'}
          ]
-itinerary_form_fields = [
-    {'name': 'Budget', 'type' : 'number', 'currency' : 'USD'}
+itineraryfields = [
+    {'name': 'Budget', 'type' : 'number', 'currency' : 'USD'},
+    {'name': 'Arrival Date', 'type': 'date'},
+    {'name': 'Departure Date', 'type': 'date'},
+    {'name': 'Destination', 'type': 'text'}
 ]

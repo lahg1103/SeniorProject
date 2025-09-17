@@ -2,7 +2,8 @@ from flask import *
 from config import context
 
 pages = context.pages
-itinerary_form_fields = context.itinerary_form_fields
+itineraryfields = context.itineraryfields
+data = [{'name': 'test', 'result': 'data did not update!'}]
 
 app = Flask(__name__)
 
@@ -16,7 +17,22 @@ def about():
 
 @app.route('/questionnaire')
 def questionnaire():
-    return render_template('questionnaire.html', pages=pages, current_page=request.endpoint)
+    return render_template('questionnaire.html', pages=pages, current_page=request.endpoint, fields=itineraryfields)
+
+@app.route('/process-itinerary', methods=['POST'])
+def process_itinerary():
+    # TEMPORARY WHILE IN DEVELOPMENT
+    global data
+    data = request.get_json()
+    # REF DO SOMETHING REF TEST THE DATA REF DO SOMETHING
+    print("Received itinerary:", data)
+    # SQLITE HERE I REPEAT.
+    return('', 204)
+
+@app.route('/success')
+def success():
+    #SQLITE HERE TOO
+    return render_template('itinerary.html', results=data)
 
 @app.route('/contact')
 def contact():

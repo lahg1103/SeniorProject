@@ -8,5 +8,14 @@
     </h1>
     <h2 class="subheader">Answer a few questions so we can tailor your itinerary.</h2>
 </section>
-
+<section>
+    <form id="itinerary-form">
+        {% for field in fields %}
+            <label for="{{ field.name | lower | replace(' ', '_') }}"> {{ field.name }} : </label>
+            <input type="{{ field.type }}" name="{{ field.name | lower | replace(' ', '_') }}">
+        {% endfor %}
+        <button type="submit">Generate Itinerary</button>
+    </form>
+</section>
+<script src="{{ url_for('static', filename='javascript/form.js') }}"></script>
 {% endblock %}

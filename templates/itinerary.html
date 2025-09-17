@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<section>
+    {% for key, value in results.items() %}
+        <p>
+            {{ key }} : {{ value }}
+        </p>
+    {% endfor %}
+</section>
+
+{% endblock %}
