@@ -260,6 +260,10 @@ footer {
     margin: auto;
     text-align: center;
 }
+.landing.sidepage {
+    min-height: 50vh;
+    max-height: 60vh;
+}
 
 
 /* cosmetic */
@@ -399,7 +403,7 @@ section {
     width: 3000px;
     height: 2000px;
 }
-.landing .text-arrow-wrapper {
+.text-arrow-wrapper {
     text-align: center;
     display: flex;
     border: 1px solid var(--mainLight);
@@ -408,6 +412,29 @@ section {
     gap: var(--spacer);
     overflow: clip;
     transition: 600ms ease-in-out;
+}
+form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacer1x);
+    padding-inline: var(--spacer1x);
+}
+label {
+    padding-block-start: var(--spacer1x);
+    margin-block-end: -2rem;
+}
+input {
+    border-bottom: 1px solid var(--mainLight);
+}
+button {
+    cursor:pointer;
+}
+.itinerary-form {
+    padding-inline: var(--spacer1x);
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 /* backgrounds */

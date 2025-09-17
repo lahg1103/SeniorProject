@@ -8,13 +8,20 @@
     </h1>
     <h2 class="subheader">Answer a few questions so we can tailor your itinerary.</h2>
 </section>
-<section>
+<section class="itinerary-form">
     <form id="itinerary-form">
         {% for field in fields %}
             <label for="{{ field.name | lower | replace(' ', '_') }}"> {{ field.name }} : </label>
             <input type="{{ field.type }}" name="{{ field.name | lower | replace(' ', '_') }}">
         {% endfor %}
-        <button type="submit">Generate Itinerary</button>
+        <button type="submit" class="text-arrow-wrapper">
+            <div class="arrow-wrapper">
+                <img src="{{ url_for('static', filename='images/arrow.svg') }}" alt="arrow" class="arrow up-facing black-arrow">
+            </div>
+            <h3 class="subheader">
+                Generate Itinerary
+            </h3>
+        </button>
     </form>
 </section>
 <script src="{{ url_for('static', filename='javascript/form.js') }}"></script>
