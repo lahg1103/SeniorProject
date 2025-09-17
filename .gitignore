@@ -4,6 +4,7 @@ __pycache__/
 
 # environment files
 .venv/
+venv/
 .env
 
 # SQLite databases
