@@ -4,17 +4,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    {% block head %}{% endblock %}
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.webmanifest') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/icons/favicon-96x96.png') }}" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/icons/favicon.svg') }}" />
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/icons/favicon.ico') }}" />
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='images/icons/apple-touch-icon.png') }}" />
+    <meta name="apple-mobile-web-app-title" content="Voyage" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+
+    <title> Voyage {% block title %} {% endblock %} </title>
 </head>
-<body id="main">
+<body>
     <header>
-        <h1>[Working Title]</h1>
-        <nav>
-            <ul>
-                {% block nav %} {% endblock %}
-            </ul>
-        </nav>
+        <div class="title-wrapper">
+            <h1 class="serif"><a href="{{ url_for('index') }}">Voyage</a></h1>
+            <h2 class="subheader uppercase">Precision Meets Paradise</h2>
+        </div>
+        <button class="hamburger-wrapper">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
     </header>
+    <nav class="hidden">
+            <ul class="stagger subheader">
+                {% for page in pages %}
+                    {% if page.endpoint != current_page %}
+                        <li style="--i: {{ loop.index0 }}">
+                            <a href="{{ url_for(page.endpoint) }}" class="nav-link uppercase">{{ page.name }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+            <a href="{{ url_for('index') }}">
+                <div class="logo-wrapper">
+                    <img src="{{ url_for('static', filename='images/icons/favicon.svg') }}" alt="voyage logo" class="spin">
+                </div>
+            </a>
+            
+    </nav>
     <main>
         {% block body %}{% endblock %}
     </main>
@@ -25,16 +53,84 @@
         </p>
     </footer>
     <script>
+
+        /**
+         * Replaces the text content of multiple elements with a single string.
+         *
+         * Ideal for batch updates—like swapping out placeholder copy,
+         * syncing headlines across sections.
+         *
+         * @param {NodeList | HTMLElement[]} elements - A list of elements to update.
+         * @param {string} text - The new text to apply to each element.
+        */
         function replaceText(element, text) {
-            // for when you need to replace various instances of an element's text
-            element.forEach(element => {
-                element.textContent = text;
+            element.forEach(e => {
+                e.textContent = text;
             });
         }
+
+        /**
+         * Applies a negative top margin to visually overlap an element
+         * without affecting its DOM flow or layout siblings.
+         *
+         * @param {HTMLElement} element - The target element to apply the margin to.
+         * @param {number} height - The amount of negative margin in pixels.
+         * @param {boolean} restorePadding - If true, adds equivalent top padding.
+        */
+        function negativeMargin(element, height, restorePadding = false) {
+            const root = document.documentElement;
+            const computedStyles = getComputedStyle(root);
+            const spacer = computedStyles.getPropertyValue('--spacer');
+            
+            let updatedHeight = function(h, el) {
+                let newHeight = `calc( ${h}px + (2 * ${height}px))`;
+                el.style.height = newHeight;
+            }
+
+            if (Array.isArray(element)) {
+                element.forEach(e =>{
+                e.style.marginTop = `calc(-${height}px - ( 2 * ${spacer}))`;
+                if (restorePadding) {
+                e.style.paddingTop = `calc(2 * (${height}px + (2 * ${spacer})))`;
+                let currentHeight = e.getBoundingClientRect().height;
+                updatedHeight(currentHeight, e);
+            }
+            });
+            }
+            else {
+                element.style.marginTop = `calc(-${height}px - ( 2 * ${spacer}))`;
+                if (restorePadding) {
+                element.style.paddingTop = `calc(2 * (${height}px + (2 * ${spacer})))`;
+                }
+                console.log(element.style.paddingTop);
+                let currentHeight = element.style.height;
+                updatedHeight(currentHeight, element);
+            }
+        }
+
         window.addEventListener("DOMContentLoaded", ()=>{
+            // overlapping the landing with the header, visually
+            let landing = Array.from(document.getElementsByClassName('landing'));
+            let headerHeight = document.querySelector('header').getBoundingClientRect().height;
+            negativeMargin(landing, headerHeight, true);
+
+
+            // hamburger icon animation helper
+            let hamburger = Array.from(document.getElementsByClassName('hamburger-wrapper'));
+            let nav = document.querySelector('nav');
+            hamburger.forEach(burger =>{
+                burger.addEventListener('click', ()=> {
+                burger.classList.toggle('active');
+                nav.classList.toggle('hidden');
+                nav.classList.toggle('active');
+            })
+            });
+
+            negativeMargin(nav, headerHeight);
+
+            // copyright at the bottom
             let year = new Date().getFullYear();
             let htmlYear = Array.from(document.getElementsByClassName('year'));
-            
             replaceText(htmlYear, year);
             
         })

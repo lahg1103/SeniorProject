@@ -1,9 +1,76 @@
 {% extends 'base.html' %}
 
-{% block head %}
-<title>[Working Title]</title>
-{% endblock %}
 
 {% block body %}
-<h2>Travel made easy</h2>
+<section class="landing">
+    <div class="text-wrapper">
+        <h2 class="hero serif">Travel with <em>Confidence</em></h2>
+        <h2 class="hero serif"><em>Your Itinerary</em> Curated.</h2>
+    </div>
+    <a href="#information">
+    <div class="text-arrow-wrapper">
+        <div class="arrow-wrapper">
+            <img src="{{ url_for('static', filename='images/arrow.svg') }}" alt="arrow" class="arrow up-facing black-arrow">
+        </div>
+        <h3 class="subheader uppercase">Enter Voyage</h3>
+    </div>
+    </a>
+</section>
+<section class="information" id="information">
+
+    <div class="card">
+
+        <div class="picture">
+            <img src="{{ url_for('static', filename='images/beach-pier.jpg') }}" alt="beach pier leading to ocean with waves splashing on it">
+        </div>
+
+        <div class="text">
+            <div class="blurb-wrapper">
+                <div class="tagline">
+                    <h2 class="subheader">Curated Experiences.</h2>
+                    <h2 class="subheader">Zero Stress.</h2>
+                </div>
+
+                <div class="blurb">
+                    <p>Your trip, tailored to impress.</p>
+                    <p>Your itinerary is waiting.</p>
+                </div>
+            </div>
+            
+    
+            <a href="{{ url_for('questionnaire') }}" class="cta">
+                <button>
+                    Curate Trip <img src="{{ url_for('static', filename='images/arrow.svg') }}" alt="arrow" class="arrow up-facing">
+                </button>
+            </a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="text right">
+
+            <div class="blurb-wrapper">
+                <div class="tagline">
+                    <h2 class="subheader">Discover How Effortless Travel Can Be.</h2>
+                </div>
+                
+                <div class="blurb">
+                    <p>We design every detail with clarity and care.</p>
+                </div>
+            </div>
+            
+            
+            <a href="{{ url_for('about') }}" class="cta">
+                <button>
+                    Our Story <img src="{{ url_for('static', filename='images/arrow.svg') }}" alt="arrow" class="arrow up-facing">
+                </button>
+            </a> 
+        </div>
+
+        <div class="picture right">
+            <img src="{{ url_for('static', filename='images/woman-beach.jpg') }}" alt="">
+        </div>
+
+    </div>
+</section>
 {% endblock %}
