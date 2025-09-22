@@ -41,3 +41,38 @@ python app.py
   
 </details>
 
+### Working With the Database (Development ONLY)
+
+#### Ensure your virtual env is active, and your requirements up to date
+```bash
+pip install -r requirements.txt
+```
+
+### How to Generate Secret Keys
+```bash
+python
+import secrets
+print(secrets.token_hex(32))
+```
+#### copy the output
+
+### Create .env file
+```bash
+touch .env
+```
+#### Add the following (replace 'YOUR-SECRET-KEY' with the token you generated earlier):
+```python
+SESSION_KEY='YOUR-SECRET-KEY'
+```
+
+### Inside app.py under if __name__ == '__main__':
+#### Uncomment the following lines before running
+```python
+    # with app.app_context():
+    #     db.create_all()
+```
+#### Run app.py
+```bash
+python app.py
+```
+#### You should see a new folder 'instances/' in the root directory holding your database.
