@@ -41,7 +41,7 @@ python app.py
   
 </details>
 
-### Working With the Database (Development ONLY)
+## Working With the Database (Development ONLY)
 
 #### Ensure your virtual env is active, and your requirements up to date
 ```bash
