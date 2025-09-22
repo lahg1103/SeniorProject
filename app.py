@@ -20,11 +20,18 @@ class ItineraryPreferences(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
     #core requirements
+
     budget = db.Column(db.Integer, nullable=False)
     arrivaldate = db.Column(db.Date, default=date.today)
     departuredate = db.Column(db.Date, nullable=False)
+
+
     # the longest city in the world is 169characters long yall.
+
     destination = db.Column(db.String(200), nullable=False)
+
+
+    #this is just for how the row represents itself when called, makes it readable
 
     def __repr__(self):
         return '<Preferences %r>' % self.id
@@ -51,8 +58,7 @@ def process_itinerary():
     arrival = datetime.strptime(data['arrival_date'], format_string)
     departure = datetime.strptime(data['departure_date'], format_string)
 
-    # REF DO SOMETHING REF TEST THE DATA REF DO SOMETHING
-    # SQLITE HERE I REPEAT.
+    # Adding a new row
 
     itineraryUserPreferences = ItineraryPreferences(
         budget= int(data['budget']),
