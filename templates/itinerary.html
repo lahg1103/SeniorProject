@@ -3,11 +3,18 @@
 {% block body %}
 
 <section>
-    {% for key, value in results.items() %}
-        <p>
-            {{ key }} : {{ value }}
-        </p>
-    {% endfor %}
+    {% if not results %}
+        <h1>Itinerary Not Found</h1>
+        {% else %}
+        <section>
+            {% for key, value in results.items() %}
+                <p>
+                    {{ key }} : {{ value }}
+                </p>
+            {% endfor %}
+        </section>
+    {% endif %}
+    
 </section>
 
 {% endblock %}
