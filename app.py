@@ -1,11 +1,33 @@
 from flask import *
 from config import context
+from flask_sqlalchemy import SQLAlchemy
+from datetime import date
+from dotenv import load_dotenv
+import os
 
 pages = context.pages
 itineraryfields = context.itineraryfields
 data = {'name': 'test', 'result': 'data did not update!'}
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///voyage.db'
+db = SQLAlchemy(app)
+
+class Itinerary(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    #core requirements
+    budget = db.Column(db.Integer, nullable=False)
+    arrivaldate = db.Column(db.Date, default=date.today)
+    departuredate = db.Column(db.Date, nullable=False)
+    # the longest city in the world is 169characters long yall.
+    destination = db.Column(db.String[200], nullable=False)
+
+    def __repr__(self):
+        return '<Preferences %r>' % self.id
+
+# with app.app_context():
+#     db.create_all()
 
 @app.route('/')
 def index():
