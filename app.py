@@ -1,6 +1,7 @@
 from flask import *
 from config import context
 from utils import functions
+from utils import ai
 from flask_sqlalchemy import SQLAlchemy
 from datetime import date, datetime
 from dotenv import load_dotenv
@@ -78,7 +79,9 @@ def success():
     
     itinerary = ItineraryPreferences.query.get_or_404(itinerary_id)
 
-    itinerary_clean = functions.clean_instance(itinerary)
+    preferences_clean = functions.clean_instance(itinerary)
+
+    itinerary_clean = ai.generateItinerary(preferences_clean)
 
 
     return render_template('itinerary.html', results=itinerary_clean, pages=pages)
