@@ -423,9 +423,23 @@ label {
     padding-block-start: var(--spacer1x);
     margin-block-end: -2rem;
 }
-input {
+.input-container {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    cursor: pointer;
+    gap: var(--spacer);
+}
+
+
+.input-container:not(:first-child), .input-container:not(:last-child) {
+    padding-block-start: 0;
+    margin-block-end: -2rem;
+}
+input[type="number"], input[type="text"], input[type="date"] {
     border-bottom: 1px solid var(--mainLight);
 }
+
 button {
     cursor:pointer;
 }

@@ -12,7 +12,7 @@ itineraryfields = context.itineraryfields
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = os.getenv('SESSION_KEY')
+app.secret_key = os.getenv('FLASK_SESSION_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///voyage.db'
 db = SQLAlchemy(app)
 
