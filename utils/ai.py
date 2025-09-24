@@ -12,12 +12,35 @@ class Lodging(BaseModel):
     address: str
     cost: int
 
+class Meal(BaseModel):
+    restaurant: str
+    address: str
+    cost: int
+
+class Food(BaseModel):
+    breakfast: Meal
+    lunch: Meal
+    dinner: Meal
+
+class Activities(BaseModel):
+    name: str
+    address: str
+    cost: int
+
+class Directions(BaseModel):
+    distance: str
+    transportationmethod: str
+
+class DayItinerary(BaseModel):
+    lodging: Lodging
+    food: Food
+    activities: Activities
+    directions: Directions
+    daysummary: str
 
 class Itinerary(BaseModel):
-    budget: int
-    dates: List[str]
-    lodging: Lodging
-    transportation: str
+    itineraryperday: List[DayItinerary]
+    promotionalblurb: str
 
 
 
