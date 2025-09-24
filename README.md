@@ -41,12 +41,19 @@ python app.py
   
 </details>
 
-## Working With the Database (Development ONLY)
+# Contributing to the Repository:
+---
 
-#### Ensure your virtual env is active, and your requirements up to date
+Always, make sure you pull from the working branch, and make sure that your virtual environment is active.
+Make sure your requirements are up to date.
 ```bash
 pip install -r requirements.txt
 ```
+
+## Working With the Database (Development ONLY)
+
+We are working with Flask-SQLAlchemy which is a wrapper for SQLite. This requires Flask-Migrate and Flask-SQLAlchemy libraries in order for this to work.
+To get started from scratch, you'll need to have your keys in order.
 
 ### How to Generate Secret Keys
 ```bash
@@ -76,3 +83,12 @@ SESSION_KEY='YOUR-SECRET-KEY'
 python app.py
 ```
 #### You should see a new folder 'instances/' in the root directory holding your database.
+
+Next, we want to make sure you have the most updated database schema available. This is where Flask-Migrate comes in.
+The versions of the database are under the migrations directory in the root.
+
+#### Get the latest by running this command
+
+```bash
+flask db upgrade
+```
