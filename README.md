@@ -42,7 +42,7 @@ python app.py
 </details>
 
 # Contributing to the Repository:
----
+
 
 Always, make sure you pull from the working branch, and make sure that your virtual environment is active.
 Make sure your requirements are up to date.
@@ -83,6 +83,8 @@ SESSION_KEY='YOUR-SECRET-KEY'
 python app.py
 ```
 #### You should see a new folder 'instances/' in the root directory holding your database.
+
+## Updating the Database Schema
 
 Next, we want to make sure you have the most updated database schema available. This is where Flask-Migrate comes in.
 The versions of the database are under the migrations directory in the root.
