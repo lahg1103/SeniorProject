@@ -2,6 +2,7 @@ from flask import *
 from config import context
 from utils import functions
 from utils import ai
+from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from datetime import date, datetime
 from dotenv import load_dotenv
@@ -15,6 +16,7 @@ app = Flask(__name__)
 app.secret_key = os.getenv('FLASK_SESSION_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///voyage.db'
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 class ItineraryPreferences(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -24,6 +26,7 @@ class ItineraryPreferences(db.Model):
     budget = db.Column(db.Integer, nullable=False)
     arrivaldate = db.Column(db.Date, default=date.today)
     departuredate = db.Column(db.Date, nullable=False)
+    transportation = db.Column(db.Boolean, default=True)
 
 
     # the longest city in the world is 169characters long yall.
