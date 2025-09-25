@@ -64,7 +64,6 @@ em {
 /* general */
 html, body {
     overscroll-behavior-block: none;
-    height: 100%;
 }
 body {
     font-size: 1.12rem;
@@ -73,6 +72,7 @@ body {
     font-style: normal;
 
     overflow-x: clip;
+    overflow-y: auto;
 
     color: var(--mainLight);
     background-color: var(--secondaryDark);
@@ -80,6 +80,7 @@ body {
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
     grid-template-rows: auto;
+    align-items: start;
     gap: 1.5rem;
     position: relative;
 }
@@ -100,7 +101,7 @@ a:hover {
 header {
     position: sticky;
     top: 0;
-    z-index: 999;
+    z-index: 10;
     background-color: transparent;
     grid-column: 1/13;
     padding-inline: var(--spacer1x);
@@ -461,11 +462,13 @@ button {
     font-size: 1.75rem;
 }
 .itinerary-wrapper {
-    position: relative;
     display: block;
     padding-inline: var(--spacer1x);
-    height: auto;
-    overflow-y: scroll;
+    background-color: var(--secondaryDark);
+}
+.navigation-days{
+    position: sticky;
+    top: calc(var(--hHeight) + var(--spacer));
 }
 .itinerary-top-navigation {
     display: inline-flex;
@@ -475,8 +478,6 @@ button {
     justify-content: space-between;
     width: 100%;
     background-image: linear-gradient(var(--secondaryDark), rgba(103, 111, 124));
-    position: sticky;
-    top: 0;
 }
 .itinerary-top-navigation li {
     font-size: 1.20rem;

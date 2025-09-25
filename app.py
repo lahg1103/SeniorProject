@@ -4,7 +4,7 @@ from utils import functions
 from utils import ai
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from dotenv import load_dotenv
 import os
 
@@ -86,15 +86,23 @@ def success():
     if not itinerary_id:
         return redirect('/questionnaire')
     
-    itinerary = ItineraryPreferences.query.get_or_404(itinerary_id)
+    if not 'itinerary' in session: 
+    
+        itinerary = ItineraryPreferences.query.get_or_404(itinerary_id)
 
-    preferences_clean = functions.clean_instance(itinerary)
+        preferences_clean = functions.clean_instance(itinerary)
 
-    itinerary_clean = ai.generateItinerary(preferences_clean)
+        itinerary_clean = ai.generateItinerary(preferences_clean)
 
-    print(type(itinerary_clean))
+        session.permanent = True
+        session['itinerary'] = itinerary_clean
 
-    return render_template('itinerary.html', results=itinerary_clean, pages=pages)
+        return render_template('itinerary.html', results=itinerary_clean, pages=pages)
+
+    else:
+        return render_template('itinerary.html', results=session["itinerary"], pages=pages)
+
+    
 
 @app.route('/contact')
 def contact():

@@ -42,6 +42,7 @@ class Itinerary(BaseModel):
     itineraryperday: List[DayItinerary]
     promotionalblurb: str
     duration : int
+    city: str
 
 
 
