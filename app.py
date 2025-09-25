@@ -92,12 +92,17 @@ def success():
 
     itinerary_clean = ai.generateItinerary(preferences_clean)
 
+    print(type(itinerary_clean))
 
     return render_template('itinerary.html', results=itinerary_clean, pages=pages)
 
 @app.route('/contact')
 def contact():
     return render_template('contact.html', pages=pages, current_page=request.endpoint)
+
+@app.route('/test')
+def test():
+    return render_template('test.html', pages=pages)
     
 @app.errorhandler(404)
 def page_not_found(e):

@@ -108,9 +108,12 @@
         }
 
         window.addEventListener("DOMContentLoaded", ()=>{
+            const root = document.documentElement;
+
             // overlapping the landing with the header, visually
             let landing = Array.from(document.getElementsByClassName('landing'));
             let headerHeight = document.querySelector('header').getBoundingClientRect().height;
+            root.style.setProperty('--hHeight', `${headerHeight}px`);
             negativeMargin(landing, headerHeight, true);
 
 
