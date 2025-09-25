@@ -8,6 +8,7 @@ venv/
 .env
 
 # SQLite databases
+instance/
 *.sqlite
 *.db
 

@@ -62,6 +62,9 @@ em {
 
 
 /* general */
+html, body {
+    overscroll-behavior-block: none;
+}
 body {
     font-size: 1.12rem;
     text-rendering: optimizeLegibility;
@@ -69,6 +72,7 @@ body {
     font-style: normal;
 
     overflow-x: clip;
+    overflow-y: auto;
 
     color: var(--mainLight);
     background-color: var(--secondaryDark);
@@ -76,6 +80,7 @@ body {
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
     grid-template-rows: auto;
+    align-items: start;
     gap: 1.5rem;
     position: relative;
 }
@@ -96,7 +101,7 @@ a:hover {
 header {
     position: sticky;
     top: 0;
-    z-index: 999;
+    z-index: 10;
     background-color: transparent;
     grid-column: 1/13;
     padding-inline: var(--spacer1x);
@@ -223,6 +228,7 @@ nav ul {
 
 main {
     grid-column: 1/13;
+    position: relative;
 }
 footer {
     grid-column: 1/13;
@@ -423,9 +429,23 @@ label {
     padding-block-start: var(--spacer1x);
     margin-block-end: -2rem;
 }
-input {
+.input-container {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    cursor: pointer;
+    gap: var(--spacer);
+}
+
+
+.input-container:not(:first-child), .input-container:not(:last-child) {
+    padding-block-start: 0;
+    margin-block-end: -2rem;
+}
+input[type="number"], input[type="text"], input[type="date"] {
     border-bottom: 1px solid var(--mainLight);
 }
+
 button {
     cursor:pointer;
 }
@@ -435,6 +455,43 @@ button {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+/* itinerary page */
+.itinerary.blurb {
+    font-size: 1.75rem;
+}
+.itinerary-wrapper {
+    display: block;
+    padding-inline: var(--spacer1x);
+    background-color: var(--secondaryDark);
+}
+.navigation-days{
+    position: sticky;
+    top: calc(var(--hHeight) + var(--spacer));
+}
+.itinerary-top-navigation {
+    display: inline-flex;
+    padding-block: var(--spacer);
+    padding-inline: 5vw;
+    border-radius: 50rem;
+    justify-content: space-between;
+    width: 100%;
+    background-image: linear-gradient(var(--secondaryDark), rgba(103, 111, 124));
+}
+.itinerary-top-navigation li {
+    font-size: 1.20rem;
+}
+.landing.sidepage.itinerary {
+    display: flex;
+    flex-direction: column;
+    gap: 5vw;
+}
+.itinerary-heading {
+    font-size: clamp(1.75rem, 3vw, 5rem);
+}
+.day-card > * {
+    margin-bottom: var(--spacer);
 }
 
 /* backgrounds */

@@ -11,8 +11,20 @@
 <section class="itinerary-form">
     <form id="itinerary-form">
         {% for field in fields %}
-            <label for="{{ field.name | lower | replace(' ', '_') }}"> {{ field.name }} : </label>
-            <input type="{{ field.type }}" name="{{ field.name | lower | replace(' ', '_') }}">
+        {% if field.options %}
+                <label for="{{ field.name | lower | replace(' ','_') }}"> {{ field.name }} : </label>
+                {% for option in field.options %}
+
+                <label class="input-container"> {{ option }} 
+                    <input type="{{ field.type }}" name="{{ field.name | lower | replace(' ','_') }}" value="{{ option }}" id="{{ option }}"/>
+                    <div class="{{ field.type }}"></div>
+                </label>
+                
+                {% endfor %}
+            {% else %}
+                <label for="{{ field.name | lower | replace(' ', '_') }}"> {{ field.name }} : </label>
+                <input type="{{ field.type }}" name="{{ field.name | lower | replace(' ', '_') }}" />
+            {% endif %}
         {% endfor %}
         <button type="submit" class="text-arrow-wrapper">
             <div class="arrow-wrapper">

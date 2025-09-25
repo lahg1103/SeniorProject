@@ -102,16 +102,18 @@
                 if (restorePadding) {
                 element.style.paddingTop = `calc(2 * (${height}px + (2 * ${spacer})))`;
                 }
-                console.log(element.style.paddingTop);
                 let currentHeight = element.style.height;
                 updatedHeight(currentHeight, element);
             }
         }
 
         window.addEventListener("DOMContentLoaded", ()=>{
+            const root = document.documentElement;
+
             // overlapping the landing with the header, visually
             let landing = Array.from(document.getElementsByClassName('landing'));
             let headerHeight = document.querySelector('header').getBoundingClientRect().height;
+            root.style.setProperty('--hHeight', `${headerHeight}px`);
             negativeMargin(landing, headerHeight, true);
 
 
