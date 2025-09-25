@@ -461,8 +461,7 @@ button {
     font-size: 1.75rem;
 }
 .itinerary-wrapper {
-    position: sticky;
-    left: 0;
+    position: relative;
     display: block;
     padding-inline: var(--spacer1x);
     height: auto;
@@ -486,6 +485,12 @@ button {
     display: flex;
     flex-direction: column;
     gap: 5vw;
+}
+.itinerary-heading {
+    font-size: clamp(1.75rem, 3vw, 5rem);
+}
+.day-card > * {
+    margin-bottom: var(--spacer);
 }
 
 /* backgrounds */

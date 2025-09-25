@@ -34,7 +34,7 @@ class Directions(BaseModel):
 class DayItinerary(BaseModel):
     lodging: Lodging
     food: Food
-    activities: Activities
+    activities: List[Activities]
     directions: Directions
     daysummary: str
 

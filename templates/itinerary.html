@@ -29,8 +29,9 @@
                 <p><strong>Dinner: </strong> {{ day["food"]["dinner"]["restaurant"] }} &mdash; {{ day["food"]["dinner"]["address"] }} </p>
 
                 <h4>Activities: </h4>
-                <p>{{ day["activities"]["name"] }} &mdash; {{ day["activities"]["address"] }} | cost: {{ day["activities"]["cost"] }} </p>
-               
+                {% for activity in day["activities"] %}
+                <p>{{ activity["name"] }} &mdash; {{ activity["address"] }} | cost: {{ activity["cost"] }} </p>
+                {% endfor %}
             </section>
         {% endfor %}
     {% endif %}
