@@ -35,7 +35,7 @@ em {
     --mainDark : rgb(6, 13, 12);
     --secondaryDark : rgb(15, 20, 20);
     --accentOne : #676f7c;
-    --accentTwo : rgb(200, 62, 33);
+    --accentTwo : #c83e21;
     --headerGradient : linear-gradient(90deg,rgba(6, 13, 12, 0.1) 10%, rgba(6, 13, 12, 0.75) 50%, rgba(6, 13, 12, 0.1) 90%);
     --spacer: 0.75rem;
     --spacer1x : 4rem;
@@ -59,6 +59,7 @@ em {
         transform: rotate(360deg);
     }
 }
+
 
 
 /* general */
