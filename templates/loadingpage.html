@@ -1,0 +1,40 @@
+<!-- ugly basic loading bar, will suffice for now. will spice later! ^-^ -->
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Loading Screen</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <div class="loading">
+        <div class="percent">100%</div>
+        <div class="progress-bar"></div>
+        <div class="progress"></div>
+        <div class="text">Please wait as your itinerary is being generated!</div>
+    </div>
+
+    <script>
+        var percent = document.querySelector('.percent');
+        var progress = document.querySelector('.progress');
+        var count = 4;
+        var per = 10;
+        var loading = setInterval(animate, 50);
+        /* hardcoded function to simulate loading bar, needs to account for itinerary generating time */
+        function animate() {
+            per = Math.min(per + 4, 400);
+            count = Math.min(count + 1, 100);
+
+            progress.style.width = per + 'px';
+            percent.textContent = count + '%';
+
+            if (count == 100 && per == 400) {
+                percent.classList.add('text-blink');
+                clearInterval(loading);
+            }
+        }
+    </script>
+</body>
+
+</html>
