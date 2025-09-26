@@ -1,13 +1,70 @@
+
+// loader
+    let textType = function(e, toRotate, period) {
+        this.toRotate = toRotate;
+        this.e = e;
+        this.loop = 0;
+        this.period = parseInt(period, 10) || 2000;
+        this.text = '';
+        this.tick();
+        this.isDeleting = false;
+    };
+    textType.prototype.tick = function(){
+        var i = this.loop % this.toRotate.length;
+        var fullText = this.toRotate[i];
+
+        if (this.isDeleting) {
+            this.text = fullText.substring(0, this.text.length - 1);
+        }
+        else {
+            this.text = fullText.substring(0, this.text.length + 1);
+        }
+
+        this.e.textContent = this.text;
+        
+        let delta = 200 - Math.random() * 100;
+
+        if(this.isDeleting) {
+            delta /= 2;
+        }
+        
+        if(!this.isDeleting && this.text === fullText) {
+            delta = this.period;
+            this.isDeleting = true;
+        } else if (this.isDeleting && this.text === '') {
+            this.isDeleting = false;
+            this.loop++;
+            delta = 500;
+        }
+
+        setTimeout(()=>{
+            this.tick();
+        }, delta);
+    }
+
+
 document.addEventListener('DOMContentLoaded', ()=> {
     const form = document.getElementById('itinerary-form');
+    const loadingpage = document.getElementById('loader');
+    const loaderlogo = document.getElementById('loaderlogo');
 
-    // loader
+    const typewritten = document.getElementsByClassName('typewrite');
+    for (let t of typewritten) {
+        let toRotate = t.getAttribute('data-type');
+        let period = t.getAttribute('data-period');
+        if(toRotate) {
+            new textType(t, JSON.parse(toRotate), period);
+        }
+    }
     
     // send stuff to Flask to add to Database
     form.addEventListener('submit', async(e) => {
 
 
         e.preventDefault();
+        
+        ['stagger-fade-in', 'hidden'].forEach(c => loadingpage.classList.toggle(c));
+        loaderlogo.classList.toggle('spin-logo');
 
         const formData = new FormData(form);
         const jsonData = Object.fromEntries(formData.entries());

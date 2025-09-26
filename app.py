@@ -115,11 +115,6 @@ def contact():
     return render_template('contact.html', pages=pages, current_page=request.endpoint)
 
 
-@app.route('/test')
-def test():
-    return render_template('test.html', pages=pages)
-
-
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html', pages=pages), 404

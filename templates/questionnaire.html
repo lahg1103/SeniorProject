@@ -36,9 +36,13 @@
         </button>
     </form>
 </section>
-<section id="loader">
-    <img src="{{ url_for('static', filename='images/icons/favicon.svg') }}" alt="Voyage app logo" class="logo-spin" style="--i: 1">
-    <h3 style="--i: 2;">Curating Your Trip</h3>
-</section>
+<section id="loader" class="stagger-fade-in hidden">
+    <div style="--i: 0">
+        <img src="{{ url_for('static', filename='images/icons/favicon.svg') }}" alt="Voyage app logo" id="loaderlogo">
+    </div>
+    <div class="loading-messages" style="--i: 1">
+        <h3 data-period="2000" data-type='["Shaping Your Vision...", "Your Voyage Awaits...", "Setting Your Course...", "Anchored in Intention...", "Curating Your Trip..."]' data-ghost="Anchored in Intention..." class="typewrite">Curating Your Trip...</h3>
+    </div>
+    
 <script src="{{ url_for('static', filename='javascript/form.js') }}"></script>
 {% endblock %}
