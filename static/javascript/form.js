@@ -1,7 +1,9 @@
 document.addEventListener('DOMContentLoaded', ()=> {
     const form = document.getElementById('itinerary-form');
 
-
+    // loader
+    
+    // send stuff to Flask to add to Database
     form.addEventListener('submit', async(e) => {
 
 

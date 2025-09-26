@@ -76,6 +76,17 @@ em {
     }
 }
 
+@keyframes staggerFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 @keyframes blink {
     0% {
         opacity: 1;
@@ -340,6 +351,14 @@ footer {
 .bounce {
     animation: bounce 1.5s 300ms infinite alternate;
 }
+.stagger-fade-in >* {
+    opacity: 0;
+    animation-name: staggerFadeIn;
+    animation-duration: 800ms;
+    animation-fill-mode: forwards;
+    animation-timing-function: cubic-bezier(0.75, -0.015, 0.565, 1.055);
+    animation-delay: calc(0.45s * var(--i));
+}
 
 section {
     padding-block: var(--spacer1x);
@@ -548,48 +567,16 @@ button {
 }
 
 /* loading page (placeholder/draft) */
-.loading {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+#loader {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 999;
+    background-color: var(--mainDark);
 }
 
-.percent {
-    color: #999;
-    font-size: 100px;
-    font-weight: 400;
-    text-align: center;
-}
-
-.progress-bar {
-    width: 406px;
-    height: 21px;
-    background: #111;
-    border-radius: 13px;
-    padding: 3px;
-    box-sizing: border-box;
-}
-
-.progress {
-    width: 200px;
-    height: 15px;
-    background: #f60d54;
-    border-radius: 13px;
-}
-
-.text {
-    position: absolute;
-    color: #f60d54;
-    font-size: 15px;
-    letter-spacing: 1px;
-    line-height: 21px;
-    text-align: center;
-}
-
-.text-blink {
-    animation: blink .7s ease-in-out .1s;
-}
 
 /* itinerary page */
 .itinerary.blurb {
