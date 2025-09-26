@@ -56,9 +56,9 @@ def generateItinerary(preferences):
         model="gemini-2.5-flash",
         config={
             "system_instruction": ("You are a travel agent expert. You are building a travel itinerary based on the following preferences listed in the dictionary. Generate realistic lodging, restaurants, timelines, etc. with the information given. Avoid generic terms like 'public transportation' be specific to the location. Avoid generic terms like 'verious locations' always be sure to pick out a specific spot."),
-            # "thinking_config" : {
-            #     "thinking_budget" : 0
-            # },
+            "thinking_config" : {
+                "thinking_budget" : 0
+            },
             "response_mime_type" : "application/json",
             "response_schema": Itinerary,
         
