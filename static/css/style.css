@@ -568,6 +568,17 @@ input[type="date"] {
     border-bottom: 1px solid var(--mainLight);
 }
 
+div.checkbox {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-around;
+}
+div.checkbox label, div.checkbox input {
+    margin: 0;
+    padding: 0;
+}
+
+
 button {
     cursor: pointer;
 }

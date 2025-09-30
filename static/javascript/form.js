@@ -42,11 +42,41 @@
         }, delta);
     }
 
+    const optionalFieldVisibility = function(fields, show) {
+        for (let f of fields) {
+            f.classList.toggle('hidden', !show);
+        }
+    }
+
 
 document.addEventListener('DOMContentLoaded', ()=> {
     const form = document.getElementById('itinerary-form');
     const loadingpage = document.getElementById('loader');
     const loaderlogo = document.getElementById('loaderlogo');
+
+    const foodPreferences = document.getElementById('food-preferences');
+    const foodRestrictions = document.getElementsByClassName('food-restrictions');
+    const foodBudget = document.getElementsByClassName('food-budget');
+    optionalFieldVisibility(foodRestrictions, foodPreferences.checked);
+
+    const lodging = document.getElementById('lodging');
+    const lodgingType = document.getElementsByClassName('lodging-type');
+    const lodgingBudget = document.getElementsByClassName('lodging-budget');
+    optionalFieldVisibility(lodgingType, lodging.checked);
+
+
+    
+
+    foodPreferences.addEventListener('change', ()=> {
+        const isChecked = foodPreferences.checked;
+        optionalFieldVisibility(foodRestrictions, isChecked);
+    })
+
+    lodging.addEventListener('change', ()=> {
+        const isChecked = lodging.checked;
+        optionalFieldVisibility(lodgingType, isChecked);
+    })
+    
 
     const typewritten = document.getElementsByClassName('typewrite');
     for (let t of typewritten) {
