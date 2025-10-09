@@ -59,7 +59,6 @@ class Itinerary(BaseModel):
     itineraryperday: List[DayItinerary]
     promotionalblurb: str
     tripduration: int = Field(description="an integer value representing the length in days of the trip")
-    duration: str = Field(example="a week")
     city: str
 
 

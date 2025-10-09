@@ -22,11 +22,18 @@ h6 {
 }
 
 h1 {
-    font-size: 1.75rem;
+    font-size: clamp(1.75rem, 2vw, 5rem);
 }
 
 h2 {
-    font-size: 1.20rem;
+    font-size: clamp(1.20rem, 1.75vw, 3rem);
+}
+
+.voyage-header {
+    font-size: 2rem;
+}
+.voyage-subheader {
+    font-size: 1rem;
 }
 
 .subheader {
@@ -607,8 +614,8 @@ button {
 
 
 /* itinerary page */
-.itinerary.blurb {
-    font-size: 1.75rem;
+.landing.sidepage.itinerary {
+    color: red;
 }
 
 .itinerary-wrapper {
@@ -620,13 +627,17 @@ button {
 .navigation-days {
     position: sticky;
     top: calc(var(--hHeight) + var(--spacer));
+    width: fit-content; 
+    margin-bottom: -4vh;
 }
 
 .itinerary-top-navigation {
     display: inline-flex;
     padding-block: var(--spacer);
     padding-inline: 5vw;
+    margin-bottom: -5rem;
     border-radius: 50rem;
+    gap: var(--spacer1x);
     justify-content: space-between;
     width: 100%;
     background-image: linear-gradient(var(--secondaryDark), rgba(103, 111, 124));
@@ -646,6 +657,10 @@ button {
     font-size: clamp(1.75rem, 3vw, 5rem);
 }
 
+.day-card {
+    padding-top: calc(1.55 * var(--hHeight) + var(--spacer));
+    margin-bottom: -20vh;
+}
 .day-card>* {
     margin-bottom: var(--spacer);
 }
