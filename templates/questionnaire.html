@@ -12,25 +12,18 @@
     <form id="itinerary-form">
         {% for field in fields %}
         {% if field.options %}
-                <label for="{{ field.name | lower | replace(' ','-') }}" id="{{ field.name | lower | replace(' ', '-') }}" class="hidden"> {{ field.name }} : </label>
+                <label for="{{ field.name | lower | replace(' ','_') }}"> {{ field.name }} : </label>
                 {% for option in field.options %}
 
-                <label class="input-container hidden {{ field.name | lower | replace(' ', '-') }}"> {{ option }} 
-                    <input type="{{ field.type }}" name="{{ field.name | lower | replace(' ','-') }}" value="{{ option }}" id="{{ option }}"/>
+                <label class="input-container"> {{ option }} 
+                    <input type="{{ field.type }}" name="{{ field.name | lower | replace(' ','_') }}" value="{{ option }}" id="{{ option }}"/>
                     <div class="{{ field.type }}"></div>
                 </label>
                 
                 {% endfor %}
             {% else %}
-                {% if field.type == 'checkbox' %}
-                <div class=" {{ field.type }}">
-                    <label for="{{ field.name | lower | replace(' ', '-') }}"> {{ field.name }} : </label>
-                    <input type="{{ field.type }}" name="{{ field.name | lower | replace(' ', '-') }}" id="{{ field.name | lower | replace(' ', '-') }}" />
-                </div>
-                {% else %}
-                    <label for="{{ field.name | lower | replace(' ', '-') }}" class="{{ field.name | lower | replace(' ', '-') }}"> {{ field.name }} : </label>
-                    <input type="{{ field.type }}" name="{{ field.name | lower | replace(' ', '-') }}" class="{{ field.name | lower | replace(' ', '-') }}" />
-                {% endif %}
+                <label for="{{ field.name | lower | replace(' ', '_') }}"> {{ field.name }} : </label>
+                <input type="{{ field.type }}" name="{{ field.name | lower | replace(' ', '_') }}" />
             {% endif %}
         {% endfor %}
         <button type="submit" class="text-arrow-wrapper">

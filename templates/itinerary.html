@@ -7,14 +7,14 @@
         <h1>Itinerary Not Found</h1>
         {% else %}
         <section class="landing sidepage {{ current_page }}">
-        <h1 class="hero serif"> {{ results.city }} in {{ results.duration }} Days </h1>
+        <h1 class="hero serif"> {{ results.city }} in {{ results.duration }} </h1>
         <h2 class="blurb sidepage"> {{ results.promotionalblurb }} </h2>
         </section>
         
         <section class="itinerary-wrapper">
             <div class="navigation-days">
                 <ul class="itinerary-top-navigation uppercase">
-                    {% for i in range(0, results["duration"], +1) %}
+                    {% for i in range(0, results["tripduration"], +1) %}
                         <a href="#day{{ i + 1 }}">
                         <li class="{{ i + 1 }}">
                             Day {{ i + 1 }}
@@ -25,24 +25,36 @@
             </div>
         {% for day in results["itineraryperday"] %}
 
-            <section class="day-card" id="day{{ loop.index + 1 }}">
+            <section class="day-card" id="day{{ loop.index }}">
                 <h3 class="itinerary-heading serif"> Day {{ loop.index }} </h3>
                 <p> {{ day["daysummary"] }} </p>
                 <h4>Lodging: </h4>
                 <p>{{ day["lodging"]["name"] }} &mdash; {{ day["lodging"]["address"] }} | cost: {{ day["lodging"]["cost"] }} </p>
-                <h4>Meals: </h4>
-                <p><strong>Breakfast: </strong> {{ day["food"]["breakfast"]["restaurant"] }} &mdash; {{ day["food"]["breakfast"]["address"] }} </p>
-                <p><strong>Lunch: </strong> {{ day["food"]["lunch"]["address"] }} &mdash; {{ day["food"]["lunch"]["address"] }} </p>
-                <p><strong>Dinner: </strong> {{ day["food"]["dinner"]["restaurant"] }} &mdash; {{ day["food"]["dinner"]["address"] }} </p>
 
-                <h4>Activities: </h4>
-                {% for activity in day["activities"] %}
+                {% for activity in day["timeblocks"]["morning"] %}
+                <h3>{{ activity["time"] }}</h3>
                 <p>{{ activity["name"] }} &mdash; {{ activity["address"] }} | cost: {{ activity["cost"] }} </p>
+                <p>{{ activity["summary"] }}</p>
+                <p><strong>Breakfast: </strong> {{ day["food"]["breakfast"]["restaurant"] }} &mdash; {{ day["food"]["breakfast"]["address"] }} | cost: {{ day["food"]["lunch"]["cost"]}}</p>
                 {% endfor %}
+
+                {% for activity in day["timeblocks"]["afternoon"] %}
+                <h3>{{ activity["time"] }}</h3>
+                <p>{{ activity["name"] }} &mdash; {{ activity["address"] }} | cost: {{ activity["cost"] }} </p>
+                <p>{{ activity["summary"] }}</p>
+                <p><strong>Lunch: </strong> {{ day["food"]["lunch"]["address"] }} &mdash; {{ day["food"]["lunch"]["address"] }} | cost: {{ day["food"]["lunch"]["cost"]}}</p>
+                {% endfor %}
+                
+                {% for activity in day["timeblocks"]["evening"] %}
+                <h3>{{ activity["time"] }}</h3>
+                <p>{{ activity["name"] }} &mdash; {{ activity["address"] }} | cost: {{ activity["cost"] }} </p>
+                <p>{{ activity["summary"] }}</p>
+                <p><strong>Dinner: </strong> {{ day["food"]["dinner"]["restaurant"] }} &mdash; {{ day["food"]["dinner"]["address"] }} | cost: {{ day["food"]["lunch"]["cost"]}}</p>
+                {% endfor %}
+                
             </section>
         {% endfor %}
         </section>
     {% endif %}
     
-
 {% endblock %}
