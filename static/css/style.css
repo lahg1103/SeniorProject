@@ -38,6 +38,8 @@ h2 {
 
 .subheader {
     font-family: 'Hanken Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: clamp(1.20rem, 1.8vw, 3rem);
 }
 
 .hero {
@@ -159,7 +161,7 @@ header {
     background-color: transparent;
     grid-column: 1/13;
     padding-inline: var(--spacer1x);
-    padding-block: var(--spacer);
+    padding-block: 1.75vh;
 
     display: flex;
     align-items: center;
@@ -432,6 +434,7 @@ section {
 }
 
 .card {
+    position: relative;
     margin-block: var(--spacer);
     padding-inline: var(--spacer1x);
     width: 100%;
@@ -446,7 +449,7 @@ section {
     flex-direction: column;
     position: relative;
     max-width: 75%;
-    
+    max-height: 65vh;
 }
 
 .card .picture {
@@ -478,12 +481,21 @@ section {
     content: '';
     position: absolute;
     top: 50%;
-    left: -15%;
+    left: 0;
     transform: translateY(-55%);
     border: 2px solid var(--accentTwo);
     height: 100%;
-    width: 145%;
+    width: 100%;
     z-index: -1;
+    aspect-ratio: 9/16;
+}
+.card .text.rbox::before {
+    left: -2vw;
+    width: calc(100% + 2vw);
+}
+.card .text.lbox::before {
+    right: -2vw;
+    width: calc(100% + 2vw);
 }
 
 .card .text>* {
@@ -508,7 +520,7 @@ section {
 }
 
 .cta {
-    padding: var(--spacer);
+    padding: 1.75vh;
     transition: 600ms ease-in-out;
 }
 
@@ -561,11 +573,11 @@ section {
     top: 50%;
     left: 50%;
     translate: -50% -50%;
-    height: 100%;
-    width: 100%;
+    height: 200%;
+    width: 200%;
     background-color: var(--mainLight);
     padding: 1rem;
-    border-radius: 50%;
+    border-radius: 100%;
     z-index: 0;
     transition: height 800ms ease-in-out,
         width 800ms ease-in-out;

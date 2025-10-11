@@ -54,6 +54,9 @@ document.addEventListener('DOMContentLoaded', ()=> {
     const loadingpage = document.getElementById('loader');
     const loaderlogo = document.getElementById('loaderlogo');
 
+    const sliders = document.querySelectorAll('input[type="range"]');
+    const totalBudget = document.getElementById('');
+
     const typewritten = document.getElementsByClassName('typewrite');
     for (let t of typewritten) {
         let toRotate = t.getAttribute('data-type');
