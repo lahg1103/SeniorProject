@@ -39,7 +39,7 @@ h2 {
 .subheader {
     font-family: 'Hanken Grotesk', sans-serif;
     font-weight: 600;
-    font-size: clamp(1.20rem, 1.8vw, 3rem);
+    font-size: clamp(1.20rem, 3vw, 4rem);
 }
 
 .hero {
@@ -119,7 +119,7 @@ body {
 }
 
 body {
-    font-size: 1.12rem;
+    font-size: clamp(1.12rem, 2.25vw, 3rem);
     text-rendering: optimizeLegibility;
     font-family: 'Hanken Grotesk', sans-serif;
     font-style: normal;
@@ -491,11 +491,11 @@ section {
 }
 .card .text.rbox::before {
     left: -2vw;
-    width: calc(100% + 2vw);
+    width: calc(100% + 1.5vw);
 }
 .card .text.lbox::before {
     right: -2vw;
-    width: calc(100% + 2vw);
+    width: calc(100% + 1.5vw);
 }
 
 .card .text>* {
