@@ -26,7 +26,7 @@ h1 {
 }
 
 h2 {
-    font-size: clamp(1.20rem, 1.75vw, 3rem);
+    font-size: clamp(1.20rem, 1.8vw, 3rem);
 }
 
 .voyage-header {
@@ -57,8 +57,8 @@ em {
     --accentOne : #676f7c;
     --accentTwo : #c83e21;
     --headerGradient : linear-gradient(90deg,rgba(6, 13, 12, 0.1) 10%, rgba(6, 13, 12, 0.75) 50%, rgba(6, 13, 12, 0.1) 90%);
-    --spacer: 0.75rem;
-    --spacer1x: 4rem;
+    --spacer: 3vh;
+    --spacer1x: 10vw;
     --radius: 80px;
 }
 
@@ -226,7 +226,7 @@ nav {
     grid-column: 1/13;
     height: 100%;
     background-color: var(--secondaryDark);
-    z-index: 100;
+    z-index: 9;
     padding-block: var(--spacer1x);
 }
 
@@ -293,6 +293,10 @@ nav ul {
                spin 12s linear 8s infinite;
 }
 
+.spin {
+    animation: spin 12s linear infinite;
+}
+
 main {
     grid-column: 1/13;
     position: relative;
@@ -342,6 +346,13 @@ footer {
     max-height: 60vh;
 }
 
+.spacer {
+    padding-inline: var(--spacer1x);
+}
+.spacer div {
+    margin-block: var(--spacer);
+}
+
 
 /* cosmetic */
 .hidden {
@@ -351,6 +362,41 @@ footer {
     top: auto;
     overflow: hidden;
     visibility: hidden;
+}
+.center {
+    text-align: center;
+}
+.indent {
+    padding-block: var(--spacer);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacer);
+}
+.indent li {
+    position: relative;
+    padding-inline: 3vw;
+    width: fit-content;
+    transition: 300ms ease-in-out;
+}
+.indent li::before {
+    content: '';
+    position: absolute;
+    left: 1.5vw;
+    top: 0;
+    width: 0.55vw;
+    background-color: var(--mainLight);
+    height: 95%;
+    z-index: -1;
+    transition: width 300ms ease-in-out;
+}
+.indent li:hover::before {
+    width: 100%;
+}
+.indent li:hover {
+    color: var(--secondaryDark);
+}
+.indent li:not(:hover) {
+    transition: 300ms ease-in-out;
 }
 
 .bounce {
@@ -399,12 +445,13 @@ section {
     display: flex;
     flex-direction: column;
     position: relative;
-    max-width: 50%;
-    aspect-ratio: 9/16;
+    max-width: 75%;
+    
 }
 
 .card .picture {
     justify-self: end;
+    aspect-ratio: 9/16;
 }
 
 .card .picture.right {
@@ -422,27 +469,25 @@ section {
 }
 
 .card .text {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(1fr, 0));
-    grid-template-rows: auto;
     height: 75%;
+    width: 100%;
     margin-block: auto;
+    padding-inline: var(--spacer);
 }
-
 .card .text::before {
     content: '';
     position: absolute;
     top: 50%;
-    left: -25%;
+    left: -15%;
     transform: translateY(-55%);
     border: 2px solid var(--accentTwo);
     height: 100%;
-    width: 175%;
+    width: 145%;
     z-index: -1;
 }
 
 .card .text>* {
-    grid-column: 2;
+    grid-column: 2/4;
 }
 
 .tagline {
@@ -627,6 +672,8 @@ button {
 .navigation-days {
     position: sticky;
     top: calc(var(--hHeight) + var(--spacer));
+    left: 50%; 
+    transform: translateX(-50%);
     width: fit-content; 
     margin-bottom: -4vh;
 }
@@ -714,4 +761,7 @@ button {
     .card {
         gap: var(--spacer);
     }
+}
+@media screen and (width < 700px) {
+
 }

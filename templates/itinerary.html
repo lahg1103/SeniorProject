@@ -28,25 +28,25 @@
             <section class="day-card" id="day{{ loop.index }}">
                 <h3 class="itinerary-heading serif"> Day {{ loop.index }} </h3>
                 <p> {{ day["daysummary"] }} </p>
-                <h4>Lodging: </h4>
+                <h3 class="subheader">Lodging: </h3>
                 <p>{{ day["lodging"]["name"] }} &mdash; {{ day["lodging"]["address"] }} | cost: {{ day["lodging"]["cost"] }} </p>
 
                 {% for activity in day["timeblocks"]["morning"] %}
-                <h3>{{ activity["time"] }}</h3>
+                <h3 class="subheader">{{ activity["time"] }}</h3>
                 <p>{{ activity["name"] }} &mdash; {{ activity["address"] }} | cost: {{ activity["cost"] }} </p>
                 <p>{{ activity["summary"] }}</p>
                 <p><strong>Breakfast: </strong> {{ day["food"]["breakfast"]["restaurant"] }} &mdash; {{ day["food"]["breakfast"]["address"] }} | cost: {{ day["food"]["lunch"]["cost"]}}</p>
                 {% endfor %}
 
                 {% for activity in day["timeblocks"]["afternoon"] %}
-                <h3>{{ activity["time"] }}</h3>
+                <h3 class="subheader">{{ activity["time"] }}</h3>
                 <p>{{ activity["name"] }} &mdash; {{ activity["address"] }} | cost: {{ activity["cost"] }} </p>
                 <p>{{ activity["summary"] }}</p>
-                <p><strong>Lunch: </strong> {{ day["food"]["lunch"]["address"] }} &mdash; {{ day["food"]["lunch"]["address"] }} | cost: {{ day["food"]["lunch"]["cost"]}}</p>
+                <p><strong>Lunch: </strong> {{ day["food"]["lunch"]["restaurant"] }} &mdash; {{ day["food"]["lunch"]["address"] }} | cost: {{ day["food"]["lunch"]["cost"]}}</p>
                 {% endfor %}
                 
                 {% for activity in day["timeblocks"]["evening"] %}
-                <h3>{{ activity["time"] }}</h3>
+                <h3 class="subheader">{{ activity["time"] }}</h3>
                 <p>{{ activity["name"] }} &mdash; {{ activity["address"] }} | cost: {{ activity["cost"] }} </p>
                 <p>{{ activity["summary"] }}</p>
                 <p><strong>Dinner: </strong> {{ day["food"]["dinner"]["restaurant"] }} &mdash; {{ day["food"]["dinner"]["address"] }} | cost: {{ day["food"]["lunch"]["cost"]}}</p>
