@@ -6,7 +6,7 @@ from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from datetime import date, datetime, timedelta
 from dotenv import load_dotenv
-import os
+import os, requests
 
 pages = context.pages
 itineraryfields = context.itineraryfields
@@ -17,6 +17,7 @@ app.secret_key = os.getenv('FLASK_SESSION_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///voyage.db'
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+unsplashKey = os.getenv("UNSPLASH_ACCESS_KEY")
 
 
 class ItineraryPreferences(db.Model):
@@ -38,6 +39,25 @@ class ItineraryPreferences(db.Model):
     def __repr__(self):
         return '<Preferences %r>' % self.id
 
+def get_unsplash_images(query, session): 
+    if "unsplash_cache" not in session:
+        session["unsplash_cache"] = {}
+    if query in session["unsplash_cache"]:
+        print(f"Using cached images for {query}")
+        return session["unsplash_cache"][query]
+    
+    print(f"Fetching new images for {query}")
+    url = "https://api.unsplash.com/search/photos"
+    params = {"query": query, "per_page": 4, "client_id": unsplashKey}
+    response = requests.get(url, params=params)
+
+    if response.status_code == 200:
+        results = response.json().get("results", [])
+        image_urls = [p["urls"]["regular"] for p in results]
+        session["unsplash_cache"][query] = image_urls
+        return image_urls
+    else:
+        return []
 
 @app.route('/')
 def index():
@@ -53,10 +73,6 @@ def about():
 def questionnaire():
     return render_template('questionnaire.html', pages=pages, current_page=request.endpoint, fields=itineraryfields)
 
-
-@app.route('/loadingpage')
-def loadingpage():
-    return render_template('loadingpage.html', pages=pages)
 
 
 @app.route('/process-itinerary', methods=['POST'])
@@ -104,9 +120,17 @@ def success():
         session.permanent = True
         session['itinerary'] = itinerary_clean
 
+        destination = preferences_clean.get("destination")
+
+        if destination:
+            images = get_unsplash_images(destination, session)
+            itinerary_clean["images"] = images
+            session['itinerary'] = itinerary_clean
+
         return render_template('itinerary.html', results=itinerary_clean, pages=pages)
 
     else:
+        
         return render_template('itinerary.html', results=session["itinerary"], pages=pages)
 
 

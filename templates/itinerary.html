@@ -6,7 +6,7 @@
     {% if not results %}
         <h1>Itinerary Not Found</h1>
         {% else %}
-        <section class="landing sidepage {{ current_page }}">
+        <section class="landing sidepage itinerary">
         <h1 class="hero serif"> {{ results.city }} in {{ results.tripduration }} Days </h1>
         <h2 class="blurb sidepage"> {{ results.promotionalblurb }} </h2>
         </section>
@@ -56,5 +56,14 @@
         {% endfor %}
         </section>
     {% endif %}
-    
+    {% if results["images"] %}
+        <script>
+            document.addEventListener('DOMContentLoaded', ()=>{
+                const itinerary = document.querySelector('.itinerary');
+                const imgURL = '{{ results["images"][0] }}';
+                itinerary.style.setProperty('--bg-img', `url(${imgURL})`);
+            })
+        </script>
+    {% endif %}
+
 {% endblock %}

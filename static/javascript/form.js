@@ -53,6 +53,7 @@ document.addEventListener('DOMContentLoaded', ()=> {
     const form = document.getElementById('itinerary-form');
     const loadingpage = document.getElementById('loader');
     const loaderlogo = document.getElementById('loaderlogo');
+    
 
     const sliders = document.querySelectorAll('input[type="range"]');
     const totalBudget = document.getElementById('');

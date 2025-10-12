@@ -671,9 +671,6 @@ button {
 
 
 /* itinerary page */
-.landing.sidepage.itinerary {
-    color: red;
-}
 
 .itinerary-wrapper {
     display: block;
@@ -704,12 +701,6 @@ button {
 
 .itinerary-top-navigation li {
     font-size: 1.20rem;
-}
-
-.landing.sidepage.itinerary {
-    display: flex;
-    flex-direction: column;
-    gap: 5vw;
 }
 
 .itinerary-heading {
@@ -744,6 +735,10 @@ button {
 
 .fourOfour::before {
     background-image: none;
+}
+
+.itinerary::before {
+    background-image: var(--bg-img);
 }
 
 .landing.fourOfour {

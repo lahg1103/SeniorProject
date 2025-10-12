@@ -1,5 +1,6 @@
 import json
 
+
 def clean_instance(instance) :
     return {
         column.name : getattr(instance, column.name)
@@ -8,3 +9,4 @@ def clean_instance(instance) :
     }
 def stringify(o) :
     return json.dumps(o, default=str)
+
