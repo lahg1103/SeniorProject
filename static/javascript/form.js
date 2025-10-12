@@ -1,3 +1,47 @@
+const State = {
+    FORM: "form",
+    LOADING: "loading",
+    ERROR: "error"
+};
+
+let currentState = State.FORM;
+
+let showFieldError = function(inputElement, message) {
+    let errorElement = inputElement.parentElement.querySelector('.field-error');
+    if (!errorElement) {
+        errorElement = document.createElement('div');
+        errorElement.className = 'field-error';
+        errorElement.style.color = 'var(--accent-two)';
+        inputElement.parentElement.appendChild(errorElement);
+    }
+    errorElement.textContent = message;
+}
+let clearFieldError = function(inputElement) {
+    const errorElement = inputElement.parentElement.querySelector('.field-error');
+    if (errorElement) {
+        errorElement.remove();
+    };
+}
+let validateForm = function(form, budget, arrival, departure) {
+    let isValid = true;
+    [budget, arrival, departure].forEach(clearFieldError);
+    if (!budget.value || parseFloat(budget.value) <= 0) {
+        showFieldError(budget, "Budget must be greater than zero.");
+        isValid = false;
+    }
+    const arrivalDate = new Date(arrival.value);
+    const departureDate = new Date(departure.value);
+    if (arrival.value && departure.value && arrivalDate >= departureDate) {
+        showFieldError(departure, "Departure must be after arrival.");
+        isValid = false;
+    }
+
+    return isValid;
+}
+
+let setState = function() {
+
+}
 
 // loader
     let textType = function(e, toRotate, period) {
