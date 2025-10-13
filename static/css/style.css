@@ -611,6 +611,12 @@ label {
     margin-block-end: -2rem;
 }
 
+.input-field {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: var(--spacer);
+}
+
 .input-container {
     display: flex;
     flex-direction: row-reverse;

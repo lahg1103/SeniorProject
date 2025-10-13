@@ -9,6 +9,9 @@
     <h2 class="subheader">Answer a few questions so we can tailor your itinerary.</h2>
 </section>
 <section class="itinerary-form">
+    <div class="global-error">
+        
+    </div>
     <form id="itinerary-form">
         {% for field in fields %}
         {% if field.options %}
@@ -22,8 +25,12 @@
                 
                 {% endfor %}
             {% else %}
-                <label for="{{ field.name | lower | replace(' ', '_') }}"> {{ field.name }} : </label>
-                <input type="{{ field.type }}" name="{{ field.name | lower | replace(' ', '_') }}" />
+                <label for="{{ field.name | lower | replace(' ', '_') }}"> {{ field.name }} : 
+                    <div class="input-field">
+                        <input type="{{ field.type }}" name="{{ field.name | lower | replace(' ', '_') }}" />
+                    </div>
+                </label>
+                
             {% endif %}
         {% endfor %}
         <button type="submit" class="text-arrow-wrapper">
