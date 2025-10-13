@@ -6,7 +6,8 @@ const State = {
 
 let currentState = State.FORM;
 
-let showFieldError = function(inputElement, message) {
+
+function showFieldError(inputElement, message) {
     let errorElement = inputElement.parentElement.querySelector('.field-error');
     if (!errorElement) {
         errorElement = document.createElement('div');
@@ -15,33 +16,77 @@ let showFieldError = function(inputElement, message) {
         inputElement.parentElement.appendChild(errorElement);
     }
     errorElement.textContent = message;
+
+    console.log(`Adding error at: ${errorElement} with message: ${message}`);
 }
-let clearFieldError = function(inputElement) {
+
+function clearFieldError(inputElement) {
     const errorElement = inputElement.parentElement.querySelector('.field-error');
-    if (errorElement) {
-        errorElement.remove();
-    };
+    if (errorElement) errorElement.remove();
+
+    console.log(`clearing field error at: ${errorElement}`);
 }
-let validateForm = function(form, budget, arrival, departure) {
+
+
+function validateForm(form) {
+    const budget = form.querySelector('input[name="budget"]');
+    const arrival = form.querySelector('input[name="arrival_date"]');
+    const departure = form.querySelector('input[name="departure_date"]');
+    const destination = form.querySelector('input[name="destination"]');
+    const inputFields = [budget, arrival, departure, destination];
+    let errors = [];
+
+    inputFields.forEach(clearFieldError);
+
     let isValid = true;
-    [budget, arrival, departure].forEach(clearFieldError);
+
+    // budget validation
     if (!budget.value || parseFloat(budget.value) <= 0) {
-        showFieldError(budget, "Budget must be greater than zero.");
+        errors.push({ element: budget, message: "Budget must be greater than zero."});
         isValid = false;
+
+        console.log(`raising field error at budget form validation status: ${isValid}`);
     }
+
+    // date validation
     const arrivalDate = new Date(arrival.value);
     const departureDate = new Date(departure.value);
     if (arrival.value && departure.value && arrivalDate >= departureDate) {
-        showFieldError(departure, "Departure must be after arrival.");
+        errors.push({ element: departure, message: "Departure must be after arrival."});
         isValid = false;
+        console.log(`raising field error at date form validation status: ${isValid}`);
+    
     }
 
-    return isValid;
+    // add city validation HERE!!!
+
+    return { isValid, errors };
 }
 
-let setState = function() {
 
+function setState(state, form, loader) {
+    currentState = state;
+
+    switch (state) {
+        case State.FORM:
+            loader.classList.add('hidden');
+            break;
+        case State.LOADING:
+            loader.classList.remove('hidden');
+            let loaderLogo = loader.querySelector('#loader-logo');
+            if (loaderLogo) loaderLogo.classList.add('spin-logo');
+            break;
+        case State.ERROR:
+            loader.classList.remove('hidden');
+            elements.forEach(showFieldError(errorMessages));
+    }
+
+    if (state === State.ERROR && inputElement) {
+        showFieldError;
+        loader.classList.add('hidden');
+    }
 }
+
 
 // loader
     let textType = function(e, toRotate, period) {
@@ -96,7 +141,6 @@ let setState = function() {
 document.addEventListener('DOMContentLoaded', ()=> {
     const form = document.getElementById('itinerary-form');
     const loadingpage = document.getElementById('loader');
-    const loaderlogo = document.getElementById('loaderlogo');
     
 
     const sliders = document.querySelectorAll('input[type="range"]');
