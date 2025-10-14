@@ -21,7 +21,7 @@ class FormValidation {
 
             case 'LOADING':
                 this.loader.classList.remove('hidden');
-                const loaderLogo = this.loader.querySelector('#loader-logo');
+                const loaderLogo = this.loader.querySelector('#loaderlogo');
                 if (loaderLogo) loaderLogo.classList.add('spin-logo');
                 break;
 
@@ -65,27 +65,28 @@ class FormValidation {
         }
 
         // date validation
-        const currentDate = new Date();
-        const arrivalDate = new Date(arrival.value);
-        const departureDate = new Date(departure.value);
+        let currentDate = new Date();
+        currentDate.setHours(0,0,0,0);
+        const arrivalDate = new Date(`${arrival.value}T00:00:00`);
+        const departureDate = new Date(`${departure.value}T00:00:00`);
 
-        if(arrival.value && departure.value && arrivalDate >= departureDate) {
-            errors.push({ element: departure, message: 'Departure must be after arrival.'});
+        
+        if (arrivalDate.getTime() < currentDate.getTime()) {
+            errors.push({ element: arrival, message: 'Arrival must be today onwards.'});
             isValid = false;
-
-            console.log(`${departure.value} is ${isValid}`);
-        }
-        else {
-            this.clearFieldError(departure);
-        }
-        if (arrival.value && arrivalDate < currentDate) {
-            errors.push({ element: arrival, message: 'Arrival must be today onwards.'})
         }
         else{
             this.clearFieldError(arrival);
         }
 
-        // DESTINATION VALIDATION HERE
+        if(arrival.value && departure.value && arrivalDate >= departureDate) {
+            errors.push({ element: departure, message: 'Departure must be after arrival.'});
+            isValid = false;
+        }
+        else {
+            this.clearFieldError(departure);
+        }
+        
 
         // update state.
         if (!isValid) {
@@ -186,9 +187,11 @@ document.addEventListener('DOMContentLoaded', ()=> {
 
 
         e.preventDefault();
+
+        const isValid = FormValidator.validateForm();
         
 
-        if (FormValidator.validateForm()) {
+        if (isValid) {
             FormValidator.setState('LOADING');
 
             const formData = new FormData(form);
@@ -207,9 +210,14 @@ document.addEventListener('DOMContentLoaded', ()=> {
             } else {
                 FormValidator.setState('FORM');
                 globalError.textContent = "There was an error submitting your form.";
+                window.scroll({
+                top: 0,
+                left: 0,
+                behavior: "smooth",
+            });
             }
         }
-        else if (!FormValidator.validateForm()) {
+        else if (!isValid) {
             globalError.textContent = "There was an error submitting your form. Please revise the highlighted fields, and try again.";
         }
     }); 
