@@ -6,6 +6,7 @@ from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from datetime import date, datetime, timedelta
 from dotenv import load_dotenv
+from markupsafe import escape
 import os, requests
 
 pages = context.pages
@@ -89,7 +90,7 @@ def process_itinerary():
         budget=int(data['budget']),
         arrivaldate=arrival,
         departuredate=departure,
-        destination=data['destination']
+        destination=escape(data.get("destination", "").strip())
     )
 
     # save instance

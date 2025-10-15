@@ -9,6 +9,9 @@
     <h2 class="subheader">Answer a few questions so we can tailor your itinerary.</h2>
 </section>
 <section class="itinerary-form">
+    <div class="global-error">
+        
+    </div>
     <form id="itinerary-form">
         {% for field in fields %}
         {% if field.options %}
@@ -22,10 +25,26 @@
                 
                 {% endfor %}
             {% else %}
-                <label for="{{ field.name | lower | replace(' ', '_') }}"> {{ field.name }} : </label>
-                <input type="{{ field.type }}" name="{{ field.name | lower | replace(' ', '_') }}" />
+                <label for="{{ field.name | lower | replace(' ', '_') }}" class="input-container"> {{ field.name }} : 
+                        <input type="{{ field.type }}" name="{{ field.name | lower | replace(' ', '_') }}" />
+                </label>
+                
             {% endif %}
         {% endfor %}
+        <label class="input-container"> Preferred Budget Allocation: 
+            <div class="slide-container">
+                <input type="range" class="slider" id="foodBudget">
+            </div>
+            <div class="slide-container">
+                <input type="range" class="slider" id="lodgingBudget">
+            </div>
+            <div class="slide-container">
+                <input type="range" class="slider" id="activityBudget">
+            </div>
+            <div class="slide-container">
+                <input type="range" class="slider" id="transportationBudget">
+            </div>
+        </label>
         <button type="submit" class="text-arrow-wrapper">
             <div class="arrow-wrapper">
                 <img src="{{ url_for('static', filename='images/arrow.svg') }}" alt="arrow" class="arrow up-facing black-arrow">
@@ -35,6 +54,7 @@
             </h3>
         </button>
     </form>
+
 </section>
 <section id="loader" class="stagger-fade-in hidden">
     <div style="--i: 0">
