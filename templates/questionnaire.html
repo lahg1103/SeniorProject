@@ -25,14 +25,26 @@
                 
                 {% endfor %}
             {% else %}
-                <label for="{{ field.name | lower | replace(' ', '_') }}"> {{ field.name }} : 
-                    <div class="input-field">
+                <label for="{{ field.name | lower | replace(' ', '_') }}" class="input-container"> {{ field.name }} : 
                         <input type="{{ field.type }}" name="{{ field.name | lower | replace(' ', '_') }}" />
-                    </div>
                 </label>
                 
             {% endif %}
         {% endfor %}
+        <label class="input-container"> Preferred Budget Allocation: 
+            <div class="slide-container">
+                <input type="range" class="slider" id="foodBudget">
+            </div>
+            <div class="slide-container">
+                <input type="range" class="slider" id="lodgingBudget">
+            </div>
+            <div class="slide-container">
+                <input type="range" class="slider" id="activityBudget">
+            </div>
+            <div class="slide-container">
+                <input type="range" class="slider" id="transportationBudget">
+            </div>
+        </label>
         <button type="submit" class="text-arrow-wrapper">
             <div class="arrow-wrapper">
                 <img src="{{ url_for('static', filename='images/arrow.svg') }}" alt="arrow" class="arrow up-facing black-arrow">
