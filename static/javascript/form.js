@@ -110,6 +110,9 @@ class FormValidation {
     }
 }
 
+// slider
+
+
 // loader
     let textType = function(e, toRotate, period) {
         this.toRotate = toRotate;
