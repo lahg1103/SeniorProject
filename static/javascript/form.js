@@ -161,27 +161,31 @@ class LinkedSliders {
     handleSliderInput(changedSlider) {
         const sliders = Object.values(this.sliders);
         let runningTotal = sliders.reduce((sum, s) => sum + parseInt(s.value), 0);
-        const difference = runningTotal - this.totalBudget;
 
-        if(difference == 0) {
-            this.updateTotal();
-            return;
+        if (runningTotal > this.totalBudget) {
+            const overflow = runningTotal - this.totalBudget;
+            const otherSliders = sliders.filter(s => s !== changedSlider);
+            let remaining = overflow;
+
+            for (let slider of otherSliders) {
+                if (remaining <= 0) break;
+
+                const available = parseInt(slider.value) - parseInt(slider.min);
+                const reduceBy = Math.min(available, Math.ceil(remaining / otherSliders.length));
+                slider.value = parseInt(slider.value) - reduceBy;
+                slider.parentElement.querySelector('.current').textContent = "current: " + slider.value;
+
+                remaining -= reduceBy;
         }
 
-        const otherSliders = sliders.filter(s => s !== changedSlider);
-        let remaining = difference;
-
-        for (let slider of otherSliders) {
-            if (remaining === 0) break;
-
-            const oldValue = parseInt(slider.value);
-            let newValue = oldValue - Math.round(remaining / otherSliders.length);
-
-            newValue = Math.max(parseInt(slider.min), Math.min(parseInt(slider.max), newValue));
-
-            remaining -= (oldValue - newValue);
-            slider.value = newValue;
-            slider.parentElement.querySelector('.current').textContent = newValue;
+            let totalPostReduction = sliders.reduce((sum, s) => sum + parseInt(s.value), 0);
+            while (totalPostReduction > this.totalBudget) {
+                const target = otherSliders.find(s=> parseInt(s.value) > parseInt(s.min));
+                if (!target) break;
+                target.value = parseInt(target.value) - 1;
+                target.parentElement.querySelector('.current').textContent = "current: " + target.value;
+                totalPostReduction--;
+            }
         }
 
         this.updateTotal();

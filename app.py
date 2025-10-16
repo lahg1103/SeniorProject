@@ -2,12 +2,13 @@ from flask import *
 from config import context
 from utils import functions
 from utils import ai
+from flask.cli import with_appcontext
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from datetime import date, datetime, timedelta
 from dotenv import load_dotenv
 from markupsafe import escape
-import os, requests
+import os, requests, click
 
 pages = context.pages
 itineraryfields = context.itineraryfields
@@ -59,6 +60,13 @@ def get_unsplash_images(query, session):
         return image_urls
     else:
         return []
+    
+@app.cli.command("init-db")
+@with_appcontext
+def init_db_command():
+    """Initialize the database"""
+    db.create_all()
+    click.echo("Database itiliazed successfully")
 
 @app.route('/')
 def index():
@@ -146,6 +154,4 @@ def page_not_found(e):
 
 
 if __name__ == '__main__':
-    # with app.app_context():
-    #     db.create_all()
     app.run(debug=True)
