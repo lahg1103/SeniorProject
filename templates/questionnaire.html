@@ -26,23 +26,39 @@
                 {% endfor %}
             {% else %}
                 <label for="{{ field.name | lower | replace(' ', '_') }}" class="input-container"> {{ field.name }} : 
-                        <input type="{{ field.type }}" name="{{ field.name | lower | replace(' ', '_') }}" />
+                        <input type="{{ field.type }}" name="{{ field.name | lower | replace(' ', '_') }}" id="{{ field.name | lower | replace(' ', '_') }}" />
                 </label>
                 
             {% endif %}
         {% endfor %}
         <label class="input-container"> Preferred Budget Allocation: 
             <div class="slide-container">
+                <p>Food Budget</p>
                 <input type="range" class="slider" id="foodBudget">
+                <p class="current">current: </p>
+                <p class="min">min: </p>
+                <p class="max">max: </p>
             </div>
             <div class="slide-container">
+                <p>Lodging Budget</p>
                 <input type="range" class="slider" id="lodgingBudget">
+                <p class="current">current: </p>
+                <p class="min">min: </p>
+                <p class="max">max: </p>
             </div>
             <div class="slide-container">
+                <p>Activity Budget</p>
                 <input type="range" class="slider" id="activityBudget">
+                <p class="current">current: </p>
+                <p class="min">min: </p>
+                <p class="max">max: </p>
             </div>
             <div class="slide-container">
+                <p>Transportation Budget</p>
                 <input type="range" class="slider" id="transportationBudget">
+                <p class="current">current: </p>
+                <p class="min">min: </p>
+                <p class="max">max: </p>
             </div>
         </label>
         <button type="submit" class="text-arrow-wrapper">

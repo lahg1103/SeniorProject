@@ -543,7 +543,7 @@ section {
 }
 
 .arrow {
-    width: 1.15rem;
+    width: clamp(1.20rem, 3vw, 4rem);
     height: auto;
     transition: 600ms ease-in-out;
     z-index: 5;
@@ -654,6 +654,10 @@ button {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+.slide-container {
+
 }
 
 /* loading page (placeholder/draft) */

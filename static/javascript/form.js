@@ -48,7 +48,6 @@ class FormValidation {
     }
 
     validateForm() {
-        // Object.values(this.inputs).forEach(input => this.clearFieldError(input));
         const { budget, arrival, departure, destination } = this.inputs;
         let isValid = true;
         const errors = [];
@@ -111,7 +110,57 @@ class FormValidation {
 }
 
 // slider
+class LinkedSliders {
+    constructor(sliders, totalBudget) {
+        this.sliders = sliders,
+        this.totalBudget = totalBudget,
+        this.sliderLength = sliders.length
+    }
+    
+    budgetAllocationMinimum(totalBudget = 1000) {
+    return Math.floor(totalBudget / 8);
+    }
+    budgetAllocationMaximum(totalBudget = 1000) {
+        return Math.floor(this.sliderLength * this.budgetAllocationMinimum(totalBudget));
+    }
 
+    listenForBudget() {
+        this.totalBudget.addEventListener('change', ()=> {
+            Object.values(this.sliders).forEach(slider => {
+                slider.min = this.budgetAllocationMinimum(this.totalBudget.value);
+                slider.max = this.budgetAllocationMaximum(this.totalBudget.value);
+                
+                slider.parentElement.querySelector('.min').textContent = slider.min;
+                slider.parentElement.querySelector('.max').textContent = slider.max;
+            })
+        });
+        return true;
+    }
+    listenForChange() {
+        // initialize the total by getting the minimum sum of all sliders.
+        let runningTotal = this.budgetAllocationMaximum(this.totalBudget.value);
+
+
+        this.listenForBudget();
+
+        // whenever there is a change in the sliders, make sure to update the running total.
+        let sliderTotal = runningTotal;
+        // update sliderTotal whenever budget is updated.
+        if (this.listenForBudget()) sliderTotal = runningTotal;
+        Object.values(this.sliders).forEach(slider => {
+            slider.addEventListener('change', ()=>{
+                slider.parentElement.querySelector('.current').textContent = slider.value;
+
+                console.log(typeof parseInt(slider.value));
+                console.log(typeof sliderTotal);
+                sliderTotal += parseInt((parseInt(slider.value) - this.budgetAllocationMinimum(this.totalBudget.value)));
+                console.log("running total: " + sliderTotal);
+            })
+            
+        })
+        
+    }
+}
 
 // loader
     let textType = function(e, toRotate, period) {
@@ -174,7 +223,11 @@ document.addEventListener('DOMContentLoaded', ()=> {
     
 
     const sliders = document.querySelectorAll('input[type="range"]');
-    const totalBudget = document.getElementById('');
+    const totalBudget = document.getElementById('budget');
+
+    const LinkSliders = new LinkedSliders(sliders, totalBudget);
+
+    LinkSliders.listenForChange();
 
     const typewritten = document.getElementsByClassName('typewrite');
     for (let t of typewritten) {
