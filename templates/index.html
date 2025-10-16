@@ -24,7 +24,7 @@
             <img src="{{ url_for('static', filename='images/beach-pier.jpg') }}" alt="beach pier leading to ocean with waves splashing on it">
         </div>
 
-        <div class="text">
+        <div class="text rbox">
             <div class="blurb-wrapper">
                 <div class="tagline">
                     <h2 class="subheader">Curated Experiences.</h2>
@@ -47,7 +47,7 @@
     </div>
 
     <div class="card">
-        <div class="text right">
+        <div class="text right lbox">
 
             <div class="blurb-wrapper">
                 <div class="tagline">
@@ -71,6 +71,32 @@
             <img src="{{ url_for('static', filename='images/woman-beach.jpg') }}" alt="">
         </div>
 
+    </div>
+    <div class="card">
+
+        <div class="picture">
+            <img src="{{ url_for('static', filename='images/marinabaysandssignapore.jpg') }}" alt="beach pier leading to ocean with waves splashing on it">
+        </div>
+
+        <div class="text rbox">
+            <div class="blurb-wrapper">
+                <div class="tagline">
+                    <h2 class="subheader">We're Open to Hearing From You.</h2>
+                </div>
+
+                <div class="blurb">
+                    <p>Send a message.</p>
+                    <p>We'll get back to you soon.</p>
+                </div>
+            </div>
+            
+    
+            <a href="{{ url_for('contact') }}" class="cta">
+                <button>
+                    Contact <img src="{{ url_for('static', filename='images/arrow.svg') }}" alt="arrow" class="arrow up-facing">
+                </button>
+            </a>
+        </div>
     </div>
 </section>
 {% endblock %}

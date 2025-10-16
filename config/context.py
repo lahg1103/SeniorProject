@@ -35,13 +35,13 @@ itineraryfields = [
     {'name': 'Arrival Date', 'type': 'date'},
     {'name': 'Departure Date', 'type': 'date'},
     {'name': 'Destination', 'type': 'text'},
-    {'name': 'Food Budget', 'type': 'range'},
+    
     {'name': 'Food Preferences', 'type': 'checkbox'},
     {'name': 'Food Restrictions', 'type': 'checkbox', 'options': [e.value for e in FoodRestrictions]},
+
+    
     {'name': 'Lodging', 'type': 'checkbox'},
-    {'name': 'Lodging Budget', 'type': 'range'},
     {'name': 'Lodging Type', 'type': 'radio', 'options': [e.value for e in LodgingType]},
-    {'name': 'Transportation Budget', 'type': 'range'},
     {'name': 'Transportation Type', 'type': 'radio', 'options': [e.value for e in TransportationType]},
     {'name': 'Trip Type', 'type': 'radio', 'options': [e.value for e in TripType]},
 ]

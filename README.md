@@ -69,7 +69,7 @@ touch .env
 ```
 #### Add the following (replace 'YOUR-SECRET-KEY' with the token you generated earlier):
 ```python
-SESSION_KEY='YOUR-SECRET-KEY'
+FLASK_SESSION_KEY='YOUR-SECRET-KEY'
 ```
 
 ### Inside app.py under if __name__ == '__main__':
