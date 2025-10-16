@@ -113,52 +113,84 @@ class FormValidation {
 class LinkedSliders {
     constructor(sliders, totalBudget) {
         this.sliders = sliders,
-        this.totalBudget = totalBudget,
-        this.sliderLength = sliders.length
+        this.slidersLength = sliders.length,
+        this.totalBudgetInput = totalBudget,
+        this.totalBudget = parseInt(totalBudget.value) || 1000,
+
+        this.init();
+    }
+
+    init() {
+        this.updateSliderLimits();
+        this.listenForBudget();
+        this.listenForSlider();
     }
     
-    budgetAllocationMinimum(totalBudget = 1000) {
-    return Math.floor(totalBudget / 8);
-    }
-    budgetAllocationMaximum(totalBudget = 1000) {
-        return Math.floor(this.sliderLength * this.budgetAllocationMinimum(totalBudget));
+    updateSliderLimits() {
+        const min = Math.floor(this.totalBudget / 8);
+        const max = Math.floor(this.slidersLength * Math.floor(this.totalBudget / 8));
+
+        Object.values(this.sliders).forEach(slider=> {
+            slider.min = min;
+            slider.max = max;
+            slider.value = min;
+
+            parent = slider.parentElement;
+
+            parent.querySelector('.min').textContent = "min: " + min;
+            parent.querySelector('.max').textContent = "max: " + max;
+            parent.querySelector('.min').textContent = "current: " + slider.value;
+        });
+
+        this.updateTotal();
     }
 
     listenForBudget() {
-        this.totalBudget.addEventListener('change', ()=> {
-            Object.values(this.sliders).forEach(slider => {
-                slider.min = this.budgetAllocationMinimum(this.totalBudget.value);
-                slider.max = this.budgetAllocationMaximum(this.totalBudget.value);
-                
-                slider.parentElement.querySelector('.min').textContent = slider.min;
-                slider.parentElement.querySelector('.max').textContent = slider.max;
-            })
+        this.totalBudgetInput.addEventListener('change', ()=> {
+            this.totalBudget = parseInt(this.totalBudgetInput.value);
+            this.updateSliderLimits();
         });
-        return true;
     }
-    listenForChange() {
-        // initialize the total by getting the minimum sum of all sliders.
-        let runningTotal = this.budgetAllocationMaximum(this.totalBudget.value);
 
-
-        this.listenForBudget();
-
-        // whenever there is a change in the sliders, make sure to update the running total.
-        let sliderTotal = runningTotal;
-        // update sliderTotal whenever budget is updated.
-        if (this.listenForBudget()) sliderTotal = runningTotal;
-        Object.values(this.sliders).forEach(slider => {
-            slider.addEventListener('change', ()=>{
-                slider.parentElement.querySelector('.current').textContent = slider.value;
-
-                console.log(typeof parseInt(slider.value));
-                console.log(typeof sliderTotal);
-                sliderTotal += parseInt((parseInt(slider.value) - this.budgetAllocationMinimum(this.totalBudget.value)));
-                console.log("running total: " + sliderTotal);
-            })
-            
+    listenForSlider() {
+        Object.values(this.sliders).forEach(slider=>{ 
+            slider.addEventListener('input', ()=> this.handleSliderInput(slider));
         })
-        
+    }
+
+    handleSliderInput(changedSlider) {
+        const sliders = Object.values(this.sliders);
+        let runningTotal = sliders.reduce((sum, s) => sum + parseInt(s.value), 0);
+        const difference = runningTotal - this.totalBudget;
+
+        if(difference == 0) {
+            this.updateTotal();
+            return;
+        }
+
+        const otherSliders = sliders.filter(s => s !== changedSlider);
+        let remaining = difference;
+
+        for (let slider of otherSliders) {
+            if (remaining === 0) break;
+
+            const oldValue = parseInt(slider.value);
+            let newValue = oldValue - Math.round(remaining / otherSliders.length);
+
+            newValue = Math.max(parseInt(slider.min), Math.min(parseInt(slider.max), newValue));
+
+            remaining -= (oldValue - newValue);
+            slider.value = newValue;
+            slider.parentElement.querySelector('.current').textContent = newValue;
+        }
+
+        this.updateTotal();
+    }
+
+    updateTotal() {
+        const sum = Object.values(this.sliders).reduce((acc, s) => acc + parseInt(s.value), 0);
+        const totalElement = document.getElementById('totalAllocated');
+        if (totalElement) totalElement.textContent = sum + ' / ' + this.totalBudget;
     }
 }
 
@@ -226,8 +258,6 @@ document.addEventListener('DOMContentLoaded', ()=> {
     const totalBudget = document.getElementById('budget');
 
     const LinkSliders = new LinkedSliders(sliders, totalBudget);
-
-    LinkSliders.listenForChange();
 
     const typewritten = document.getElementsByClassName('typewrite');
     for (let t of typewritten) {
