@@ -135,11 +135,12 @@ class LinkedSliders {
             slider.max = max;
             slider.value = min;
 
-            parent = slider.parentElement;
+            parent = slider.parentNode;
 
-            parent.querySelector('.min').textContent = "min: " + min;
-            parent.querySelector('.max').textContent = "max: " + max;
-            parent.querySelector('.min').textContent = "current: " + slider.value;
+            parent.style.setProperty('--min', slider.min);
+            parent.style.setProperty('--max', slider.max);
+            parent.style.setProperty('--value', slider.value);
+            parent.style.setProperty('--text-value', JSON.stringify((+slider.value).toLocaleString()));
         });
 
         this.updateTotal();
@@ -162,6 +163,9 @@ class LinkedSliders {
         const sliders = Object.values(this.sliders);
         let runningTotal = sliders.reduce((sum, s) => sum + parseInt(s.value), 0);
 
+        changedSlider.parentNode.style.setProperty('--value', changedSlider.value);
+        changedSlider.parentNode.style.setProperty('--text-value', JSON.stringify((+changedSlider.value).toLocaleString()));
+
         if (runningTotal > this.totalBudget) {
             const overflow = runningTotal - this.totalBudget;
             const otherSliders = sliders.filter(s => s !== changedSlider);
@@ -173,7 +177,6 @@ class LinkedSliders {
                 const available = parseInt(slider.value) - parseInt(slider.min);
                 const reduceBy = Math.min(available, Math.ceil(remaining / otherSliders.length));
                 slider.value = parseInt(slider.value) - reduceBy;
-                slider.parentElement.querySelector('.current').textContent = "current: " + slider.value;
 
                 remaining -= reduceBy;
         }
@@ -183,7 +186,8 @@ class LinkedSliders {
                 const target = otherSliders.find(s=> parseInt(s.value) > parseInt(s.min));
                 if (!target) break;
                 target.value = parseInt(target.value) - 1;
-                target.parentElement.querySelector('.current').textContent = "current: " + target.value;
+                target.parentNode.style.setProperty('--value', target.value);
+                target.parentNode.style.setProperty('--text-value', JSON.stringify((+target.value).toLocaleString()));
                 totalPostReduction--;
             }
         }
