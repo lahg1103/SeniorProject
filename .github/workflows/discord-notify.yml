@@ -15,21 +15,20 @@ jobs:
                 ISSUE_TITLE: ${{ github.event.issue.title }}
                 ISSUE_URL: ${{ github.event.issue.html_url }}
                 ISSUE_USER: ${{ github.event.issue.user.login }}
-                ASSIGNEE: ${{ github.event.issue.assignee.login || '' }}
+                ISSUE_ASSIGNEE: ${{ github.event.assignee.login || github.event.issue.assignee.login || '' }}
               run: |
-                # Default fallbacks
                 TITLE=${ISSUE_TITLE:-"Untitled issue"}
                 URL=${ISSUE_URL:-"https://github.com/${{ github.repository }}/issues"}
                 USER=${ISSUE_USER:-"someone"}
-                ASSIGNEE=${ASSIGNEE:-"someone"}
+                ASSIGNEE=${ISSUE_ASSIGNEE:-"someone"}
 
-                # Create different messages based on action
+                # Determine the message based on the action type
                 case "$ACTION" in
                     opened)
                     MSG="🚀 New issue opened by **$USER**: [$TITLE]($URL)"
                     ;;
                     assigned)
-                    MSG="👥 Issue assigned to **$ASSIGNEE**: [$TITLE]($URL)"
+                    MSG="👥 Issue assigned to **$ASSIGNEE** by **$USER**: [$TITLE]($URL)"
                     ;;
                     closed)
                     MSG="✅ Issue closed by **$USER**: [$TITLE]($URL)"
