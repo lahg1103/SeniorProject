@@ -699,7 +699,7 @@ button {
 }
 
 .slide-container {
-
+    /* ref do something */
 }
 
 /* loading page (placeholder/draft) */
@@ -716,6 +716,25 @@ button {
     gap: 5vw;
 }
 
+/* Contact page */
+.contact-form {
+    padding-inline: var(--spacer1x);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacer);
+}
+.contact-form button {
+    max-width: 15vw;
+}
+#contactForm, #contactForm fieldset {
+    padding-inline: var(--spacer);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacer);
+}
+legend {
+    padding-block: var(--spacer);
+}
 
 /* itinerary page */
 
