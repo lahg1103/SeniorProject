@@ -30,6 +30,11 @@
             <section class="day-card" id="day{{ loop.index }}">
                 <h3 class="itinerary-heading serif"> Day {{ loop.index }} </h3>
                 <p> {{ day["daysummary"] }} </p>
+
+                <div class="day-img">
+                    <img src="{{ results['images'][loop.index] }}" alt="">
+                </div>
+
                 <h3 class="subheader">Lodging: </h3>
                 <p>{{ day["lodging"]["name"] }} &mdash; {{ day["lodging"]["address"] }} | cost: {{ day["lodging"]["cost"] }} </p>
 

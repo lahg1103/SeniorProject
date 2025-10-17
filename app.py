@@ -30,7 +30,11 @@ class ItineraryPreferences(db.Model):
     budget = db.Column(db.Integer, nullable=False)
     arrivaldate = db.Column(db.Date, default=date.today)
     departuredate = db.Column(db.Date, nullable=False)
-    transportation = db.Column(db.Boolean, default=True)
+    foodBudget = db.Column(db.Integer, nullable=False)
+    lodgingBudget = db.Column(db.Integer, nullable=False)
+    transportationBudget = db.Column(db.Integer, nullable=False)
+    activityBudget = db.Column(db.Integer, nullable=False)
+    tripDuration = db.Column(db.Integer, nullable=True)
 
     # the longest city in the world is 169characters long yall.
 
@@ -41,7 +45,7 @@ class ItineraryPreferences(db.Model):
     def __repr__(self):
         return '<Preferences %r>' % self.id
 
-def get_unsplash_images(query, session): 
+def get_unsplash_images(query, session, trip_duration): 
     if "unsplash_cache" not in session:
         session["unsplash_cache"] = {}
     if query in session["unsplash_cache"]:
@@ -50,7 +54,7 @@ def get_unsplash_images(query, session):
     
     print(f"Fetching new images for {query}")
     url = "https://api.unsplash.com/search/photos"
-    params = {"query": query, "per_page": 4, "client_id": unsplashKey}
+    params = {"query": query, "per_page": trip_duration, "client_id": unsplashKey}
     response = requests.get(url, params=params)
 
     if response.status_code == 200:
@@ -98,7 +102,12 @@ def process_itinerary():
         budget=int(data['budget']),
         arrivaldate=arrival,
         departuredate=departure,
-        destination=escape(data.get("destination", "").strip())
+        destination=escape(data.get("destination", "").strip()),
+        foodBudget = int(data['foodBudget']),
+        lodgingBudget = int(data['lodgingBudget']),
+        transportationBudget = int(data['transportationBudget']),
+        activityBudget = int(data['activityBudget']),
+        tripDuration = functions.trip_duration(arrival, departure)
     )
 
     # save instance
@@ -130,9 +139,10 @@ def success():
         session['itinerary'] = itinerary_clean
 
         destination = preferences_clean.get("destination")
+        trip_duration = preferences_clean.get("tripDuration")
 
         if destination:
-            images = get_unsplash_images(destination, session)
+            images = get_unsplash_images(destination, session, trip_duration)
             itinerary_clean["images"] = images
             session['itinerary'] = itinerary_clean
 

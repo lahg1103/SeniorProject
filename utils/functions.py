@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 
 
 def clean_instance(instance) :
@@ -9,4 +10,8 @@ def clean_instance(instance) :
     }
 def stringify(o) :
     return json.dumps(o, default=str)
+
+def trip_duration(arrival_date, departure_date):
+    duration = (departure_date - arrival_date).days + 2
+    return max(duration, 0)
 
