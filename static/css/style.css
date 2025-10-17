@@ -22,11 +22,11 @@ h6 {
 }
 
 h1 {
-    font-size: clamp(1.75rem, 2vw, 5rem);
+    font-size: clamp(1.75rem, 2vmin, 5rem);
 }
 
 h2 {
-    font-size: clamp(1.20rem, 1.8vw, 3rem);
+    font-size: clamp(1.20rem, 1.8vmin, 3rem);
 }
 
 .voyage-header {
@@ -39,11 +39,11 @@ h2 {
 .subheader {
     font-family: 'Hanken Grotesk', sans-serif;
     font-weight: 600;
-    font-size: clamp(1.20rem, 3vw, 4rem);
+    font-size: clamp(1.20rem, 3vmin, 4rem);
 }
 
 .hero {
-    font-size: clamp(2.5rem, 6vw, 12rem);
+    font-size: clamp(2.5rem, 6vmin, 12rem);
 }
 
 em {
@@ -119,7 +119,7 @@ body {
 }
 
 body {
-    font-size: clamp(1.12rem, 2.25vw, 3rem);
+    font-size: clamp(1.12rem, 2.25vmin, 3rem);
     text-rendering: optimizeLegibility;
     font-family: 'Hanken Grotesk', sans-serif;
     font-style: normal;
@@ -267,7 +267,7 @@ nav ul {
 
 .nav-link {
     position: relative;
-    font-size: clamp(1.5rem, 3vw, 4rem);
+    font-size: clamp(1.5rem, 3vmin, 4rem);
 }
 
 .nav-link::after {
@@ -473,16 +473,13 @@ section {
 
 .card .text {
     height: 75%;
-    width: 100%;
+    width: fit-content;
     margin-block: auto;
     padding-inline: var(--spacer);
 }
 .card .text::before {
     content: '';
     position: absolute;
-    top: 50%;
-    left: 0;
-    transform: translateY(-55%);
     border: 2px solid var(--accentTwo);
     height: 100%;
     width: 100%;
@@ -490,12 +487,16 @@ section {
     aspect-ratio: 9/16;
 }
 .card .text.rbox::before {
-    left: -2vw;
-    width: calc(100% + 1.5vw);
+    top: 50%;
+    transform: translateY(-55%);
+    left: -20%;
+    width: calc(100% + 20%);
 }
 .card .text.lbox::before {
-    right: -2vw;
-    width: calc(100% + 1.5vw);
+    top: 50%;
+    transform: translateY(-55%);
+    right: -20%;
+    width: calc(100% + 20%);
 }
 
 .card .text>* {
@@ -510,6 +511,48 @@ section {
     content: '';
     position: absolute;
 
+}
+
+.card.stamped {
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    place-content: center;
+
+}
+.card.stamped .picture {
+    grid-row: 1;
+    grid-column: 1;
+    max-height: 40dvh;
+    justify-self: center;
+}
+.card.stamped .picture::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    transform: translate(-35%, -60%);
+    background-image: url('../images/vector-anchor-stamp.svg');
+    width: 135%;
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    z-index: -1;
+}
+.card.stamped .text {
+    justify-self: center;
+    grid-column: 1;
+    grid-row: 2;
+    height: 85%;
+    padding-top: 15%;
+    max-width: 100%;
+    margin-block: -20%;
+}
+.card.stamped .text::before {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -55%);
 }
 
 .card .cta {
@@ -539,11 +582,11 @@ section {
 }
 
 .up-facing {
-    transform: rotate(-137deg);
+    transform: rotate(-137deg) translateY(-1vh) translateX(-0.15vmin);
 }
 
 .arrow {
-    width: 1.15rem;
+    width: clamp(1.20rem, 2.5vmin, 4rem);
     height: auto;
     transition: 600ms ease-in-out;
     z-index: 5;
@@ -570,13 +613,12 @@ section {
 .arrow-wrapper::before {
     content: '';
     position: absolute;
-    top: 50%;
+    top: calc( 50% + 0.5vh);
     left: 50%;
-    translate: -50% -50%;
+    translate: -65% -45%;
     height: 200%;
     width: 200%;
     background-color: var(--mainLight);
-    padding: 1rem;
     border-radius: 100%;
     z-index: 0;
     transition: height 800ms ease-in-out,
@@ -611,9 +653,10 @@ label {
     margin-block-end: -2rem;
 }
 
+
 .input-container {
     display: flex;
-    flex-direction: row-reverse;
+    flex-direction: column;
     justify-content: flex-end;
     cursor: pointer;
     gap: var(--spacer);
@@ -653,6 +696,10 @@ button {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+.slide-container {
+
 }
 
 /* loading page (placeholder/draft) */
@@ -704,7 +751,7 @@ button {
 }
 
 .itinerary-heading {
-    font-size: clamp(1.75rem, 3vw, 5rem);
+    font-size: clamp(1.75rem, 3vmin, 5rem);
 }
 
 .day-card {

@@ -9,23 +9,46 @@
     <h2 class="subheader">Answer a few questions so we can tailor your itinerary.</h2>
 </section>
 <section class="itinerary-form">
+    <div class="global-error">
+        
+    </div>
     <form id="itinerary-form">
         {% for field in fields %}
-        {% if field.options %}
-                <label for="{{ field.name | lower | replace(' ','_') }}"> {{ field.name }} : </label>
-                {% for option in field.options %}
-
-                <label class="input-container"> {{ option }} 
-                    <input type="{{ field.type }}" name="{{ field.name | lower | replace(' ','_') }}" value="{{ option }}" id="{{ option }}"/>
-                    <div class="{{ field.type }}"></div>
-                </label>
-                
-                {% endfor %}
-            {% else %}
-                <label for="{{ field.name | lower | replace(' ', '_') }}"> {{ field.name }} : </label>
-                <input type="{{ field.type }}" name="{{ field.name | lower | replace(' ', '_') }}" />
-            {% endif %}
+            <label for="{{ field.name | lower | replace(' ', '_') }}" class="input-container"> {{ field.name }} : 
+                    <input type="{{ field.type }}" name="{{ field.name | lower | replace(' ', '_') }}" id="{{ field.name | lower | replace(' ', '_') }}" />
+            </label>
         {% endfor %}
+        <label class="input-container"> Preferred Budget Allocation: 
+            <h2 class="subheader" id="totalAllocated"></h2>
+            <div class="slide-container">
+                <p>Food Budget</p>
+                <input type="range" class="slider" id="foodBudget" name="foodBudget">
+                <p class="current">current: </p>
+                <p class="min">min: </p>
+                <p class="max">max: </p>
+            </div>
+            <div class="slide-container">
+                <p>Lodging Budget</p>
+                <input type="range" class="slider" id="lodgingBudget" name="lodgingBudget">
+                <p class="current">current: </p>
+                <p class="min">min: </p>
+                <p class="max">max: </p>
+            </div>
+            <div class="slide-container">
+                <p>Activity Budget</p>
+                <input type="range" class="slider" id="activityBudget" name="activityBudget">
+                <p class="current">current: </p>
+                <p class="min">min: </p>
+                <p class="max">max: </p>
+            </div>
+            <div class="slide-container">
+                <p>Transportation Budget</p>
+                <input type="range" class="slider" id="transportationBudget" name="transportationBudget">
+                <p class="current">current: </p>
+                <p class="min">min: </p>
+                <p class="max">max: </p>
+            </div>
+        </label>
         <button type="submit" class="text-arrow-wrapper">
             <div class="arrow-wrapper">
                 <img src="{{ url_for('static', filename='images/arrow.svg') }}" alt="arrow" class="arrow up-facing black-arrow">
@@ -35,6 +58,7 @@
             </h3>
         </button>
     </form>
+
 </section>
 <section id="loader" class="stagger-fade-in hidden">
     <div style="--i: 0">

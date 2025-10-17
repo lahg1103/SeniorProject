@@ -2,10 +2,12 @@
 
 {% block body %}
 
-<section>
+
     {% if not results %}
-        <h1>Itinerary Not Found</h1>
-        {% else %}
+        <section>
+            <h1>Itinerary Not Found</h1>
+        </section>
+    {% else %}
         <section class="landing sidepage itinerary">
         <h1 class="hero serif"> {{ results.city }} in {{ results.tripduration }} Days </h1>
         <h2 class="blurb sidepage"> {{ results.promotionalblurb }} </h2>
@@ -28,6 +30,11 @@
             <section class="day-card" id="day{{ loop.index }}">
                 <h3 class="itinerary-heading serif"> Day {{ loop.index }} </h3>
                 <p> {{ day["daysummary"] }} </p>
+
+                <div class="day-img">
+                    <img src="{{ results['images'][loop.index] }}" alt="">
+                </div>
+
                 <h3 class="subheader">Lodging: </h3>
                 <p>{{ day["lodging"]["name"] }} &mdash; {{ day["lodging"]["address"] }} | cost: {{ day["lodging"]["cost"] }} </p>
 
