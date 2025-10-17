@@ -2,7 +2,7 @@ name: Notify Discord
 
 on:
     issues:
-        types: [opened, reopened, closed, assigned]
+        types: [opened, reopened, closed, assigned, edited]
 
 jobs:
     notify:
@@ -12,12 +12,30 @@ jobs:
               env: 
                 DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
               run: |
-                ISSUE_TITLE="${{ github.event.issue.title }}"
-                ISSUE_URL="${{ github.event.issue.html_url }}"
-                ISSUE_USER="${{ github.event.issue.user.login }}"
-                PAYLOAD=$(jq -n \
-                    --arg content "🚀 New Issue by **$ISSUE_USER**: [$ISSUE_TITLE]($ISSUE_URL)" \
-                    '{content: $content}')
+                # Pick the right message depending on what happened
+                case "$ACTION" in
+                    opened)
+                    MSG="🚀 New issue opened by **$ISSUE_USER**: [$ISSUE_TITLE]($ISSUE_URL)"
+                    ;;
+                    assigned)
+                    MSG="👥 Issue assigned to **$ASSIGNEE**: [$ISSUE_TITLE]($ISSUE_URL)"
+                    ;;
+                    closed)
+                    MSG="✅ Issue closed by **$ISSUE_USER**: [$ISSUE_TITLE]($ISSUE_URL)"
+                    ;;
+                    reopened)
+                    MSG="🔄 Issue reopened by **$ISSUE_USER**: [$ISSUE_TITLE]($ISSUE_URL)"
+                    ;;
+                    edited)
+                    MSG="📝 Issue updated by **$ISSUE_USER**: [$ISSUE_TITLE]($ISSUE_URL)"
+                    ;;
+                    *)
+                    MSG="ℹ️ Issue event \`$ACTION\` occurred for [$ISSUE_TITLE]($ISSUE_URL)"
+                    ;;
+                esac
+
+                # Send to Discord
+                PAYLOAD=$(jq -n --arg content "$MSG" '{content: $content}')
                 curl -H "Content-Type: application/json" \
                     -d "$PAYLOAD" \
                     "$DISCORD_WEBHOOK"
