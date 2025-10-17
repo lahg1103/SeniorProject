@@ -116,8 +116,6 @@ em {
 html,
 body {
     overscroll-behavior-block: none;
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
 }
 
 body {
