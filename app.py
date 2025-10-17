@@ -16,10 +16,13 @@ load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.getenv('FLASK_SESSION_KEY')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///voyage.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 unsplashKey = os.getenv("UNSPLASH_ACCESS_KEY")
+
+app.debug = os.environ.get('FLASK_DEBUG', 'false').lower() == 'true' 
 
 
 class ItineraryPreferences(db.Model):
@@ -164,4 +167,5 @@ def page_not_found(e):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 8000))
+    app.run(host='0.0.0.0', port=port)
