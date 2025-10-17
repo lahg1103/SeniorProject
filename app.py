@@ -16,7 +16,12 @@ load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.getenv('FLASK_SESSION_KEY')
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+
+DATABASE_URL = os.environ.get('DATABASE_URL')
+if DATABASE_URL is not None:
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://")
+
+app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
