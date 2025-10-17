@@ -151,7 +151,7 @@ def success():
         trip_duration = preferences_clean.get("tripDuration")
 
         if destination:
-            images = get_unsplash_images(destination, session, trip_duration)
+            images = get_unsplash_images(destination, session, trip_duration + 1)
             itinerary_clean["images"] = images
             session['itinerary'] = itinerary_clean
 

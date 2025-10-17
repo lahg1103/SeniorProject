@@ -12,6 +12,6 @@ def stringify(o) :
     return json.dumps(o, default=str)
 
 def trip_duration(arrival_date, departure_date):
-    duration = (departure_date - arrival_date).days + 2
+    duration = (departure_date - arrival_date).days + 1
     return max(duration, 0)
 
