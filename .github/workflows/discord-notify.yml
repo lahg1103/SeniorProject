@@ -1,0 +1,23 @@
+name: Notify Discord
+
+on:
+    issues:
+        types: [opened, reopened, closed, assigned]
+
+jobs:
+    notify:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Send notification to Discord
+              env: 
+                DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+              run: |
+                ISSUE_TITLE="${{ github.event.issue.title }}"
+                ISSUE_URL="${{ github.event.issue.html_url }}"
+                ISSUE_USER="${{ github.event.issue.user.login }}"
+                PAYLOAD=$(jq -n \
+                    --arg content "🚀 New Issue by **$ISSUE_USER**: [$ISSUE_TITLE]($ISSUE_URL)" \
+                    '{content: $content}')
+                curl -H "Content-Type: application/json" \
+                    -d "$PAYLOAD" \
+                    "$DISCORD_WEBHOOK"
