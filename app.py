@@ -15,7 +15,7 @@ itineraryfields = context.itineraryfields
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = os.getenv('FLASK_SESSION_KEY')
+app.secret_key = os.getenv('FLASK_SESSION_KEY') or os.environ.get('FLASK_SESSION_KEY')
 
 DATABASE_URL = os.environ.get('DATABASE_URL')
 if DATABASE_URL is not None:
@@ -25,7 +25,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
-unsplashKey = os.getenv("UNSPLASH_ACCESS_KEY")
+
+unsplashKey = os.getenv("UNSPLASH_ACCESS_KEY") or os.environ.get("UNSPLASH_ACCESS_KEY")
 
 app.debug = os.environ.get('FLASK_DEBUG', 'false').lower() == 'true' 
 
