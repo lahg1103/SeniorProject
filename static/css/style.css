@@ -473,16 +473,13 @@ section {
 
 .card .text {
     height: 75%;
-    width: 100%;
+    width: fit-content;
     margin-block: auto;
     padding-inline: var(--spacer);
 }
 .card .text::before {
     content: '';
     position: absolute;
-    top: 50%;
-    left: 0;
-    transform: translateY(-55%);
     border: 2px solid var(--accentTwo);
     height: 100%;
     width: 100%;
@@ -490,12 +487,16 @@ section {
     aspect-ratio: 9/16;
 }
 .card .text.rbox::before {
-    left: -2vw;
-    width: calc(100% + 1.5vw);
+    top: 50%;
+    transform: translateY(-55%);
+    left: -20%;
+    width: calc(100% + 20%);
 }
 .card .text.lbox::before {
-    right: -2vw;
-    width: calc(100% + 1.5vw);
+    top: 50%;
+    transform: translateY(-55%);
+    right: -20%;
+    width: calc(100% + 20%);
 }
 
 .card .text>* {
@@ -510,6 +511,48 @@ section {
     content: '';
     position: absolute;
 
+}
+
+.card.stamped {
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    place-content: center;
+
+}
+.card.stamped .picture {
+    grid-row: 1;
+    grid-column: 1;
+    max-height: 40dvh;
+    justify-self: center;
+}
+.card.stamped .picture::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    transform: translate(-35%, -60%);
+    background-image: url('../images/vector-anchor-stamp.svg');
+    width: 135%;
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    z-index: -1;
+}
+.card.stamped .text {
+    justify-self: center;
+    grid-column: 1;
+    grid-row: 2;
+    height: 85%;
+    padding-top: 15%;
+    max-width: 100%;
+    margin-block: -20%;
+}
+.card.stamped .text::before {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -55%);
 }
 
 .card .cta {
@@ -572,7 +615,7 @@ section {
     position: absolute;
     top: calc( 50% + 0.5vh);
     left: 50%;
-    translate: -50% -50%;
+    translate: -65% -45%;
     height: 200%;
     width: 200%;
     background-color: var(--mainLight);
