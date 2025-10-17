@@ -48,7 +48,6 @@ class FormValidation {
     }
 
     validateForm() {
-        // Object.values(this.inputs).forEach(input => this.clearFieldError(input));
         const { budget, arrival, departure, destination } = this.inputs;
         let isValid = true;
         const errors = [];
@@ -111,7 +110,93 @@ class FormValidation {
 }
 
 // slider
+class LinkedSliders {
+    constructor(sliders, totalBudget) {
+        this.sliders = sliders,
+        this.slidersLength = sliders.length,
+        this.totalBudgetInput = totalBudget,
+        this.totalBudget = parseInt(totalBudget.value) || 1000,
 
+        this.init();
+    }
+
+    init() {
+        this.updateSliderLimits();
+        this.listenForBudget();
+        this.listenForSlider();
+    }
+    
+    updateSliderLimits() {
+        const min = Math.floor(this.totalBudget / 8);
+        const max = Math.floor(this.slidersLength * Math.floor(this.totalBudget / 8));
+
+        Object.values(this.sliders).forEach(slider=> {
+            slider.min = min;
+            slider.max = max;
+            slider.value = min;
+
+            parent = slider.parentElement;
+
+            parent.querySelector('.min').textContent = "min: " + min;
+            parent.querySelector('.max').textContent = "max: " + max;
+            parent.querySelector('.min').textContent = "current: " + slider.value;
+        });
+
+        this.updateTotal();
+    }
+
+    listenForBudget() {
+        this.totalBudgetInput.addEventListener('change', ()=> {
+            this.totalBudget = parseInt(this.totalBudgetInput.value);
+            this.updateSliderLimits();
+        });
+    }
+
+    listenForSlider() {
+        Object.values(this.sliders).forEach(slider=>{ 
+            slider.addEventListener('input', ()=> this.handleSliderInput(slider));
+        })
+    }
+
+    handleSliderInput(changedSlider) {
+        const sliders = Object.values(this.sliders);
+        let runningTotal = sliders.reduce((sum, s) => sum + parseInt(s.value), 0);
+
+        if (runningTotal > this.totalBudget) {
+            const overflow = runningTotal - this.totalBudget;
+            const otherSliders = sliders.filter(s => s !== changedSlider);
+            let remaining = overflow;
+
+            for (let slider of otherSliders) {
+                if (remaining <= 0) break;
+
+                const available = parseInt(slider.value) - parseInt(slider.min);
+                const reduceBy = Math.min(available, Math.ceil(remaining / otherSliders.length));
+                slider.value = parseInt(slider.value) - reduceBy;
+                slider.parentElement.querySelector('.current').textContent = "current: " + slider.value;
+
+                remaining -= reduceBy;
+        }
+
+            let totalPostReduction = sliders.reduce((sum, s) => sum + parseInt(s.value), 0);
+            while (totalPostReduction > this.totalBudget) {
+                const target = otherSliders.find(s=> parseInt(s.value) > parseInt(s.min));
+                if (!target) break;
+                target.value = parseInt(target.value) - 1;
+                target.parentElement.querySelector('.current').textContent = "current: " + target.value;
+                totalPostReduction--;
+            }
+        }
+
+        this.updateTotal();
+    }
+
+    updateTotal() {
+        const sum = Object.values(this.sliders).reduce((acc, s) => acc + parseInt(s.value), 0);
+        const totalElement = document.getElementById('totalAllocated');
+        if (totalElement) totalElement.textContent = sum + ' / ' + this.totalBudget;
+    }
+}
 
 // loader
     let textType = function(e, toRotate, period) {
@@ -174,7 +259,9 @@ document.addEventListener('DOMContentLoaded', ()=> {
     
 
     const sliders = document.querySelectorAll('input[type="range"]');
-    const totalBudget = document.getElementById('');
+    const totalBudget = document.getElementById('budget');
+
+    const LinkSliders = new LinkedSliders(sliders, totalBudget);
 
     const typewritten = document.getElementsByClassName('typewrite');
     for (let t of typewritten) {
