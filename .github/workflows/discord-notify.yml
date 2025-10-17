@@ -11,31 +11,43 @@ jobs:
             - name: Send notification to Discord
               env: 
                 DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+                ACTION: ${{ github.event.action }}
+                ISSUE_TITLE: ${{ github.event.issue.title }}
+                ISSUE_URL: ${{ github.event.issue.html_url }}
+                ISSUE_USER: ${{ github.event.issue.user.login }}
+                ASSIGNEE: ${{ github.event.issue.assignee.login || '' }}
               run: |
-                # Pick the right message depending on what happened
+                # Default fallbacks
+                TITLE=${ISSUE_TITLE:-"Untitled issue"}
+                URL=${ISSUE_URL:-"https://github.com/${{ github.repository }}/issues"}
+                USER=${ISSUE_USER:-"someone"}
+                ASSIGNEE=${ASSIGNEE:-"someone"}
+
+                # Create different messages based on action
                 case "$ACTION" in
                     opened)
-                    MSG="🚀 New issue opened by **$ISSUE_USER**: [$ISSUE_TITLE]($ISSUE_URL)"
+                    MSG="🚀 New issue opened by **$USER**: [$TITLE]($URL)"
                     ;;
                     assigned)
-                    MSG="👥 Issue assigned to **$ASSIGNEE**: [$ISSUE_TITLE]($ISSUE_URL)"
+                    MSG="👥 Issue assigned to **$ASSIGNEE**: [$TITLE]($URL)"
                     ;;
                     closed)
-                    MSG="✅ Issue closed by **$ISSUE_USER**: [$ISSUE_TITLE]($ISSUE_URL)"
+                    MSG="✅ Issue closed by **$USER**: [$TITLE]($URL)"
                     ;;
                     reopened)
-                    MSG="🔄 Issue reopened by **$ISSUE_USER**: [$ISSUE_TITLE]($ISSUE_URL)"
+                    MSG="🔄 Issue reopened by **$USER**: [$TITLE]($URL)"
                     ;;
                     edited)
-                    MSG="📝 Issue updated by **$ISSUE_USER**: [$ISSUE_TITLE]($ISSUE_URL)"
+                    MSG="📝 Issue updated by **$USER**: [$TITLE]($URL)"
                     ;;
                     *)
-                    MSG="ℹ️ Issue event \`$ACTION\` occurred for [$ISSUE_TITLE]($ISSUE_URL)"
+                    MSG="ℹ️ Issue event \`$ACTION\` occurred for [$TITLE]($URL)"
                     ;;
                 esac
 
-                # Send to Discord
+                echo "Sending message: $MSG"
+
                 PAYLOAD=$(jq -n --arg content "$MSG" '{content: $content}')
-                curl -H "Content-Type: application/json" \
+                curl -s -H "Content-Type: application/json" \
                     -d "$PAYLOAD" \
                     "$DISCORD_WEBHOOK"
