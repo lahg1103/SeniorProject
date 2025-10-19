@@ -1035,6 +1035,8 @@ legend {
     display: block;
     padding-inline: var(--spacer1x);
     background-color: var(--secondaryDark);
+    position: relative;
+    
 }
 
 .navigation-days {

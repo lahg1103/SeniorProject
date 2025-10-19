@@ -63,7 +63,10 @@ class Itinerary(BaseModel):
 
 
 load_dotenv()
-client = genai.Client(api_key=os.getenv("GEMINI_KEY"))
+
+api_key = os.environ.get("GEMINI_KEY") or os.getenv("GEMINI_KEY")
+
+client = genai.Client(api_key=api_key)
 
 
 def generateItinerary(preferences):

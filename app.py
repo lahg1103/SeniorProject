@@ -15,12 +15,18 @@ itineraryfields = context.itineraryfields
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = os.getenv('FLASK_SESSION_KEY')
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+app.secret_key = os.getenv('FLASK_SESSION_KEY') or os.environ.get('FLASK_SESSION_KEY')
+
+DATABASE_URL = os.environ.get('DATABASE_URL')
+if DATABASE_URL is not None:
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://")
+
+app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
-unsplashKey = os.getenv("UNSPLASH_ACCESS_KEY")
+
+unsplashKey = os.getenv("UNSPLASH_ACCESS_KEY") or os.environ.get("UNSPLASH_ACCESS_KEY")
 
 app.debug = os.environ.get('FLASK_DEBUG', 'false').lower() == 'true' 
 
@@ -145,7 +151,7 @@ def success():
         trip_duration = preferences_clean.get("tripDuration")
 
         if destination:
-            images = get_unsplash_images(destination, session, trip_duration)
+            images = get_unsplash_images(destination, session, trip_duration + 1)
             itinerary_clean["images"] = images
             session['itinerary'] = itinerary_clean
 
