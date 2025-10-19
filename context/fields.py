@@ -25,10 +25,10 @@ class LodgingType(Enum):
     HOSTEL = 'Hostel'
 
 # stores template-facing data passed to Jinja templates.
-pages = [{'name': 'Home', 'endpoint': 'index'},
-         {'name': 'Start Planning', 'endpoint': 'questionnaire'},
-         {'name': 'About', 'endpoint': 'about'},
-         {'name': 'Contact', 'endpoint': 'contact'}
+pages = [{'name': 'Home', 'endpoint': 'main.index'},
+         {'name': 'Start Planning', 'endpoint': 'itinerary.questionnaire'},
+         {'name': 'About', 'endpoint': 'main.about'},
+         {'name': 'Contact', 'endpoint': 'main.contact'}
          ]
 itineraryfields = [
     {'name': 'Budget', 'type' : 'number', 'currency' : 'USD'},

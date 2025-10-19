@@ -19,7 +19,7 @@
 <body>
     <header>
         <div class="title-wrapper">
-            <h1 class="serif voyage-header"><a href="{{ url_for('index') }}">Voyage</a></h1>
+            <h1 class="serif voyage-header"><a href="{{ url_for('main.index') }}">Voyage</a></h1>
             <h2 class="subheader uppercase voyage-subheader">Precision Meets Paradise</h2>
         </div>
         <button class="hamburger-wrapper">
@@ -38,7 +38,7 @@
                     {% endif %}
                 {% endfor %}
             </ul>
-            <a href="{{ url_for('index') }}">
+            <a href="{{ url_for('main.index') }}">
                 <div class="logo-wrapper">
                     <img src="{{ url_for('static', filename='images/icons/favicon.svg') }}" alt="voyage logo" class="spin">
                 </div>

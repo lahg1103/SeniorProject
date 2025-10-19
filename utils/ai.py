@@ -70,7 +70,7 @@ client = genai.Client(api_key=api_key)
 
 
 def generateItinerary(preferences):
-
+    print("generating itinerary")
     try:
         itinerary = client.models.generate_content(
             model="gemini-2.5-flash",

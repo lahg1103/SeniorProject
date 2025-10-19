@@ -32,7 +32,9 @@
                 <p> {{ day["daysummary"] }} </p>
 
                 <div class="day-img">
-                    <img src="{{ results['images'][loop.index] }}" alt="">
+                    {% if results['images'] %}
+                        <img src="{{ results['images'][loop.index] }}" alt="">
+                    {% endif %}
                 </div>
 
                 <h3 class="subheader">Lodging: </h3>
