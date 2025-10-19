@@ -16,7 +16,7 @@
         <section class="itinerary-wrapper">
             <div class="navigation-days">
                 <ul class="itinerary-top-navigation uppercase">
-                    {% for i in range(0, results["tripduration"] + 1) %}
+                    {% for i in range(0, results["tripduration"], +1) %}
                         <a href="#day{{ i + 1 }}">
                         <li class="{{ i + 1 }}">
                             Day {{ i + 1 }}
