@@ -116,6 +116,7 @@ em {
 html,
 body {
     overscroll-behavior-block: none;
+    overscroll-behavior-y: none;
 }
 
 body {
@@ -523,7 +524,7 @@ section {
 .card.stamped .picture {
     grid-row: 1;
     grid-column: 1;
-    max-height: 40dvh;
+    max-height: 40svh;
     justify-self: center;
 }
 .card.stamped .picture::before {
@@ -1131,7 +1132,7 @@ legend {
 @media screen and (width < 445px) {
     :root {
         font-size: 10px;
-        --spacer: 1.5dvh;
+        --spacer: 1.5vh;
     }
     body {
         font-size: 1rem;
@@ -1140,7 +1141,7 @@ legend {
         font-size: clamp(1.20rem, 2vmin, 2.5rem);
     }
     .cta {
-        padding: 1dvh;
+        padding: 1vh;
     }
     .card.stamped .text {
         padding-top: var(--spacer1x);
