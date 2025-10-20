@@ -291,28 +291,35 @@ document.addEventListener('DOMContentLoaded', ()=> {
             const formData = new FormData(form);
             const jsonData = Object.fromEntries(formData.entries());
 
+            try {
+                const preferencesResponse = await fetch('/process-itinerary', {
+                    method: 'POST',
+                    headers: {'Content-type': 'application/json'},
+                    body: JSON.stringify(jsonData)
+                });
+                if (!preferencesResponse.ok) throw new Error("Failed to save preferences");
+                const { itinerary_id } = await preferencesResponse.json();
 
-            const response = await fetch('/process-itinerary', {
-                method: 'POST',
-                headers: {'Content-type': 'application/json'},
-                body: JSON.stringify(jsonData)
-            });
+                const buildResponse = await fetch(`/build-itinerary/${itinerary_id}`);
+                if (!buildResponse.ok) throw new Error("Failed to build itinerary");
+                const buildData = await buildResponse.json();
 
-
-            if (response.ok) {
-                window.location.href = '/success';
-            } else {
+                window.location.href = `/itinerary/${buildData.itinerary_id}`;
+            }
+            catch (err) {
+                console.error(err);
                 FormValidator.setState('FORM');
-                globalError.textContent = "There was an error submitting your form.";
+                globalError.textContent = "Something went wrong while building your itinerary. Please try again.";
                 window.scroll({
-                top: 0,
-                left: 0,
-                behavior: "smooth",
-            });
+                    top: 0,
+                    left: 0,
+                    behavior: "smooth",
+                });
             }
         }
         else if (!isValid) {
             globalError.textContent = "There was an error submitting your form. Please revise the highlighted fields, and try again.";
+            return;
         }
     }); 
 });

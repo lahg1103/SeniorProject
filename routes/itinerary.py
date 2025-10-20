@@ -1,10 +1,10 @@
-from flask import Blueprint, render_template, request, session, redirect
+from flask import Blueprint, render_template, request, session, redirect, url_for
 from markupsafe import escape
 from datetime import datetime
 from context import fields
 from utils import functions, ai
 from extensions import db
-from models import ItineraryPreferences
+from models import ItineraryPreferences, Itinerary
 import requests, os
 
 itinerary = Blueprint("itinerary", __name__)
@@ -12,18 +12,14 @@ pages = fields.pages
 fields = fields.itineraryfields
 unsplashKey = os.getenv("UNSPLASH_ACCESS_KEY")
 
-def get_unsplash_images(query, session, trip_duration):
-    if "unsplash_cache" not in session:
-        session["unsplash_cache"] = {}
-    if query in session["unsplash_cache"]:
-        return session["unsplash_cache"][query]
+def get_unsplash_images(query, trip_duration):
 
     url = "https://api.unsplash.com/search/photos"
     params = {"query": query, "per_page": trip_duration, "client_id": unsplashKey}
     response = requests.get(url, params=params)
+
     if response.status_code == 200:
         image_urls = [r["urls"]["regular"] for r in response.json().get("results", [])]
-        session["unsplash_cache"][query] = image_urls
         return image_urls
     return []
 
@@ -53,16 +49,18 @@ def process_itinerary():
     db.session.add(itinerary)
     db.session.commit()
     session["itinerary_id"] = itinerary.id
-    return ("", 204)
+    session.permanent = True
+    return {"itinerary_id": itinerary.id}, 200
 
-@itinerary.route("/success")
-def success():
-    itinerary_id = session.get("itinerary_id")
-    if not itinerary_id:
-        return redirect("/questionnaire")
+@itinerary.route("/build-itinerary/<int:itinerary_id>")
+def success(itinerary_id):
+    existingItinerary = Itinerary.query.filter_by(preferences_id=itinerary_id).first()
 
-    if "itinerary" not in session:
-        print("creating session")
+    if existingItinerary:
+        return {"itinerary_id": existingItinerary.id}, 200
+
+    else:
+        print("adding to database")
         itinerary = ItineraryPreferences.query.get_or_404(itinerary_id)
         preferences = functions.clean_instance(itinerary)
         itinerary_data = ai.generateItinerary(preferences)
@@ -70,9 +68,18 @@ def success():
         trip_duration = preferences.get("tripDuration")
 
         if destination:
-            itinerary_data["images"] = get_unsplash_images(destination, session, trip_duration + 1)
+            itinerary_data["images"] = get_unsplash_images(destination, trip_duration + 1)
 
-        session.permanent = True
-        session["itinerary"] = itinerary_data
+        new_itinerary = Itinerary(preferences_id=itinerary_id, data=itinerary_data)
+        db.session.add(new_itinerary)
+        db.session.commit()
 
-    return render_template("itinerary.html", results=session["itinerary"], pages=pages)
+    return {"itinerary_id": new_itinerary.id}, 200
+
+@itinerary.route("/itinerary/<int:itinerary_id>")
+def display_itinerary(itinerary_id):
+    existingItinerary = Itinerary.query.get_or_404(itinerary_id)
+    if not existingItinerary:
+        return redirect("/questionnaire")
+    itineraryData = existingItinerary.data
+    return render_template("itinerary.html", results=itineraryData, pages=pages)
