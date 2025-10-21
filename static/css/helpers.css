@@ -1,0 +1,98 @@
+/* basic classes */
+.relative {
+    position: relative;
+}
+.center {
+    text-align: center;
+}
+.flex {
+    display: flex;
+}
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+.gap {
+    gap: var(--spacer);
+}
+.padding {
+    padding: var(--spacer);
+}
+.padding-2x {
+    padding: calc(var(--spacer) * 1.5);
+}
+.padding-inline {
+    padding-inline: var(--spacer);
+}
+.padding-block {
+    padding-block: var(--spacer);
+}
+.margin-inline {
+    margin-inline: var(--spacer);
+}
+.margin-block {
+    margin-block: var(--spacer);
+}
+.margin-bottom {
+    margin-bottom: var(--spacer);
+}
+.align-center {
+    align-items: center;
+}
+.justify-center {
+    justify-content: center;
+}
+.flex-center {
+    align-items: center;
+    justify-content: center;
+}
+.center-self {
+    align-self: center;
+    justify-self: center;
+}
+.align-self {
+    align-self: center;
+}
+.justify-self {
+    justify-self: center;
+}
+.width-100 {
+    width: 100%;
+}
+.height-100 {
+    height: 100%;
+}
+.hidden {
+    opacity: 0;
+    position: absolute;
+    left: -10000px;
+    top: auto;
+    overflow: hidden;
+    visibility: hidden;
+}
+.indent li::before {
+    content: '';
+    position: absolute;
+    left: 1.5vw;
+    top: 0;
+    width: 0.55vw;
+    background-color: var(--text-color);
+    height: 95%;
+    z-index: -1;
+    transition: var(--basic-transition);
+}
+.indent li {
+    position: relative;
+    padding-inline: 3vw;
+    width: fit-content;
+    transition: var(--basic-transition);
+}
+.indent li:hover::before {
+    width: 100%;
+}
+.indent li:hover {
+    color: var(--secondary-background);
+}
+.indent li:not(:hover) {
+    transition: var(--basic-transition);
+}

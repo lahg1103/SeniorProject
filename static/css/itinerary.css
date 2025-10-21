@@ -1,0 +1,34 @@
+/* itinerary page */
+.itinerary-wrapper {
+    display: block;
+    background-color: var(--secondary-background);   
+}
+.navigation-days {
+    position: sticky;
+    top: calc(var(--hHeight) + var(--spacer));
+    left: 0; 
+    margin-inline: auto;
+    width: fit-content; 
+    margin-bottom: -4vh;
+}
+.itinerary-top-navigation {
+    display: inline-flex;
+    padding-inline: 5vw;
+    margin-bottom: -5rem;
+    border-radius: var(--radius);
+    justify-content: space-between;
+    background-image: linear-gradient(var(--secondary-background), rgba(103, 111, 124));
+}
+.itinerary-top-navigation li {
+    font-size: var(--paragraph-font);
+}
+.itinerary-heading {
+    font-size: var(--header-font);
+}
+.day-card {
+    padding-top: calc(1.55 * var(--hHeight) + var(--spacer));
+    margin-bottom: -20vh;
+}
+.day-card>* {
+    margin-bottom: var(--spacer);
+}

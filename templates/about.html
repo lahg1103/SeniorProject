@@ -1,8 +1,12 @@
 {% extends 'base.html' %}
 
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/about.css') }}">
+{% endblock %}
+
 {% block body %}
 
-<section class="landing sidepage {{ current_page }}">
+<section class="landing sidepage {{ current_page }} flex-column flex-direction">
     <h1 class="serif hero">
         Behind Every Interface Is a Process
     </h1>
@@ -35,7 +39,7 @@
     <div>
         <h1 class="subheader">Meet the Team</h1>
         <p>Voyage was created by four computer science majors passionate about merging design and technology.</p>
-        <ul class="indent">
+        <ul class="indent padding-block flex-column gap">
             <li><strong>Leslie Hurtado</strong> &mdash; Fullstack Developer & UX/UI Designer</li>
             <li><strong>Nathan Perez</strong> &mdash; AI Engineer</li>
             <li><strong>Emma Pacheco</strong> &mdash; UX/UI Designer</li>

@@ -1,0 +1,118 @@
+.card:first-of-type {
+    padding-top: var(--hHeight);
+}
+.card {
+    position: relative;
+    width: 100%;
+    overflow: clip;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.card .picture,
+.card .text {
+    position: relative;
+    max-width: 75%;
+    max-height: 65vh;
+}
+
+.card .picture {
+    justify-self: end;
+    aspect-ratio: 9/16;
+}
+.card .picture.right {
+    justify-self: start;
+}
+.card .text.right {
+    justify-self: end;
+}
+.card .picture img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.card .text::before {
+    content: '';
+    position: absolute;
+    border: 2px solid var(--accent-two);
+    height: 100%;
+    width: 100%;
+    z-index: -1;
+    aspect-ratio: 9/16;
+}
+.card .text {
+    height: 75%;
+    width: fit-content;
+    margin-block: auto;
+}
+.card .text.rbox::before {
+    top: 50%;
+    transform: translateY(-55%);
+    left: -20%;
+    width: calc(100% + 20%);
+}
+.card .text.lbox::before {
+    top: 50%;
+    transform: translateY(-55%);
+    right: -20%;
+    width: calc(100% + 20%);
+}
+.card .text>* {
+    grid-column: 2/4;
+}
+.card.stamped {
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    place-content: center;
+    margin-bottom: -10vh;
+}
+.card.stamped .picture::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    transform: translate(-35%, -60%);
+    background-image: url('../images/vector-anchor-stamp.svg');
+    width: 135%;
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    z-index: -1;
+}
+.card.stamped .picture {
+    grid-row: 1;
+    grid-column: 1;
+    max-height: 40svh;
+    justify-self: center;
+}
+.card.stamped .text::before {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -55%);
+}
+.card.stamped .text {
+    grid-column: 1;
+    grid-row: 2;
+    height: 85%;
+    padding-top: 15%;
+    max-width: 100%;
+    margin-top: -20%;
+}
+.card .cta {
+    background-color: var(--accent-one);
+    margin-top: auto;
+    margin-inline: auto;
+    width: fit-content;
+}
+.cta {
+    transition: var(--basic-transition);
+}
+.cta:hover {
+    background-color: var(--text-color);
+    color: var(--background-color);
+}
+.cta:hover .arrow {
+    filter: brightness(0.15);
+    transform: rotate(-90deg);
+}

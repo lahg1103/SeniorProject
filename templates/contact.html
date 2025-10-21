@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/contact.css') }}">
+{% endblock %}
+
 {% block body %}
 
 <section class="landing sidepage {{ current_page }}">
@@ -9,12 +13,12 @@
     <h2 class="subheader">Whether you have a question, suggestion, or just want to say hello &mdash; let's talk.</h2>
 </section>
 
-<section class="contact-form">
+<section class="contact-form flex-column gap padding-inline">
     <h2 class="subheader">Voyage App Feedback</h2>
     <p>Let us know any ideas we could implement or any changes you'd like to see for its next implementation.</p>
-    <form action="" id="contactForm">
-        <fieldset>
-            <legend>Input Type: </legend>
+    <form action="" id="contactForm" class="padding-inline flex-column gap">
+        <fieldset class="padding-inline flex-column gap">
+            <legend class="padding-block">Input Type: </legend>
                 <div>
                     <input type="radio" name="feedback-type" value="comment">
                     <label for="comment">Comment</label>

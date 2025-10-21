@@ -178,6 +178,9 @@ class LinkedSliders {
                 const reduceBy = Math.min(available, Math.ceil(remaining / otherSliders.length));
                 slider.value = parseInt(slider.value) - reduceBy;
 
+                slider.parentNode.style.setProperty('--value', slider.value);
+                slider.parentNode.style.setProperty('--text-value', JSON.stringify((+slider.value).toLocaleString()));
+
                 remaining -= reduceBy;
         }
 

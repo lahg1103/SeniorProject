@@ -2,11 +2,11 @@
 
 {% block body %}
 
-<section class="landing sidepage fourOfour">
+<section class="landing sidepage error-page flex-column align-center">
     <h1 class="serif hero">
-        Page Not Found.
+        {{ error }}
     </h1>
-    <h2 class="subheader">The destination you're looking for doesn't exist.</h2>
+    <h2 class="subheader"> {{ message }} </h2>
     <a href="{{ url_for('main.index') }}" aria-label="Return Home">
         <div class="logo-wrapper">
             <img src="{{ url_for('static', filename='images/icons/favicon.svg') }}" alt="voyage logo" class="spin">

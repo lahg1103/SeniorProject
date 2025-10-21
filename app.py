@@ -25,9 +25,11 @@ def create_app():
             print("✅ Database initialized successfully")
 
     # Error handler
-    @app.errorhandler(404)
-    def not_found(e):
-        return render_template("404.html"), 404
+    @app.errorhandler(Exception)
+    def handle_exception(e):
+        code = getattr(e, 'code', 500)
+        message = getattr(e, 'description', str(e))
+        return render_template("errors.html", code=code, message=message), code
 
     return app
 

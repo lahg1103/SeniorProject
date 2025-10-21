@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/itinerary.css') }}">
+{% endblock %}
+
 {% block body %}
 
 
@@ -8,14 +12,14 @@
             <h1>Itinerary Not Found</h1>
         </section>
     {% else %}
-        <section class="landing sidepage itinerary">
+        <section class="landing sidepage itinerary flex-column flex-center">
         <h1 class="hero serif"> {{ results.city }} in {{ results.tripduration }} Days </h1>
         <h2 class="blurb sidepage"> {{ results.promotionalblurb }} </h2>
         </section>
         
-        <section class="itinerary-wrapper">
+        <section class="itinerary-wrapper padding-inline relative">
             <div class="navigation-days">
-                <ul class="itinerary-top-navigation uppercase">
+                <ul class="itinerary-top-navigation uppercase padding-block gap width-100">
                     {% for i in range(0, results["tripduration"], +1) %}
                         <a href="#day{{ i + 1 }}">
                         <li class="{{ i + 1 }}">
