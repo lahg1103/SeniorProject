@@ -18,7 +18,7 @@
         </section>
         
         <section class="itinerary-wrapper padding-inline relative">
-            <div class="navigation-days">
+            <div class="navigation-days relative">
                 <ul class="itinerary-top-navigation uppercase padding-block gap width-100">
                     {% for i in range(0, results["tripduration"], +1) %}
                         <a href="#day{{ i + 1 }}">
@@ -35,7 +35,7 @@
                 <h3 class="itinerary-heading serif"> Day {{ loop.index }} </h3>
                 <p> {{ day["daysummary"] }} </p>
 
-                <div class="day-img">
+                <div class="day-img relative">
                     {% if results['images'] %}
                         <img src="{{ results['images'][loop.index] }}" alt="">
                     {% endif %}
