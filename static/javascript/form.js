@@ -41,7 +41,7 @@ class FormValidation {
         if (!errorElement) {
             errorElement = document.createElement('div');
             errorElement.className = 'field-error';
-            errorElement.style.color = 'var(--accentTwo)';
+            errorElement.style.color = 'var(--accent-two)';
             inputElement.parentElement.appendChild(errorElement);
         }
         errorElement.textContent = message;
@@ -68,6 +68,7 @@ class FormValidation {
         currentDate.setHours(0,0,0,0);
         const arrivalDate = new Date(`${arrival.value}T00:00:00`);
         const departureDate = new Date(`${departure.value}T00:00:00`);
+        const oneDay = 24 * 60 * 60 * 1000;
 
         
         if (arrivalDate.getTime() < currentDate.getTime()) {
@@ -83,6 +84,17 @@ class FormValidation {
             isValid = false;
         }
         else {
+            this.clearFieldError(departure);
+        }
+
+        if(arrival.value && departure.value && (Math.round((departureDate - arrivalDate) / oneDay) > 7)) {
+            console.log(Math.round((departureDate - arrivalDate) / oneDay));
+            errors.push({
+                element: departure,
+                message: 'Trip duration cannot exceed 7 days.',
+            });
+            isValid = false;
+        } else {
             this.clearFieldError(departure);
         }
         
@@ -177,6 +189,9 @@ class LinkedSliders {
                 const available = parseInt(slider.value) - parseInt(slider.min);
                 const reduceBy = Math.min(available, Math.ceil(remaining / otherSliders.length));
                 slider.value = parseInt(slider.value) - reduceBy;
+
+                slider.parentNode.style.setProperty('--value', slider.value);
+                slider.parentNode.style.setProperty('--text-value', JSON.stringify((+slider.value).toLocaleString()));
 
                 remaining -= reduceBy;
         }

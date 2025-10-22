@@ -13,5 +13,16 @@ def stringify(o) :
 
 def trip_duration(arrival_date, departure_date):
     duration = (departure_date - arrival_date).days + 1
+    if duration > 7:
+        duration = 7
     return max(duration, 0)
 
+def decode_unicode(obj):
+    if isinstance(obj, dict):
+        return {k: decode_unicode(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [decode_unicode(i) for i in obj]
+    elif isinstance(obj, str):
+        return obj.encode('utf-8').decode('unicode_escape')
+    else:
+        return obj

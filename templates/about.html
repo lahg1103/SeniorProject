@@ -1,19 +1,23 @@
 {% extends 'base.html' %}
 
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/about.css') }}">
+{% endblock %}
+
 {% block body %}
 
-<section class="landing sidepage {{ current_page }}">
+<section class="landing sidepage about flex-column flex-center">
     <h1 class="serif hero">
         Behind Every Interface Is a Process
     </h1>
     <h2 class="subheader">Explore the tools, thinking, and team that shaped Voyage.</h2>
 </section>
-<section class="spacer">
+<section class="flex-column gap padding-2x">
     <div class="center">
         <p class="subheader"><strong>Voyage</strong> transforms travel planning into an effortless experience by blending AI-powered recommendations with a minimalist approach, we curate itineraries that feel practical and inspiring.</p>
     </div>
 
-    <div class="center">
+    <div class="center margin-block">
         <img src="{{ url_for('static', filename='images/icons/favicon.svg') }}" alt="wave stamp vector" class="center">
     </div>
 
@@ -35,7 +39,7 @@
     <div>
         <h1 class="subheader">Meet the Team</h1>
         <p>Voyage was created by four computer science majors passionate about merging design and technology.</p>
-        <ul class="indent">
+        <ul class="indent padding-block flex-column gap">
             <li><strong>Leslie Hurtado</strong> &mdash; Fullstack Developer & UX/UI Designer</li>
             <li><strong>Nathan Perez</strong> &mdash; AI Engineer</li>
             <li><strong>Emma Pacheco</strong> &mdash; UX/UI Designer</li>
@@ -43,7 +47,7 @@
         </ul>
    </div>
 
-   <img src="{{ url_for('static', filename='images/vector-anchor-stamp.svg') }}" alt="anchor stamp">
+   <img src="{{ url_for('static', filename='images/vector-anchor-stamp.svg') }}" alt="anchor stamp" class="stamp">
     
 </section>
 

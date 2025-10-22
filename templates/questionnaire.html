@@ -1,52 +1,57 @@
 {% extends 'base.html' %}
 
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/questionnaire.css') }}">
+{% endblock %}
+
 {% block body %}
 
-<section class="landing sidepage {{ current_page }}">
-    <h1 class="serif hero">
+<section class="landing sidepage questionnaire flex-column flex-center">
+    <h1 class="serif hero center">
         Let's Curate Your Escape
     </h1>
-    <h2 class="subheader">Answer a few questions so we can tailor your itinerary.</h2>
+    <h2 class="subheader center">Answer a few questions so we can tailor your itinerary.</h2>
 </section>
-<section class="itinerary-form">
+<section class="itinerary-form padding-inline flex-column flex-center">
     <div class="global-error">
         
     </div>
-    <form id="itinerary-form">
+    <form id="itinerary-form" class="flex-column gap padding-inline">
         {% for field in fields %}
-            <label for="{{ field.name | lower | replace(' ', '_') }}" class="input-container"> {{ field.name }} : 
+            <label for="{{ field.name | lower | replace(' ', '_') }}" class="input-container flex-column gap"> {{ field.name }} : 
                     <input type="{{ field.type }}" name="{{ field.name | lower | replace(' ', '_') }}" id="{{ field.name | lower | replace(' ', '_') }}" />
             </label>
         {% endfor %}
-        <label class="input-container"> Preferred Budget Allocation: 
+        <label class="input-container flex-column gap"> Preferred Budget Allocation: 
             <h2 class="subheader" id="totalAllocated"></h2>
-            <h2 class="subheader">Food Budget:</h2>
-            <div class="slide-container range-slider gradient" style="--min:0; --max:10000; --step:100; --value:200; --text-value:'200'; --prefix:'$'">
+            <h2 class="subheader padding-block">Food Budget:</h2>
+            <div class="slide-container range-slider gradient margin-bottom" style="--min:0; --max:10000; --step:100; --value:200; --text-value:'200'; --prefix:'$'">
                 <input type="range" class="slider" id="foodBudget" name="foodBudget" step="1">
                 <output></output>
                 <div class='range-slider__progress'></div>
             </div>
-            <h2 class="subheader">Lodging Budget:</h2>
-            <div class="slide-container range-slider gradient" style="--min:0; --max:10000; --step:100; --value:200; --text-value:'200'; --prefix:'$'">
+            <h2 class="subheader padding-block">Lodging Budget:</h2>
+            <div class="slide-container range-slider gradient margin-bottom" style="--min:0; --max:10000; --step:100; --value:200; --text-value:'200'; --prefix:'$'">
                 <input type="range" class="slider" id="lodgingBudget" name="lodgingBudget" step="1">
                 <output></output>
                 <div class='range-slider__progress'></div>
             </div>
-            <h2 class="subheader">Activity Budget:</h2>
-            <div class="slide-container range-slider gradient" style="--min:0; --max:10000; --step:100; --value:200; --text-value:'200'; --prefix:'$'">
+            <h2 class="subheader padding-block">Activity Budget:</h2>
+            <div class="slide-container range-slider gradient margin-bottom" style="--min:0; --max:10000; --step:100; --value:200; --text-value:'200'; --prefix:'$'">
                 <input type="range" class="slider" id="activityBudget" name="activityBudget" step="1">
                 <output></output>
                 <div class='range-slider__progress'></div>
             </div>
-            <h2 class="subheader">Transportation Budget:</h2>
-            <div class="slide-container range-slider gradient" style="--min:0; --max:10000; --step:100; --value:200; --text-value:'200'; --prefix:'$'">
+            <h2 class="subheader padding-block">Transportation Budget:</h2>
+            <div class="slide-container range-slider gradient margin-bottom" style="--min:0; --max:10000; --step:100; --value:200; --text-value:'200'; --prefix:'$'">
                 <input type="range" class="slider" id="transportationBudget" name="transportationBudget" step="1">
                 <output></output>
                 <div class='range-slider__progress'></div>
             </div>
         </label>
-        <button type="submit" class="text-arrow-wrapper">
-            <div class="arrow-wrapper">
+
+        <button type="submit" class="text-arrow-wrapper relative flex flex-center padding-2x gap">
+            <div class="arrow-wrapper relative">
                 <img src="{{ url_for('static', filename='images/arrow.svg') }}" alt="arrow" class="arrow up-facing black-arrow">
             </div>
             <h3 class="subheader">

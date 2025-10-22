@@ -1,15 +1,18 @@
 {% extends 'base.html' %}
 
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+{% endblock %}
 
 {% block body %}
-<section class="landing">
+<section class="landing flex-column center">
     <div class="text-wrapper">
         <h2 class="hero serif">Travel with <em>Confidence</em></h2>
         <h2 class="hero serif"><em>Your Itinerary</em> Curated.</h2>
     </div>
     <a href="#information">
-    <div class="text-arrow-wrapper">
-        <div class="arrow-wrapper">
+    <div class="text-arrow-wrapper center flex padding-2x gap relative">
+        <div class="arrow-wrapper relative">
             <img src="{{ url_for('static', filename='images/arrow.svg') }}" alt="arrow" class="arrow up-facing black-arrow">
         </div>
         <h3 class="subheader uppercase">Enter Voyage</h3>
@@ -18,15 +21,15 @@
 </section>
 <section class="information" id="information">
 
-    <div class="card stamped">
+    <div class="card stamped margin-block padding-inline">
 
-        <div class="picture">
+        <div class="picture justify-self">
             <img src="{{ url_for('static', filename='images/beach-pier.jpg') }}" alt="beach pier leading to ocean with waves splashing on it">
         </div>
 
-        <div class="text">
+        <div class="text justify-self flex-column padding-inline">
             <div class="blurb-wrapper">
-                <div class="tagline">
+                <div class="tagline padding-block">
                     <h2 class="subheader">Curated Experiences.</h2>
                     <h2 class="subheader">Zero Stress.</h2>
                 </div>
@@ -38,7 +41,7 @@
             </div>
             
     
-            <a href="{{ url_for('itinerary.questionnaire') }}" class="cta">
+            <a href="{{ url_for('itinerary.questionnaire') }}" class="cta padding">
                 <button>
                     Curate Trip <img src="{{ url_for('static', filename='images/arrow.svg') }}" alt="arrow" class="arrow up-facing">
                 </button>
@@ -46,11 +49,11 @@
         </div>
     </div>
 
-    <div class="card">
-        <div class="text right lbox">
+    <div class="card margin-block padding-inline">
+        <div class="text right lbox flex-column padding-inline">
 
             <div class="blurb-wrapper">
-                <div class="tagline">
+                <div class="tagline padding-block">
                     <h2 class="subheader">Discover How Effortless Travel Can Be.</h2>
                 </div>
                 
@@ -60,27 +63,27 @@
             </div>
             
             
-            <a href="{{ url_for('main.about') }}" class="cta">
+            <a href="{{ url_for('main.about') }}" class="cta padding">
                 <button>
                     Our Story <img src="{{ url_for('static', filename='images/arrow.svg') }}" alt="arrow" class="arrow up-facing">
                 </button>
             </a> 
         </div>
 
-        <div class="picture right">
+        <div class="picture right flex-column">
             <img src="{{ url_for('static', filename='images/woman-beach.jpg') }}" alt="">
         </div>
 
     </div>
-    <div class="card">
+    <div class="card margin-block padding-inline">
 
         <div class="picture">
             <img src="{{ url_for('static', filename='images/marinabaysandssignapore.jpg') }}" alt="beach pier leading to ocean with waves splashing on it">
         </div>
 
-        <div class="text rbox">
+        <div class="text rbox flex-column padding-inline">
             <div class="blurb-wrapper">
-                <div class="tagline">
+                <div class="tagline padding-block">
                     <h2 class="subheader">We're Open to Hearing From You.</h2>
                 </div>
 
@@ -91,7 +94,7 @@
             </div>
             
     
-            <a href="{{ url_for('main.contact') }}" class="cta">
+            <a href="{{ url_for('main.contact') }}" class="cta padding">
                 <button>
                     Contact <img src="{{ url_for('static', filename='images/arrow.svg') }}" alt="arrow" class="arrow up-facing">
                 </button>
