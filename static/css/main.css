@@ -293,6 +293,10 @@ main {
 .text-arrow-wrapper h3 {
     z-index: 1;
 }
+.required {
+    color: var(--accent-two);
+    font-weight: 800;
+}
 
 
 
