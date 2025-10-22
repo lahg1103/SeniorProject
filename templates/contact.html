@@ -1,45 +1,56 @@
 {% extends 'base.html' %}
 
-{% block head %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/contact.css') }}">
-{% endblock %}
-
 {% block body %}
 
-<section class="landing sidepage contact flex-column flex-center">
-    <h1 class="serif hero center">
+<section class="landing sidepage {{ current_page }}">
+    <h1 class="serif hero">
         We Are Here to Help You Plan With Confidence.
     </h1>
-    <h2 class="subheader center">Whether you have a question, suggestion, or just want to say hello &mdash; let's talk.</h2>
+    <h2 class="subheader">Whether you have a question, suggestion, or just want to say hello &mdash; let's talk.</h2>
 </section>
 
-<section class="contact-form flex-column gap padding">
+<section class="contact-form">
     <h2 class="subheader">Voyage App Feedback</h2>
     <p>Let us know any ideas we could implement or any changes you'd like to see for its next implementation.</p>
-    <form action="" id="contactForm" class="padding-inline flex-column gap">
-        <fieldset class="padding-inline flex-column gap">
-            <legend class="padding-block">Input Type: </legend>
-                <div>
-                    <input type="radio" name="feedback-type" value="comment">
-                    <label for="comment">Comment</label>
-                </div>
-                <div>
-                    <input type="radio" name="feedback-type" value="questions">
-                    <label for="questions">Question</label>
-                </div>
-                <div>
-                    <input type="radio" name="feedback-type" value="bugReports">
-                    <label for="bugReports">Bug Report</label>
-                </div>
-                <div>
-                    <input type="radio" name="feedback-type" value="featureRequest">
-                    <label for="featureRequest">Feature Request</label>
-                </div>
+
+    <!-- Custom Google Form POST -->
+    <form action="https://docs.google.com/forms/d/e/1FAIpQLSdQ6YZnmyyhUJdcbZrn4dwWA0oz9QVrqF0Us-pR7M58vpgNPQ/formResponse" 
+          method="POST" 
+          id="contactForm" 
+          target="_self">
         
-            <input type="text" name="feedback" placeholder="Your answer" required/>
+        <!-- Google Form hidden fields -->
+        <input type="hidden" name="fvv" value="1">
+        <input type="hidden" name="partialResponse" value="[null,null,&quot;-6976459285566660500&quot;]">
+        <input type="hidden" name="pageHistory" value="0">
+        <input type="hidden" name="fbzx" value="-6976459285566660500">
+        <input type="hidden" name="submissionTimestamp" value="-1">
+        <input type="hidden" name="entry.1591633300_sentinel">
+
+        <fieldset>
+            <legend>Input Type: </legend>
+            <div>
+                <input type="radio" name="entry.123456789" value="Comment" id="comment">
+                <label for="comment">Comment</label>
+            </div>
+            <div>
+                <input type="radio" name="entry.123456789" value="Question" id="questions">
+                <label for="questions">Question</label>
+            </div>
+            <div>
+                <input type="radio" name="entry.123456789" value="Bug Report" id="bugReports">
+                <label for="bugReports">Bug Report</label>
+            </div>
+            <div>
+                <input type="radio" name="entry.123456789" value="Feature Request" id="featureRequest">
+                <label for="featureRequest">Feature Request</label>
+            </div>
+
+            <input type="text" name="entry.987654321" placeholder="Your answer" required/>
         </fieldset>
-        <button type="submit" class="text-arrow-wrapper relative flex gap padding-2x center">
-            <div class="arrow-wrapper relative">
+
+        <button type="submit" class="text-arrow-wrapper">
+            <div class="arrow-wrapper">
                 <img src="{{ url_for('static', filename='images/arrow.svg') }}" alt="arrow" class="arrow up-facing black-arrow">
             </div>
             <h3 class="subheader">
@@ -47,6 +58,20 @@
             </h3>
         </button>
     </form>
+
+    <hr style="margin: 2em 0;">
+
+    <!-- Fallback: Google Form iframe -->
+    <h3 class="subheader">Or use the embedded Google Form:</h3>
+    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdQ6YZnmyyhUJdcbZrn4dwWA0oz9QVrqF0Us-pR7M58vpgNPQ/viewform?embedded=true" 
+            width="100%" 
+            height="700" 
+            frameborder="0" 
+            marginheight="0" 
+            marginwidth="0">
+        Loading…
+    </iframe>
+
 </section>  
 
 {% endblock %}
