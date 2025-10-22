@@ -41,7 +41,7 @@ class FormValidation {
         if (!errorElement) {
             errorElement = document.createElement('div');
             errorElement.className = 'field-error';
-            errorElement.style.color = 'var(--accentTwo)';
+            errorElement.style.color = 'var(--accent-two)';
             inputElement.parentElement.appendChild(errorElement);
         }
         errorElement.textContent = message;
