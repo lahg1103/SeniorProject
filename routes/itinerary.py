@@ -5,15 +5,20 @@ from context import fields
 from utils import functions, ai
 from extensions import db
 from models import ItineraryPreferences, Itinerary
-import requests, os
+from config import Config
+import requests, json
 
 itinerary = Blueprint("itinerary", __name__)
 pages = fields.pages
 fields = fields.itineraryfields
-unsplashKey = os.getenv("UNSPLASH_ACCESS_KEY")
+googleMapsKey = Config.GOOGLE_MAPS_KEY
+unsplashKey = Config.UNSPLASH_ACCESS_KEY
 
 def get_unsplash_images(query, trip_duration):
 
+    if unsplashKey :
+        print("unsplash key found, generating")
+    
     url = "https://api.unsplash.com/search/photos"
     params = {"query": query, "per_page": trip_duration, "client_id": unsplashKey}
     response = requests.get(url, params=params)
@@ -81,5 +86,5 @@ def display_itinerary(itinerary_id):
     existingItinerary = Itinerary.query.get_or_404(itinerary_id)
     if not existingItinerary:
         return redirect("/questionnaire")
-    itineraryData = existingItinerary.data
-    return render_template("itinerary.html", results=itineraryData, pages=pages)
+    itineraryData = functions.decode_unicode(existingItinerary.data)
+    return render_template("itinerary.html", results=itineraryData, pages=pages, googleKey = googleMapsKey)

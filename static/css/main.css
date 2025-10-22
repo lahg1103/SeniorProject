@@ -238,7 +238,7 @@ main {
     text-align: center;
 }
 .landing.sidepage {
-    min-height: 50vh;
+    min-height: fit-content;
     max-height: 60vh;
 }
 
