@@ -3,6 +3,7 @@ from config import Config
 from extensions import db, migrate
 from routes.main import main
 from routes.itinerary import itinerary
+from context import fields
 
 def create_app():
     app = Flask(__name__)
@@ -29,7 +30,7 @@ def create_app():
     def handle_exception(e):
         code = getattr(e, 'code', 500)
         message = getattr(e, 'description', str(e))
-        return render_template("errors.html", code=code, message=message), code
+        return render_template("errors.html", code=code, message=message, pages=fields.pages), code
 
     return app
 

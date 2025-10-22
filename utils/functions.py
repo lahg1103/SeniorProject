@@ -13,6 +13,8 @@ def stringify(o) :
 
 def trip_duration(arrival_date, departure_date):
     duration = (departure_date - arrival_date).days + 1
+    if duration > 7:
+        duration = 7
     return max(duration, 0)
 
 def decode_unicode(obj):

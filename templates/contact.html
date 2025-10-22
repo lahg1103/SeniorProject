@@ -6,14 +6,14 @@
 
 {% block body %}
 
-<section class="landing sidepage {{ current_page }} flex-column flex-center">
-    <h1 class="serif hero">
+<section class="landing sidepage contact flex-column flex-center">
+    <h1 class="serif hero center">
         We Are Here to Help You Plan With Confidence.
     </h1>
-    <h2 class="subheader">Whether you have a question, suggestion, or just want to say hello &mdash; let's talk.</h2>
+    <h2 class="subheader center">Whether you have a question, suggestion, or just want to say hello &mdash; let's talk.</h2>
 </section>
 
-<section class="contact-form flex-column gap padding-inline">
+<section class="contact-form flex-column gap padding">
     <h2 class="subheader">Voyage App Feedback</h2>
     <p>Let us know any ideas we could implement or any changes you'd like to see for its next implementation.</p>
     <form action="" id="contactForm" class="padding-inline flex-column gap">
@@ -38,8 +38,8 @@
         
             <input type="text" name="feedback" placeholder="Your answer" required/>
         </fieldset>
-        <button type="submit" class="text-arrow-wrapper">
-            <div class="arrow-wrapper">
+        <button type="submit" class="text-arrow-wrapper relative flex gap padding-2x center">
+            <div class="arrow-wrapper relative">
                 <img src="{{ url_for('static', filename='images/arrow.svg') }}" alt="arrow" class="arrow up-facing black-arrow">
             </div>
             <h3 class="subheader">

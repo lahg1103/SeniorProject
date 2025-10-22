@@ -40,12 +40,15 @@
                         </li>
                     {% endif %}
                 {% endfor %}
+                <li>
+                    <a href="{{ url_for('main.index') }}">
+                        <div class="logo-wrapper">
+                            <img src="{{ url_for('static', filename='images/icons/favicon.svg') }}" alt="voyage logo" class="spin">
+                        </div>
+                    </a>
+                </li>
             </ul>
-            <a href="{{ url_for('main.index') }}">
-                <div class="logo-wrapper">
-                    <img src="{{ url_for('static', filename='images/icons/favicon.svg') }}" alt="voyage logo" class="spin">
-                </div>
-            </a>
+            
             
     </nav>
     <main>

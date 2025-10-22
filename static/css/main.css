@@ -36,6 +36,7 @@ button {
     --font-size: 10px;
     --spacer: clamp(1rem, 1.5vh, 24px);
     --radius: 80px;
+    --radius-small: 32px;
     --basic-transition: 300ms ease-in-out;
 
     --text-color : #e6eef5;
@@ -148,7 +149,7 @@ nav {
 }
 nav.active {
     min-height: 100lvh;
-    padding-top: env(safe-area-inset-top);
+    padding-top: calc(env(safe-area-inset-top) + var(--hHeight));
     padding-bottom: env(safe-area-inset-bottom);
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);
@@ -185,7 +186,7 @@ nav ul {
     transition: var(--basic-transition);
 }
 .logo-wrapper {
-    max-width: calc(2.5 * var(--spacer));
+    max-width: 15vw;
 }
 
 

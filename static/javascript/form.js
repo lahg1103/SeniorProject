@@ -68,6 +68,7 @@ class FormValidation {
         currentDate.setHours(0,0,0,0);
         const arrivalDate = new Date(`${arrival.value}T00:00:00`);
         const departureDate = new Date(`${departure.value}T00:00:00`);
+        const oneDay = 24 * 60 * 60 * 1000;
 
         
         if (arrivalDate.getTime() < currentDate.getTime()) {
@@ -83,6 +84,17 @@ class FormValidation {
             isValid = false;
         }
         else {
+            this.clearFieldError(departure);
+        }
+
+        if(arrival.value && departure.value && (Math.round((departureDate - arrivalDate) / oneDay) > 7)) {
+            console.log(Math.round((departureDate - arrivalDate) / oneDay));
+            errors.push({
+                element: departure,
+                message: 'Trip duration cannot exceed 7 days.',
+            });
+            isValid = false;
+        } else {
             this.clearFieldError(departure);
         }
         

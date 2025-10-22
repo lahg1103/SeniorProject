@@ -6,11 +6,11 @@
 
 {% block body %}
 
-<section class="landing sidepage {{ current_page }} flex-column flex-center">
-    <h1 class="serif hero">
+<section class="landing sidepage questionnaire flex-column flex-center">
+    <h1 class="serif hero center">
         Let's Curate Your Escape
     </h1>
-    <h2 class="subheader">Answer a few questions so we can tailor your itinerary.</h2>
+    <h2 class="subheader center">Answer a few questions so we can tailor your itinerary.</h2>
 </section>
 <section class="itinerary-form padding-inline flex-column flex-center">
     <div class="global-error">
@@ -50,7 +50,7 @@
             </div>
         </label>
 
-        <button type="submit" class="text-arrow-wrapper relative flex center padding-2x gap">
+        <button type="submit" class="text-arrow-wrapper relative flex flex-center padding-2x gap">
             <div class="arrow-wrapper relative">
                 <img src="{{ url_for('static', filename='images/arrow.svg') }}" alt="arrow" class="arrow up-facing black-arrow">
             </div>
