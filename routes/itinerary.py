@@ -35,7 +35,14 @@ def questionnaire():
 @itinerary.route("/process-itinerary", methods=["POST"])
 def process_itinerary():
     print("processing itinerary preferences")
+
     data = request.get_json()
+
+    if "itinerary_id" in session:
+        existing_preferences = ItineraryPreferences.query.get(session["itinerary_id"])
+        if existing_preferences:
+            return {"itinerary_id": existing_preferences.id}, 200
+
     arrival = datetime.strptime(data["arrival_date"], "%Y-%m-%d")
     departure = datetime.strptime(data["departure_date"], "%Y-%m-%d")
 
