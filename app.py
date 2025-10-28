@@ -34,6 +34,8 @@ def create_app():
 
     return app
 
+app = create_app()
+
 if __name__ == "__main__":
     app = create_app()
     port = int(Config.PORT or 8000)
