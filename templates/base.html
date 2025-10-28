@@ -6,7 +6,10 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Voyage" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/helpers.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    {% block head %} {% endblock %}
     <link rel="manifest" href="{{ url_for('static', filename='manifest.webmanifest') }}">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/icons/favicon-96x96.png') }}" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/icons/favicon.svg') }}" />
@@ -16,39 +19,42 @@
 
     <title> Voyage {% block title %} {% endblock %} </title>
 </head>
-<body>
-    <header>
-        <div class="title-wrapper">
+<body class="flex-column gap relative">
+    <header class="flex align-center width-100">
+        <div class="title-wrapper flex align-center">
             <h1 class="serif voyage-header"><a href="{{ url_for('main.index') }}">Voyage</a></h1>
             <h2 class="subheader uppercase voyage-subheader">Precision Meets Paradise</h2>
         </div>
-        <button class="hamburger-wrapper">
+        <button class="hamburger-wrapper flex-column flex-center">
             <span class="hamburger-line"></span>
             <span class="hamburger-line"></span>
             <span class="hamburger-line"></span>
         </button>
     </header>
-    <nav class="hidden">
-            <ul class="stagger subheader">
+    <nav class="hidden flex-column align-center">
+            <ul class="stagger subheader flex-column">
                 {% for page in pages %}
                     {% if page.endpoint != current_page %}
                         <li style="--i: {{ loop.index0 }}">
-                            <a href="{{ url_for(page.endpoint) }}" class="nav-link uppercase">{{ page.name }}</a>
+                            <a href="{{ url_for(page.endpoint) }}" class="nav-link uppercase relative">{{ page.name }}</a>
                         </li>
                     {% endif %}
                 {% endfor %}
+                <li>
+                    <a href="{{ url_for('main.index') }}">
+                        <div class="logo-wrapper">
+                            <img src="{{ url_for('static', filename='images/icons/favicon.svg') }}" alt="voyage logo" class="spin">
+                        </div>
+                    </a>
+                </li>
             </ul>
-            <a href="{{ url_for('main.index') }}">
-                <div class="logo-wrapper">
-                    <img src="{{ url_for('static', filename='images/icons/favicon.svg') }}" alt="voyage logo" class="spin">
-                </div>
-            </a>
+            
             
     </nav>
     <main>
         {% block body %}{% endblock %}
     </main>
-    <footer>
+    <footer class="align-self">
         {% block footer %} {% endblock %}
         <p id="copy">
             &copy; <span class="year"></span>

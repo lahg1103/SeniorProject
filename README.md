@@ -24,7 +24,7 @@ cd seniorproject
 python -m venv venv
 source venv/Scripts/activate
 pip install -r requirements.txt
-python app.py
+flask --app app.py run
 ```
   
 </details>
@@ -37,7 +37,7 @@ cd seniorproject
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
-python app.py
+flask --app app.py run
 ```
   
 </details>
@@ -73,16 +73,11 @@ touch .env
 FLASK_SESSION_KEY='YOUR-SECRET-KEY'
 ```
 
-### Inside app.py under if __name__ == '__main__':
-#### Uncomment the following lines before running
-```python
-    # with app.app_context():
-    #     db.create_all()
-```
-#### Run app.py
+### To initialize your databse run
 ```bash
-python app.py
+flask init-db
 ```
+
 #### You should see a new folder 'instances/' in the root directory holding your database.
 
 ## Updating the Database Schema

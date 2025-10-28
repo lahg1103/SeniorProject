@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% block head %} <link rel="stylesheet" href="{{ url_for('static', filename='css/contact.css') }}"> {% endblock %}
 {% block body %}
 
 <section class="landing sidepage {{ current_page }}">
@@ -9,33 +9,43 @@
     <h2 class="subheader">Whether you have a question, suggestion, or just want to say hello &mdash; let's talk.</h2>
 </section>
 
-<section class="contact-form">
+<section class="contact-form flex-column padding-inline margin-block gap">
     <h2 class="subheader">Voyage App Feedback</h2>
     <p>Let us know any ideas we could implement or any changes you'd like to see for its next implementation.</p>
-    <form action="" id="contactForm">
-        <fieldset>
-            <legend>Input Type: </legend>
-                <div>
-                    <input type="radio" name="feedback-type" value="comment">
-                    <label for="comment">Comment</label>
-                </div>
-                <div>
-                    <input type="radio" name="feedback-type" value="questions">
-                    <label for="questions">Question</label>
-                </div>
-                <div>
-                    <input type="radio" name="feedback-type" value="bugReports">
-                    <label for="bugReports">Bug Report</label>
-                </div>
-                <div>
-                    <input type="radio" name="feedback-type" value="featureRequest">
-                    <label for="featureRequest">Feature Request</label>
-                </div>
-        
-            <input type="text" name="feedback" placeholder="Your answer" required/>
+
+    <!-- Custom Google Form POST -->
+    <form id="goog-form">
+
+        <fieldset class="padding-inline margin-inline flex-column gap padding-block">
+            <legend>Feedback Type <span class="required">*</span> </legend>
+            <div>
+                <input type="radio" name="feedback-type" value="Comment" id="comment">
+                <label for="comment">Comment</label>
+            </div>
+            <div>
+                <input type="radio" name="feedback-type" value="Questions" id="questions">
+                <label for="questions">Question</label>
+            </div>
+            <div>
+                <input type="radio" name="feedback-type" value="Bug Reports" id="bugReports">
+                <label for="bugReports">Bug Report</label>
+            </div>
+            <div>
+                <input type="radio" name="feedback-type" value="Feature Request" id="featureRequest">
+                <label for="featureRequest">Feature Request</label>
+            </div>
+
+            <div class="padding-block margin-block">
+                <label for="feedback" class="flex-column gap">
+                    <h3>Feedback <span class="required">*</span></h3>
+                    <input type="text" name="feedback" placeholder="Your answer" required/>
+                </label>
+            </div>
+            
         </fieldset>
-        <button type="submit" class="text-arrow-wrapper">
-            <div class="arrow-wrapper">
+
+        <button type="submit" class="text-arrow-wrapper flex center relative padding-2x gap">
+            <div class="arrow-wrapper relative">
                 <img src="{{ url_for('static', filename='images/arrow.svg') }}" alt="arrow" class="arrow up-facing black-arrow">
             </div>
             <h3 class="subheader">
@@ -44,5 +54,5 @@
         </button>
     </form>
 </section>  
-
+<script src="{{ url_for('static', filename='javascript/contact.js') }}"></script>
 {% endblock %}

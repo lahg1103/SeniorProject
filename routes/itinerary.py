@@ -5,15 +5,20 @@ from context import fields
 from utils import functions, ai
 from extensions import db
 from models import ItineraryPreferences, Itinerary
-import requests, os
+from config import Config
+import requests, json
 
 itinerary = Blueprint("itinerary", __name__)
 pages = fields.pages
 fields = fields.itineraryfields
-unsplashKey = os.getenv("UNSPLASH_ACCESS_KEY")
+googleMapsKey = Config.GOOGLE_MAPS_KEY
+unsplashKey = Config.UNSPLASH_ACCESS_KEY
 
 def get_unsplash_images(query, trip_duration):
 
+    if unsplashKey :
+        print("unsplash key found, generating")
+    
     url = "https://api.unsplash.com/search/photos"
     params = {"query": query, "per_page": trip_duration, "client_id": unsplashKey}
     response = requests.get(url, params=params)
@@ -30,7 +35,14 @@ def questionnaire():
 @itinerary.route("/process-itinerary", methods=["POST"])
 def process_itinerary():
     print("processing itinerary preferences")
+
     data = request.get_json()
+
+    if "itinerary_id" in session:
+        existing_preferences = ItineraryPreferences.query.get(session["itinerary_id"])
+        if existing_preferences:
+            return {"itinerary_id": existing_preferences.id}, 200
+
     arrival = datetime.strptime(data["arrival_date"], "%Y-%m-%d")
     departure = datetime.strptime(data["departure_date"], "%Y-%m-%d")
 
@@ -81,5 +93,5 @@ def display_itinerary(itinerary_id):
     existingItinerary = Itinerary.query.get_or_404(itinerary_id)
     if not existingItinerary:
         return redirect("/questionnaire")
-    itineraryData = existingItinerary.data
-    return render_template("itinerary.html", results=itineraryData, pages=pages)
+    itineraryData = functions.decode_unicode(existingItinerary.data)
+    return render_template("itinerary.html", results=itineraryData, pages=pages, googleKey = googleMapsKey)
