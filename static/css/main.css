@@ -41,7 +41,7 @@ button {
 
     --text-color : #e6eef5;
     --background-color : #060d0c;
-    --secondary-background : #0f1414;
+    --secondary-background : #1c261d;
     --accent-one : #676f7c;
     --accent-two : #c83e21;
     --header-gradient : linear-gradient(90deg, rgba(6, 13, 12, 0.1) 10%, rgba(6, 13, 12, 0.75) 50%, rgba(6, 13, 12, 0.1) 90%);
@@ -77,6 +77,7 @@ body {
 
     color: var(--text-color);
     background-color: var(--secondary-background);
+    background-image: linear-gradient(to bottom, var(--secondary-background) 40%, #0f1414);
     align-items: start;
 }
 
@@ -341,6 +342,16 @@ main {
 }
 
 @media screen and (width < 445px) {
+    :root {
+        --font-size: 8px;
+        --hero-font: clamp(2.5rem, 3vmin, 6rem);
+        --header-font: clamp(1.6rem, 1.85vmin, 5rem);
+        --header2-font: clamp(1.3rem, 1.6vmin, 3rem);
+        --subheader-font: clamp(1.12rem, 1.45vmin, 2.7rem);
+        --paragraph-font: clamp(1rem, 1.1vmin, 2rem);
+        --arrow-width: clamp(1rem, 2vmin, 2rem);
+        --spacer: clamp(1rem, 1.5vh, 24px);
+    }
     .arrow-wrapper::before {
         translate: -55% -55%;
     }

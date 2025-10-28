@@ -3,7 +3,6 @@
 }
 .card {
     position: relative;
-    width: 100%;
     overflow: clip;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -11,7 +10,6 @@
 .card .picture,
 .card .text {
     position: relative;
-    max-width: 75%;
     max-height: 65vh;
 }
 
@@ -43,6 +41,9 @@
     height: 75%;
     width: fit-content;
     margin-block: auto;
+}
+.card:not(.stamped) .text {
+    aspect-ratio: 9/16;
 }
 .card .text.rbox::before {
     top: 50%;

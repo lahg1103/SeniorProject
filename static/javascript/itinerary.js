@@ -66,8 +66,6 @@ class GoogleMap {
                 console.warn(`Failed query: "${q}"`, err);
             }
         }
-        
-        throw new Error(`Geocoding failed: ${data.status}`);
     }
 
     async getPhoto(placeId) {

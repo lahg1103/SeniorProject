@@ -19,7 +19,7 @@
     </div>
     </a>
 </section>
-<section class="information" id="information">
+<section class="information padding-inline" id="information">
 
     <div class="card stamped margin-block padding-inline">
 
@@ -27,7 +27,7 @@
             <img src="{{ url_for('static', filename='images/beach-pier.jpg') }}" alt="beach pier leading to ocean with waves splashing on it">
         </div>
 
-        <div class="text justify-self flex-column padding-inline">
+        <div class="text justify-self flex-column padding-inline gap">
             <div class="blurb-wrapper">
                 <div class="tagline padding-block">
                     <h2 class="subheader">Curated Experiences.</h2>
@@ -49,8 +49,8 @@
         </div>
     </div>
 
-    <div class="card margin-block padding-inline">
-        <div class="text right lbox flex-column padding-inline">
+    <div class="card margin-block">
+        <div class="text right lbox flex-column padding-inline gap">
 
             <div class="blurb-wrapper">
                 <div class="tagline padding-block">
@@ -75,13 +75,13 @@
         </div>
 
     </div>
-    <div class="card margin-block padding-inline">
+    <div class="card margin-block">
 
         <div class="picture">
             <img src="{{ url_for('static', filename='images/marinabaysandssignapore.jpg') }}" alt="beach pier leading to ocean with waves splashing on it">
         </div>
 
-        <div class="text rbox flex-column padding-inline">
+        <div class="text rbox flex-column padding-inline gap">
             <div class="blurb-wrapper">
                 <div class="tagline padding-block">
                     <h2 class="subheader">We're Open to Hearing From You.</h2>
@@ -101,5 +101,6 @@
             </a>
         </div>
     </div>
+
 </section>
 {% endblock %}
