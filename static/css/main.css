@@ -66,7 +66,7 @@ html, body {
     overscroll-behavior-y: none;
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 body {
     font-family: 'Hanken Grotesk', sans-serif;
@@ -359,6 +359,9 @@ main {
         height: 100%;
         overflow-y: scroll;
         inset: 0;
+    }
+    html {
+        overflow-y: scroll;
     }
     
     .arrow-wrapper::before {
