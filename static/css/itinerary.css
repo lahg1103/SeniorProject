@@ -68,6 +68,7 @@
     z-index: 0;
     max-height: 60vh;
     aspect-ratio: 4/3;
+    margin-inline: auto;
 }
 .day-img img {
     object-fit: cover;
