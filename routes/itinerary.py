@@ -19,15 +19,21 @@ def get_unsplash_images(query, trip_duration):
 
     if unsplashKey :
         print("unsplash key found, generating")
+    else:
+        return []
     
-    url = "https://api.unsplash.com/search/photos"
-    params = {"query": query, "per_page": trip_duration, "client_id": unsplashKey}
-    response = requests.get(url, params=params)
+    try:
+        url = "https://api.unsplash.com/search/photos"
+        params = {"query": query, "per_page": trip_duration, "client_id": unsplashKey}
+        response = requests.get(url, params=params)
 
-    if response.status_code == 200:
-        image_urls = [r["urls"]["regular"] for r in response.json().get("results", [])]
-        return image_urls
-    return []
+        if response.status_code == 200:
+            image_urls = [r["urls"]["regular"] for r in response.json().get("results", [])]
+            return image_urls
+        return []
+    except Exception as e:
+        print(f"Error fetching images from Unsplash: {e}")
+        return []
 
 @itinerary.route("/api/place", methods=["GET"])
 def get_place():
