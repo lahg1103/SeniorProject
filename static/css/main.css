@@ -358,6 +358,7 @@ main {
         position: fixed;
         height: 100%;
         overflow-y: scroll;
+        inset: 0;
     }
     
     .arrow-wrapper::before {
