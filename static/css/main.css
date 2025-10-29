@@ -66,6 +66,7 @@ html, body {
     overscroll-behavior-y: none;
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);
+    overflow-y: scroll;
 }
 body {
     font-family: 'Hanken Grotesk', sans-serif;
@@ -78,7 +79,6 @@ body {
 
     color: var(--text-color);
     background-color: var(--secondary-background);
-    background-image: linear-gradient(to bottom, var(--secondary-background) 40%, #0f1414);
     align-items: start;
 }
 
