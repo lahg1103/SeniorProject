@@ -266,6 +266,18 @@ class LinkedSliders {
         }
     }
 
+// loader
+let pollItineraryStatus = function(itineraryId) {
+    fetch(`/itinerary-status/${itineraryId}`).then(r => r.json()).then(data => {
+        if ( data.status === "ready" ) {
+            window.location.href = `/itinerary/${data.itinerary_id}`;
+        } else {
+            setTimeout(()=> pollItineraryStatus(itineraryId), 2500);
+        }
+    })
+    .catch(() => setTimeout(() => pollItineraryStatus(itineraryId), 2500));
+}
+
 
 document.addEventListener('DOMContentLoaded', ()=> {
     const form = document.getElementById('itinerary-form');
@@ -317,9 +329,8 @@ document.addEventListener('DOMContentLoaded', ()=> {
 
                 const buildResponse = await fetch(`/build-itinerary/${itinerary_id}`);
                 if (!buildResponse.ok) throw new Error("Failed to build itinerary");
-                const buildData = await buildResponse.json();
-
-                window.location.href = `/itinerary/${buildData.itinerary_id}`;
+                
+                pollItineraryStatus(itinerary_id);
             }
             catch (err) {
                 console.error(err);
