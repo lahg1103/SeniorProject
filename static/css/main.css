@@ -74,6 +74,7 @@ body {
     
     overflow-x: clip;
     overflow-y: auto;
+    position: relative;
 
     color: var(--text-color);
     background-color: var(--secondary-background);
@@ -353,6 +354,12 @@ main {
         --arrow-width: clamp(1rem, 2vmin, 2rem);
         --spacer: clamp(1rem, 1.5vh, 24px);
     }
+    body {
+        position: fixed;
+        height: 100%;
+        overflow-y: scroll;
+    }
+    
     .arrow-wrapper::before {
         translate: -55% -55%;
     }
