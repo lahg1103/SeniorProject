@@ -12,12 +12,12 @@
             <h1>Itinerary Not Found</h1>
         </section>
     {% else %}
-        <section class="landing sidepage itinerary flex-column flex-center">
+        <section class="landing sidepage itinerary flex-column flex-center padding">
         <h1 class="hero serif center"> {{ results.city }} in {{ results.tripduration }} Days </h1>
         <h2 class="blurb sidepage center"> {{ results.promotionalblurb }} </h2>
         </section>
         
-        <section class="itinerary-wrapper padding-inline relative flex-column">
+        <section class="itinerary-wrapper relative flex-column">
             <div class="navigation-days relative">
                 <ul class="itinerary-top-navigation uppercase padding-block gap width-100 relative">
                     {% for i in range(0, results["tripduration"], +1) %}
@@ -28,7 +28,6 @@
                         </a>
                     {% endfor %}
                 </ul>
-                <div class="highlight"></div>
             </div>
         {% for day in results["itineraryperday"] %}
 
@@ -36,7 +35,7 @@
                 <h3 class="itinerary-heading serif"> Day {{ loop.index }} </h3>
                 <p> {{ day["daysummary"] }} </p>
 
-                <div class="day-img relative">
+                <div class="day-img relative center justify-self margin-inline">
                     {% if results['images'] %}
                         <img src="{{ results['images'][loop.index] }}" alt="">
                     {% endif %}
@@ -44,10 +43,10 @@
 
                 <h3 class="subheader">Lodging: </h3>
                 <p>{{ day["lodging"]["name"] }} &mdash; {{ day["lodging"]["address"] }} | cost: {{ day["lodging"]["cost"] }} </p>
-                <div class="google flex gap">
-                    <div class="map relative" data-location="{{ day['lodging']['name'] }}" data-address="{{ day['lodging']['address'] }}">
+                <div class="google gap relative flex flex-center">
+                    <div class="map relative height-100" data-location="{{ day['lodging']['name'] }}" data-address="{{ day['lodging']['address'] }}">
                         <iframe src="" frameborder="0"></iframe>
-                    </div><div class="img relative"></div>
+                    </div><div class="img relative height-100"></div>
                 </div>
 
                 {% for activity in day["timeblocks"]["morning"] %}
@@ -55,10 +54,10 @@
                 <p>{{ activity["name"] }} &mdash; {{ activity["address"] }} | cost: {{ activity["cost"] }} </p>
                 <p>{{ activity["summary"] }}</p>
                 <p><strong>Breakfast: </strong> {{ day["food"]["breakfast"]["restaurant"] }} &mdash; {{ day["food"]["breakfast"]["address"] }} | cost: {{ day["food"]["lunch"]["cost"]}}</p>
-                <div class="google flex gap">
-                    <div class="map relative" data-location="{{ day['food']['breakfast']['restaurant'] }}" data-address="{{ day['food']['breakfast']['address'] }}">
+                <div class="google gap relative flex flex-center">
+                    <div class="map relative height-100" data-location="{{ day['food']['breakfast']['restaurant'] }}" data-address="{{ day['food']['breakfast']['address'] }}">
                         <iframe src="" frameborder="0"></iframe>
-                    </div><div class="img relative"></div>
+                    </div><div class="img relative height-100"></div>
                 </div>
                 {% endfor %}
 
@@ -67,10 +66,10 @@
                 <p>{{ activity["name"] }} &mdash; {{ activity["address"] }} | cost: {{ activity["cost"] }} </p>
                 <p>{{ activity["summary"] }}</p>
                 <p><strong>Lunch: </strong> {{ day["food"]["lunch"]["restaurant"] }} &mdash; {{ day["food"]["lunch"]["address"] }} | cost: {{ day["food"]["lunch"]["cost"]}}</p>
-                <div class="google flex gap">
-                    <div class="map relative" data-location="{{ day['food']['lunch']['restaurant'] }}" data-address="{{ day['food']['lunch']['address'] }}">
+                <div class="google gap relative flex flex-center">
+                    <div class="map relative height-100" data-location="{{ day['food']['lunch']['restaurant'] }}" data-address="{{ day['food']['lunch']['address'] }}">
                         <iframe src="" frameborder="0"></iframe>
-                    </div><div class="img relative"></div>
+                    </div><div class="img relative height-100"></div>
                 </div>
                 {% endfor %}
                 
@@ -79,10 +78,10 @@
                 <p>{{ activity["name"] }} &mdash; {{ activity["address"] }} | cost: {{ activity["cost"] }} </p>
                 <p>{{ activity["summary"] }}</p>
                 <p><strong>Dinner: </strong> {{ day["food"]["dinner"]["restaurant"] }} &mdash; {{ day["food"]["dinner"]["address"] }} | cost: {{ day["food"]["lunch"]["cost"]}}</p>
-                <div class="google flex gap">
-                    <div class="map relative" data-location="{{ day['food']['dinner']['restaurant'] }}" data-address="{{ day['food']['dinner']['address'] }}">
+                <div class="google gap relative flex flex-center">
+                    <div class="map relative height-100" data-location="{{ day['food']['dinner']['restaurant'] }}" data-address="{{ day['food']['dinner']['address'] }}">
                         <iframe src="" frameborder="0"></iframe>
-                    </div><div class="img relative"></div>
+                    </div><div class="img relative height-100"></div>
                 </div>
                 {% endfor %}
                 

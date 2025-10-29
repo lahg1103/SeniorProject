@@ -45,12 +45,13 @@ class GoogleMap {
             `https://www.google.com/maps/embed/v1/place?key=${this.embedKey}&q=place_id:${placeData.place_id}`;
 
         if (placeData.photos.length > 0) {
-            placeData.photos.forEach(url => {
-                const img = document.createElement('img');
-                img.src = url;
-                img.className = 'goog-photo';
-                imgPlaceholder.appendChild(img);
-            });
+            let photo = placeData.photos[0];
+            const img = document.createElement('img');
+            img.src = photo;
+            img.className = 'goog-photo';
+            imgPlaceholder.appendChild(img);
+        } else {
+            imgPlaceholder?.remove();
         }
     }
 }

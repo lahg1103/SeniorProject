@@ -8,6 +8,8 @@
 }
 .hero {
     font-size: var(--hero-font);
+    overflow-wrap: break-word;
+    word-break: break-all;
 }
 .subheader {
     font-weight: 600;
@@ -62,8 +64,6 @@ button {
 html, body {
     overscroll-behavior-block: none;
     overscroll-behavior-y: none;
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);
 }
@@ -218,7 +218,8 @@ main {
     position: relative;
     padding: var(--spacer);
     background-color: transparent;
-    width: 100vw;
+    width: 100%;
+    max-width: 100vw;
     min-height: 100lvh;
     max-height: 100lvh;
 }
@@ -357,5 +358,10 @@ main {
     }
     .up-facing {
         transform: rotate(-137deg) translateY(-0.2dvh) translateX(-0.15vmin);
+    }
+}
+@media screen and (width > 600px) {
+    :root {
+        --spacer: clamp(1rem, 3vh, 24px);
     }
 }
