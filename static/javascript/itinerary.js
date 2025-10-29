@@ -1,16 +1,11 @@
-
 class GoogleMap {
-    constructor(placeholderList, photoWidth = 800, apiKey) {
-        this.placeholders = placeholderList,
-        this.width = photoWidth,
-        this.apiKey = apiKey,
-        this.init()
+    constructor(placeholders, embedKey) {
+        this.placeholders = placeholders;
+        this.embedKey = embedKey;
+        this.init();
     }
 
     async init() {
-        if (!this.apiKey) {
-            console.log("no API key found");
-        }
         for (const placeholder of this.placeholders) {
             try {
                 await this.processPlaceholder(placeholder);
@@ -25,66 +20,44 @@ class GoogleMap {
         const imgPlaceholder = placeholder.querySelector('.img');
         const location = mapPlaceholder.dataset.location;
         const address = mapPlaceholder.dataset.address;
-        const queries = [
-            `${location}, ${address}`,
-            location,
-            address
-        ];
+        const queries = [`${location}, ${address}`, location, address];
 
-        try {
-            const placeId = await this.getPlaceId(queries);
-        
-            mapPlaceholder.querySelector('iframe').src = `https://www.google.com/maps/embed/v1/place?key=${this.apiKey}&q=place_id:${placeId}`;
-
-            const photoUrl = await this.getPhoto(placeId);
-            const img = document.createElement('img');
-            img.src = photoUrl;
-            img.className = 'goog-photo';
-            imgPlaceholder.appendChild(img);
-        } catch (err) {
-            console.warn(`No map/photo found for ${location}, ${address}, ${err}`);
-
-            if(mapPlaceholder) mapPlaceholder.remove();
-            if (imgPlaceholder) imgPlaceholder.remove();
-        }
-        
-
-    }
-
-    async getPlaceId(queries) {
+        let placeData = null;
         for (const q of queries) {
-            const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(q)}&key=${this.apiKey}`;
             try {
-                const result = await fetch(url);
-                const data = await result.json();
-
-                if (data.status === 'OK' && data.results.length > 0) {
-                return data.results[0].place_id;
-                }
-
+                const res = await fetch(`/api/place?address=${encodeURIComponent(q)}`);
+                if (!res.ok) continue;
+                placeData = await res.json();
+                break;
             } catch (err) {
-                console.warn(`Failed query: "${q}"`, err);
+                console.warn(`Failed query: ${q}`, err);
             }
         }
-    }
 
-    async getPhoto(placeId) {
-        const url = `https://places.googleapis.com/v1/places/${placeId}`;
-        const result = await fetch(url, {
-            headers: {
-                'X-Goog-Api-Key': this.apiKey,
-                'X-Goog-FieldMask': 'photos'
-            }
-        });
-        const data = await result.json();
-        if (!data.photos || data.photos.length === 0) throw new Error('No photos found'); 
-        return `https://places.googleapis.com/v1/${data.photos[0].name}/media?maxWidthPx=${this.width}&key=${this.apiKey}`;
+        if (!placeData) {
+            console.warn(`No map/photo found for ${location}, ${address}`);
+            mapPlaceholder?.remove();
+            imgPlaceholder?.remove();
+            return;
+        }
+
+        mapPlaceholder.querySelector('iframe').src =
+            `https://www.google.com/maps/embed/v1/place?key=${this.embedKey}&q=place_id:${placeData.place_id}`;
+
+        if (placeData.photos.length > 0) {
+            placeData.photos.forEach(url => {
+                const img = document.createElement('img');
+                img.src = url;
+                img.className = 'goog-photo';
+                imgPlaceholder.appendChild(img);
+            });
+        }
     }
 }
 
 document.addEventListener('DOMContentLoaded', ()=>{
     const googlePlaceholder = document.querySelectorAll('.google');
 
-    const googleMap = new GoogleMap(googlePlaceholder, 800, apiKey);
+    const googleMap = new GoogleMap(googlePlaceholder, apiKey);
 
 });

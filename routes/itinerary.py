@@ -12,6 +12,7 @@ itinerary = Blueprint("itinerary", __name__)
 pages = fields.pages
 fields = fields.itineraryfields
 googleMapsKey = Config.GOOGLE_MAPS_KEY
+googleMapsKeyBackend = Config.GOOGLE_MAPS_KEY_BACKEND
 unsplashKey = Config.UNSPLASH_ACCESS_KEY
 
 def get_unsplash_images(query, trip_duration):
@@ -27,6 +28,42 @@ def get_unsplash_images(query, trip_duration):
         image_urls = [r["urls"]["regular"] for r in response.json().get("results", [])]
         return image_urls
     return []
+
+@itinerary.route("/api/place", methods=["GET"])
+def get_place():
+    address = request.args.get("address")
+    if not address:
+        return {"error": "Address required"}, 400
+
+    api_key = googleMapsKeyBackend
+
+    geocode_url = "https://maps.googleapis.com/maps/api/geocode/json"
+    geocode_params = {"address": address, "key": api_key}
+    geo_res = requests.get(geocode_url, params=geocode_params).json()
+
+    if geo_res.get("status") != "OK" or not geo_res.get("results"):
+        return {"error": "Place not found"}, 404
+
+    place_id = geo_res["results"][0]["place_id"]
+
+    places_url = f"https://places.googleapis.com/v1/places/{place_id}"
+    places_res = requests.get(
+        places_url,
+        headers={
+            "X-Goog-Api-Key": api_key,
+            "X-Goog-FieldMask": "photos"
+        }
+    ).json()
+
+    photos = []
+    if "photos" in places_res:
+        for photo in places_res["photos"]:
+            photos.append(f"https://places.googleapis.com/v1/{photo['name']}/media?maxWidthPx=800&key={api_key}")
+
+    return {
+        "place_id": place_id,
+        "photos": photos
+    }
 
 @itinerary.route("/questionnaire")
 def questionnaire():

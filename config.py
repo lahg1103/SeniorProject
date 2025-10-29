@@ -16,6 +16,7 @@ class Config:
     SQLALCHEMY_DATABASE_URI = DATABASE_URL
     UNSPLASH_ACCESS_KEY = os.environ.get("UNSPLASH_ACCESS_KEY") or os.getenv("UNSPLASH_ACCESS_KEY")
     GOOGLE_MAPS_KEY = os.environ.get("GOOGLE_MAPS_KEY") or os.getenv("GOOGLE_MAPS_KEY")
+    GOOGLE_MAPS_KEY_BACKEND = os.environ.get("GOOGLE_MAPS_KEY_BACKEND") or os.getenv("GOOGLE_MAPS_KEY_BACKEND")
 
     DEBUG = os.getenv("FLASK_DEBUG", "false").lower() == "true"
     PORT = os.getenv("PORT")
