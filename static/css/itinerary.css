@@ -96,6 +96,7 @@
     z-index: 0;
     aspect-ratio: 1/1;
     flex: 1 1 calc(50% - var(--spacer));
+    max-height: 45vh;
 }
 .google .map iframe {
     height: 100%;
