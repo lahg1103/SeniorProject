@@ -31,11 +31,6 @@ def get_unsplash_images(query, trip_duration):
 
 @itinerary.route("/api/place", methods=["GET"])
 def get_place():
-    
-    existing_itinerary = Itinerary.query.get(session["itinerary_id"])
-    if existing_itinerary:
-        if existing_itinerary.google_places:
-            return existing_itinerary.google_places, 200
 
     address = request.args.get("address")
     if not address:
@@ -65,9 +60,6 @@ def get_place():
     if "photos" in places_res:
         for photo in places_res["photos"]:
             photos.append(f"https://places.googleapis.com/v1/{photo['name']}/media?maxWidthPx=800&key={api_key}")
-
-    existing_itinerary.google_places = places_res
-    db.session.commit()
 
     return {
         "place_id": place_id,
