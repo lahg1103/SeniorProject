@@ -345,7 +345,7 @@ main {
 @media screen and (width < 445px) {
     :root {
         --font-size: 8px;
-        --hero-font: clamp(2.5rem, 3vmin, 6rem);
+        --hero-font: clamp(2rem, 2.5vmin, 6rem);
         --header-font: clamp(1.6rem, 1.85vmin, 5rem);
         --header2-font: clamp(1.3rem, 1.6vmin, 3rem);
         --subheader-font: clamp(1.12rem, 1.45vmin, 2.7rem);
