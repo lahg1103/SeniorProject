@@ -6,7 +6,8 @@ from utils import functions, ai
 from extensions import db
 from models import ItineraryPreferences, Itinerary
 from config import Config
-import requests, json
+import requests
+import json
 
 itinerary = Blueprint("itinerary", __name__)
 pages = fields.pages
@@ -15,25 +16,29 @@ googleMapsKey = Config.GOOGLE_MAPS_KEY
 googleMapsKeyBackend = Config.GOOGLE_MAPS_KEY_BACKEND
 unsplashKey = Config.UNSPLASH_ACCESS_KEY
 
+
 def get_unsplash_images(query, trip_duration):
 
-    if unsplashKey :
+    if unsplashKey:
         print("unsplash key found, generating")
     else:
         return []
-    
+
     try:
         url = "https://api.unsplash.com/search/photos"
-        params = {"query": query, "per_page": trip_duration, "client_id": unsplashKey}
+        params = {"query": query, "per_page": trip_duration,
+                  "client_id": unsplashKey}
         response = requests.get(url, params=params)
 
         if response.status_code == 200:
-            image_urls = [r["urls"]["regular"] for r in response.json().get("results", [])]
+            image_urls = [r["urls"]["regular"]
+                          for r in response.json().get("results", [])]
             return image_urls
         return []
     except Exception as e:
         print(f"Error fetching images from Unsplash: {e}")
         return []
+
 
 @itinerary.route("/api/place", methods=["GET"])
 def get_place():
@@ -65,16 +70,19 @@ def get_place():
     photos = []
     if "photos" in places_res:
         for photo in places_res["photos"]:
-            photos.append(f"https://places.googleapis.com/v1/{photo['name']}/media?maxWidthPx=800&key={api_key}")
+            photos.append(
+                f"https://places.googleapis.com/v1/{photo['name']}/media?maxWidthPx=800&key={api_key}")
 
     return {
         "place_id": place_id,
         "photos": photos
     }
 
+
 @itinerary.route("/questionnaire")
 def questionnaire():
     return render_template("questionnaire.html", pages=pages, fields=fields, current_page=request.endpoint)
+
 
 @itinerary.route("/process-itinerary", methods=["POST"])
 def process_itinerary():
@@ -83,7 +91,8 @@ def process_itinerary():
     data = request.get_json()
 
     if "itinerary_id" in session:
-        existing_preferences = ItineraryPreferences.query.get(session["itinerary_id"])
+        existing_preferences = ItineraryPreferences.query.get(
+            session["itinerary_id"])
         if existing_preferences:
             return {"itinerary_id": existing_preferences.id}, 200
 
@@ -91,6 +100,7 @@ def process_itinerary():
     departure = datetime.strptime(data["departure_date"], "%Y-%m-%d")
 
     itinerary = ItineraryPreferences(
+        travelers=int(data["number_of_travelers"]),
         budget=int(data["budget"]),
         arrivaldate=arrival,
         departuredate=departure,
@@ -108,9 +118,11 @@ def process_itinerary():
     session.permanent = True
     return {"itinerary_id": itinerary.id}, 200
 
+
 @itinerary.route("/build-itinerary/<int:itinerary_id>")
 def success(itinerary_id):
-    existingItinerary = Itinerary.query.filter_by(preferences_id=itinerary_id).first()
+    existingItinerary = Itinerary.query.filter_by(
+        preferences_id=itinerary_id).first()
 
     if existingItinerary:
         return {"itinerary_id": existingItinerary.id}, 200
@@ -124,13 +136,17 @@ def success(itinerary_id):
         trip_duration = preferences.get("tripDuration")
 
         if destination:
-            itinerary_data["images"] = get_unsplash_images(destination, trip_duration + 1)
+            itinerary_data["images"] = get_unsplash_images(
+                destination, trip_duration + 1)
 
-        new_itinerary = Itinerary(preferences_id=itinerary_id, data=itinerary_data)
+        itinerary_data["travelers"] = itinerary.travelers
+        new_itinerary = Itinerary(
+            preferences_id=itinerary_id, data=itinerary_data)
         db.session.add(new_itinerary)
         db.session.commit()
 
     return {"itinerary_id": new_itinerary.id}, 200
+
 
 @itinerary.route("/itinerary/<int:itinerary_id>")
 def display_itinerary(itinerary_id):
@@ -138,4 +154,4 @@ def display_itinerary(itinerary_id):
     if not existingItinerary:
         return redirect("/questionnaire")
     itineraryData = functions.decode_unicode(existingItinerary.data)
-    return render_template("itinerary.html", results=itineraryData, pages=pages, googleKey = googleMapsKey)
+    return render_template("itinerary.html", results=itineraryData, pages=pages, googleKey=googleMapsKey)
