@@ -9,7 +9,6 @@ import json
 import os
 
 
-
 class Lodging(BaseModel):
     name: str
     address: str
@@ -32,7 +31,8 @@ class Activities(BaseModel):
     name: str
     address: str
     cost: str = Field(description="number and currency")
-    time: str = Field(description="Give me a short, evocative label for this timeblock—just an article, an adjective, and a noun. No full sentences.")
+    time: str = Field(
+        description="Give me a short, evocative label for this timeblock—just an article, an adjective, and a noun. No full sentences.")
     summary: str
 
 
@@ -42,23 +42,27 @@ class Directions(BaseModel):
 
 
 class TimeBlocks(BaseModel):
-    morning: Annotated[List[Activities], Field(min_items=1, max_items=1, description="The list of activities for the morning")]
-    afternoon: Annotated[List[Activities], Field(min_items=1, max_items=1, description="The list of activities for the morning")]
-    evening: Annotated[List[Activities], Field(min_items=1, max_items=1, description="The list of activities for the morning")]
+    morning: Annotated[List[Activities], Field(
+        min_items=1, max_items=1, description="The list of activities for the morning")]
+    afternoon: Annotated[List[Activities], Field(
+        min_items=1, max_items=1, description="The list of activities for the morning")]
+    evening: Annotated[List[Activities], Field(
+        min_items=1, max_items=1, description="The list of activities for the morning")]
 
 
 class DayItinerary(BaseModel):
     lodging: Lodging
     food: Food
     directions: Directions
-    daysummary: str 
+    daysummary: str
     timeblocks: TimeBlocks
 
 
 class Itinerary(BaseModel):
     itineraryperday: List[DayItinerary]
     promotionalblurb: str
-    tripduration: int = Field(description="an integer value representing the length in days of the trip")
+    tripduration: int = Field(
+        description="an integer value representing the length in days of the trip")
     city: str
 
 
@@ -75,9 +79,9 @@ def generateItinerary(preferences):
         itinerary = client.models.generate_content(
             model="gemini-2.5-flash",
             config={
-                "system_instruction": ("You are a travel agent expert. You are building a travel itinerary based on the following preferences listed. Generate realistic lodging, restaurants, timelines, etc. with the information given. Avoid generic terms like 'public transportation' be specific to the location. Avoid generic terms like 'various locations' always be sure to pick out a specific spot. Make sure that each time block (morning, afternoon, evening) has a brief, editorial description for the meal and activity planned for that specific time block. Make sure meals are allocated to their respective time block (breakfast in the morning, lunch in the afternoon, dinner in the evening) and write a brief description of their meal, validating that it is in line with their dietary needs (if they're vegetarian validate that their meal is vegetarian). Make sure that activities are allocated to their respective time block (morning activities in the morning, afternoon activities in the afternoon, evening activities in the evening)."),
-                "thinking_config" : {
-                    "thinking_budget" : 0
+                "system_instruction": ("You are a travel agent expert. You are building a travel itinerary based on the following preferences listed. Generate realistic lodging, restaurants, timelines, etc. with the information given. There is an input field for the number of traveler's. Verify that each traveler is being accounted for and adjust lodging, meals, transportation, and activities accordingly if there is  more than 1 traveler. When travelers are more than 1 use terms like 'group activities' or 'eat together' to validate that it's more than one traveler on the trip. Interpret the total budget as being for the entire group. Avoid generic terms like 'public transportation' be specific to the location. Avoid generic terms like 'various locations' always be sure to pick out a specific spot. Make sure that each time block (morning, afternoon, evening) has a brief, editorial description for the meal and activity planned for that specific time block. Make sure meals are allocated to their respective time block (breakfast in the morning, lunch in the afternoon, dinner in the evening) and write a brief description of their meal, validating that it is in line with their dietary needs (if they're vegetarian validate that their meal is vegetarian). Make sure that activities are allocated to their respective time block (morning activities in the morning, afternoon activities in the afternoon, evening activities in the evening)."),
+                "thinking_config": {
+                    "thinking_budget": 0
                 },
                 "response_mime_type": "application/json",
                 "response_schema": Itinerary,
@@ -88,4 +92,3 @@ def generateItinerary(preferences):
         return json.loads(itinerary.text)
     except Exception as e:
         return "Error: {e}"
-
