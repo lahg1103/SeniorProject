@@ -3,6 +3,7 @@ from extensions import db
 
 class ItineraryPreferences(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    numberOfTravelers = db.Column(db.Integer, default=1, nullable=True)
     budget = db.Column(db.Integer, nullable=False)
     arrivaldate = db.Column(db.Date, default=date.today)
     departuredate = db.Column(db.Date, nullable=False)

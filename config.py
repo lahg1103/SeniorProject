@@ -7,7 +7,7 @@ class Config:
     SECRET_KEY = os.environ.get("FLASK_SESSION_KEY") or os.getenv("FLASK_SESSION_KEY")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-    DATABASE_URL = os.environ.get("DATABSE_URL") or os.getenv("DATABASE_URL") 
+    DATABASE_URL = os.environ.get("DATABASE_URL") or os.getenv("DATABASE_URL") 
     if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
         DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://")
     else:

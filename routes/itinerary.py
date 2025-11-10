@@ -107,35 +107,41 @@ def questionnaire():
 def process_itinerary():
     print("processing itinerary preferences")
 
-    data = request.get_json()
+    try:
+        data = request.get_json()
+        print(data)
 
-    if "itinerary_id" in session:
-        existing_preferences = ItineraryPreferences.query.get(
-            session["itinerary_id"])
-        if existing_preferences:
-            return {"itinerary_id": existing_preferences.id}, 200
+        if "itinerary_id" in session:
+            existing_preferences = ItineraryPreferences.query.get(
+                session["itinerary_id"])
+            if existing_preferences:
+                return {"itinerary_id": existing_preferences.id}, 200
 
-    arrival = datetime.strptime(data["arrival_date"], "%Y-%m-%d")
-    departure = datetime.strptime(data["departure_date"], "%Y-%m-%d")
+        arrival = datetime.strptime(data["arrival_date"], "%Y-%m-%d")
+        departure = datetime.strptime(data["departure_date"], "%Y-%m-%d")
 
-    itinerary = ItineraryPreferences(
-        travelers=int(data["number_of_travelers"]),
-        budget=int(data["budget"]),
-        arrivaldate=arrival,
-        departuredate=departure,
-        destination=escape(data.get("destination", "").strip()),
-        foodBudget=int(data["foodBudget"]),
-        lodgingBudget=int(data["lodgingBudget"]),
-        transportationBudget=int(data["transportationBudget"]),
-        activityBudget=int(data["activityBudget"]),
-        tripDuration=functions.trip_duration(arrival, departure),
-    )
+        itinerary = ItineraryPreferences(
+            numberOfTravelers=int(data["number_of_travelers"]),
+            budget=int(data["budget"]),
+            arrivaldate=arrival,
+            departuredate=departure,
+            destination=escape(data.get("destination", "").strip()),
+            foodBudget=int(data["foodBudget"]),
+            lodgingBudget=int(data["lodgingBudget"]),
+            transportationBudget=int(data["transportationBudget"]),
+            activityBudget=int(data["activityBudget"]),
+            tripDuration=functions.trip_duration(arrival, departure),
+        )
 
-    db.session.add(itinerary)
-    db.session.commit()
-    session["itinerary_id"] = itinerary.id
-    session.permanent = True
-    return {"itinerary_id": itinerary.id}, 200
+        db.session.add(itinerary)
+        db.session.commit()
+        session["itinerary_id"] = itinerary.id
+        session.permanent = True
+        return {"itinerary_id": itinerary.id}, 200
+    except Exception as e:
+        print(str(e))
+        return{"error": str(e)}, 500
+
 
 
 @itinerary.route("/build-itinerary/<int:itinerary_id>")
@@ -160,8 +166,9 @@ def itinerary_status(itinerary_id):
 
 @itinerary.route("/itinerary/<int:itinerary_id>")
 def display_itinerary(itinerary_id):
-    existingItinerary = Itinerary.query.get_or_404(itinerary_id)
+    existingItinerary = Itinerary.query.get(itinerary_id)
     if not existingItinerary:
+        session.pop("itinerary_id", None)
         return redirect("/questionnaire")
     itineraryData = functions.decode_unicode(existingItinerary.data)
     return render_template("itinerary.html", results=itineraryData, pages=pages, googleKey=googleMapsKey)

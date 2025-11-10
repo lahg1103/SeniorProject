@@ -37,8 +37,8 @@ pages = [{'name': 'Home', 'endpoint': 'main.index'},
          ]
 itineraryfields = [
     {'name': 'Number of Travelers', 'type': 'number',
-        min: 1, max: 10, 'step': 1},
-    {'name': 'Budget', 'type': 'number', 'currency': 'USD'},
+        'min': '1', 'max': '10', 'step': '1'},
+    {'name': 'Budget', 'type': 'number', 'currency': 'USD', 'min': '100', 'max': '1000000', 'step': '1'},
     {'name': 'Arrival Date', 'type': 'date'},
     {'name': 'Departure Date', 'type': 'date'},
     {'name': 'Destination', 'type': 'text'},
