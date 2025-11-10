@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, session, redirect, url_for
+from flask import Blueprint, render_template, request, session, redirect, url_for, jsonify, current_app
 from markupsafe import escape
 from datetime import datetime
 from context import fields
@@ -6,8 +6,8 @@ from utils import functions, ai
 from extensions import db
 from models import ItineraryPreferences, Itinerary
 from config import Config
-import requests
-import json
+from threading import Thread
+import requests, json
 
 itinerary = Blueprint("itinerary", __name__)
 pages = fields.pages
@@ -39,6 +39,25 @@ def get_unsplash_images(query, trip_duration):
         print(f"Error fetching images from Unsplash: {e}")
         return []
 
+def build_itinerary_task(app, itinerary_id):
+    with app.app_context():
+        try:
+            print("adding to database")
+            itinerary = ItineraryPreferences.query.get_or_404(itinerary_id)
+            preferences = functions.clean_instance(itinerary)
+            itinerary_data = ai.generateItinerary(preferences)
+            destination = preferences.get("destination")
+            trip_duration = preferences.get("tripDuration")
+
+            if destination:
+                itinerary_data["images"] = get_unsplash_images(destination, trip_duration + 1)
+
+            new_itinerary = Itinerary(preferences_id=itinerary_id, data=itinerary_data)
+            db.session.add(new_itinerary)
+            db.session.commit()
+        except Exception as e:
+            print("Error generating itinerary: ", e)
+        
 
 @itinerary.route("/api/place", methods=["GET"])
 def get_place():
@@ -127,25 +146,16 @@ def success(itinerary_id):
     if existingItinerary:
         return {"itinerary_id": existingItinerary.id}, 200
 
-    else:
-        print("adding to database")
-        itinerary = ItineraryPreferences.query.get_or_404(itinerary_id)
-        preferences = functions.clean_instance(itinerary)
-        itinerary_data = ai.generateItinerary(preferences)
-        destination = preferences.get("destination")
-        trip_duration = preferences.get("tripDuration")
+    app = current_app._get_current_object()
+    Thread(target=build_itinerary_task, args=(app,itinerary_id,)).start()
+    return jsonify({"status": "processing", "itinerary_id": itinerary_id}), 200
 
-        if destination:
-            itinerary_data["images"] = get_unsplash_images(
-                destination, trip_duration + 1)
-
-        itinerary_data["travelers"] = itinerary.travelers
-        new_itinerary = Itinerary(
-            preferences_id=itinerary_id, data=itinerary_data)
-        db.session.add(new_itinerary)
-        db.session.commit()
-
-    return {"itinerary_id": new_itinerary.id}, 200
+@itinerary.route("/itinerary-status/<int:itinerary_id>")
+def itinerary_status(itinerary_id):
+    itinerary = Itinerary.query.filter_by(preferences_id=itinerary_id).first()
+    if itinerary:
+        return jsonify({"status": "ready", "itinerary_id": itinerary.id})
+    return jsonify({"status": "processing"})
 
 
 @itinerary.route("/itinerary/<int:itinerary_id>")
