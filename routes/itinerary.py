@@ -50,9 +50,9 @@ def build_itinerary_task(app, itinerary_id):
             trip_duration = preferences.get("tripDuration")
 
             if destination:
-                itinerary_data["images"] = get_unsplash_images(destination, trip_duration + 1)
+                images = get_unsplash_images(destination, trip_duration + 1)
 
-            new_itinerary = Itinerary(preferences_id=itinerary_id, data=itinerary_data)
+            new_itinerary = Itinerary(preferences_id=itinerary_id, data=itinerary_data, images=images)
             db.session.add(new_itinerary)
             db.session.commit()
         except Exception as e:
@@ -166,9 +166,17 @@ def itinerary_status(itinerary_id):
 
 @itinerary.route("/itinerary/<int:itinerary_id>")
 def display_itinerary(itinerary_id):
+
     existingItinerary = Itinerary.query.get(itinerary_id)
+    existingPreferences = ItineraryPreferences.query.get(itinerary_id)
+    travelers = existingPreferences.numberOfTravelers if existingPreferences else 1
+
+    
+
     if not existingItinerary:
         session.pop("itinerary_id", None)
         return redirect("/questionnaire")
+    
     itineraryData = functions.decode_unicode(existingItinerary.data)
+
     return render_template("itinerary.html", results=itineraryData, pages=pages, googleKey=googleMapsKey)

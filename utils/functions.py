@@ -26,3 +26,45 @@ def decode_unicode(obj):
         return obj.encode('utf-8').decode('unicode_escape')
     else:
         return obj
+
+def scale_itinerary_costs(itinerary: dict, travelers: int) -> dict:
+    def recurse(obj):
+        if isinstance(obj, dict):
+            new_obj = {}
+            for key, value in obj.items():
+                if key == "cost" and isinstance(value, int):
+                    new_obj[key] = value                
+                    new_obj["cost_total"] = value * travelers  
+                else:
+                    new_obj[key] = recurse(value)
+            return new_obj
+
+        elif isinstance(obj, list):
+            return [recurse(item) for item in obj]
+
+        else:
+            return obj
+
+    return recurse(itinerary)
+
+if __name__ == "__main__":
+    from pprint import pprint
+
+    # Example input for testing
+    test_itinerary = {
+        "itineraryperday": [
+            {
+                "lodging": {"name": "Hotel A", "cost": 100},
+                "food": {
+                    "breakfast": {"restaurant": "Cafe", "cost": 10},
+                    "lunch": {"restaurant": "Deli", "cost": 15},
+                    "dinner": {"restaurant": "Bistro", "cost": 20}
+                },
+                "activities": [{"name": "Museum", "cost": 30}],
+            }
+        ]
+    }
+
+    num_travelers = 3
+    scaled = scale_itinerary_costs(test_itinerary, num_travelers)
+    pprint(scaled)
