@@ -35,11 +35,13 @@
                 <h3 class="itinerary-heading serif"> Day {{ loop.index }} </h3>
                 <p> {{ day["daysummary"] }} </p>
 
-                <div class="day-img relative center justify-self margin-inline">
-                    {% if results['images'] %}
-                        <img src="{{ results['images'][loop.index] }}" alt="">
-                    {% endif %}
+                
+                {% if photos %}
+                <div class="day-img relative center justify-self margin-inline"></div>
+                    <img src="{{ photos[loop.index] }}" alt="">
                 </div>
+                {% endif %}
+                
 
                 <h3 class="subheader">Lodging: </h3>
                 <p>{{ day["lodging"]["name"] }} &mdash; {{ day["lodging"]["address"] }} | cost: {{ day["lodging"]["cost"] }} </p>
@@ -89,11 +91,11 @@
         {% endfor %}
     </section>
     {% endif %}
-    {% if results["images"] %}
+    {% if photos %}
         <script>
             document.addEventListener('DOMContentLoaded', ()=>{
                 const itinerary = document.querySelector('.itinerary');
-                const imgURL = '{{ results["images"][0] }}';
+                const imgURL = ' {{ photos[0] }} ';
                 itinerary.style.setProperty('--bg-img', `url(${imgURL})`);
             })
         </script>

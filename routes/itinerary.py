@@ -171,7 +171,13 @@ def display_itinerary(itinerary_id):
     existingPreferences = ItineraryPreferences.query.get(itinerary_id)
     travelers = existingPreferences.numberOfTravelers if existingPreferences else 1
 
-    
+    # remember to come back and do something with this lol
+    #scale costs
+
+
+    #fix images
+    unsplashPhotos = existingItinerary.images
+
 
     if not existingItinerary:
         session.pop("itinerary_id", None)
@@ -179,4 +185,4 @@ def display_itinerary(itinerary_id):
     
     itineraryData = functions.decode_unicode(existingItinerary.data)
 
-    return render_template("itinerary.html", results=itineraryData, pages=pages, googleKey=googleMapsKey)
+    return render_template("itinerary.html", results=itineraryData, pages=pages, googleKey=googleMapsKey, photos=unsplashPhotos)
