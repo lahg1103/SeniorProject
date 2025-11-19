@@ -47,6 +47,9 @@ def scale_itinerary_costs(itinerary: dict, travelers: int) -> dict:
 
     return recurse(itinerary)
 
+
+
+
 if __name__ == "__main__":
     from pprint import pprint
 

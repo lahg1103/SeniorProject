@@ -29,6 +29,9 @@
                     {% endfor %}
                 </ul>
             </div>
+            <button id="updateItinerary">
+                update itinerary
+            </button>
         {% for day in results["itineraryperday"] %}
 
             <section class="day-card margin-block center" id="day{{ loop.index }}">
@@ -37,7 +40,7 @@
 
                 
                 {% if photos %}
-                <div class="day-img relative center justify-self margin-inline"></div>
+                <div class="day-img relative center justify-self margin-inline">
                     <img src="{{ photos[loop.index] }}" alt="">
                 </div>
                 {% endif %}
