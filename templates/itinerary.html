@@ -30,7 +30,10 @@
                 </ul>
             </div>
             <button id="updateItinerary">
-                update itinerary
+                <a href="{{ url_for('itinerary.questionnaire', itinerary_id=existingPreferences.id) }}">
+                    edit itinerary
+                </a>
+                
             </button>
         {% for day in results["itineraryperday"] %}
 

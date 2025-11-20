@@ -17,14 +17,28 @@
 
     </div>
     <form id="itinerary-form" class="flex-column gap padding-inline">
-        {% for field in fields %}
-        <label for="{{ field.name | lower | replace(' ', '_') }}" class="input-container flex-column gap"> {{ field.name
-            }} :
-            <input type="{{ field.type }}" name="{{ field.name | lower | replace(' ', '_') }}"
-                id="{{ field.name | lower | replace(' ', '_') }}" {% if field.type=='number' %} min="{{ field.min }}"
-                max="{{ field.max }}" step="{{ field.step }}" {% endif %} />
-        </label>
-        {% endfor %}
+        <section>
+            <label for="number_of_travelers" class="input-container flex-column gap"> 
+                Number of Travelers : 
+                <input type="number" name="number_of_travelers" id="number_of_travelers" min="1" max="10" step="1" value="{{ existing.numberOfTravelers if existing else '' }}" />
+            </label>
+            <label for="budget" class="input-container flex-column gap"> 
+                Budget : 
+                <input type="number" name="budget" id="budget" min="100" max="1000000" step="1" value="{{ existing.budget if existing else '' }}" />
+            </label>
+            <label for="arrival_date" class="input-container flex-column gap"> 
+                Arrival Date : 
+                <input type="date" name="arrival_date" id="arrival_date" value="{{ existing.arrivaldate if existing else '' }}"/>
+            </label>
+            <label for="departure_date" class="input-container flex-column gap"> 
+                Departure Date : 
+                <input type="date" name="departure_date" id="departure_date" value="{{ existing.departuredate if existing else '' }}" />
+            </label>
+            <label for="destination" class="input-container flex-column gap"> 
+                Destination : 
+                <input type="text" name="destination" id="destination" value="{{ existing.destination if existing else '' }}" />
+            </label>
+        </section>
         <label class="input-container flex-column gap"> Preferred Budget Allocation:
             <h2 class="subheader" id="totalAllocated"></h2>
             <h2 class="subheader padding-block">Food Budget:</h2>

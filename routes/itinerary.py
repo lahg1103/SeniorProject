@@ -39,28 +39,33 @@ def get_unsplash_images(query, trip_duration):
         print(f"Error fetching images from Unsplash: {e}")
         return []
 
-def build_itinerary_task(app, itinerary_id, existing_itinerary=None):
+def build_itinerary_task(app, itinerary_id):
     with app.app_context():
         try:
-            print("adding to database")
-            itinerary = ItineraryPreferences.query.get_or_404(itinerary_id)
-            preferences = functions.clean_instance(itinerary)
+            print(f"Building itinerary for preferences_id={itinerary_id}")
+            itineraryPreferences = ItineraryPreferences.query.get_or_404(itinerary_id)
+            itinerary = Itinerary.query.filter_by(preferences_id=itinerary_id).one_or_none()
+            if not itinerary:
+                itinerary = Itinerary()
+                itinerary.preferences_id = itinerary_id
+                db.session.add(itinerary)
+
+            preferences = functions.clean_instance(itineraryPreferences)
             itinerary_data = ai.generateItinerary(preferences)
             destination = preferences.get("destination")
             trip_duration = preferences.get("tripDuration")
 
+            images = []
+
             if destination:
                 images = get_unsplash_images(destination, trip_duration + 1)
 
-            itinerary = existing_itinerary or Itinerary()
-            itinerary.preferences_id = itinerary_id
             itinerary.data = itinerary_data
             itinerary.images = images 
 
-            if existing_itinerary is None:
-                db.session.add(itinerary)
-
             db.session.commit()
+            print(f"Itinerary updated: id={itinerary.id}, preferences_id={itinerary_id}")
+
 
         except Exception as e:
             print("Error generating itinerary: ", e)
@@ -168,24 +173,20 @@ def process_itinerary():
     
     except Exception as e:
         print(str(e))
-        return{"error": str(e)}, 500
+        return{"error": str(e)}, 500 
 
 
 
 @itinerary.route("/build-itinerary/<int:itinerary_id>")
 def success(itinerary_id):
-    existingItinerary = Itinerary.query.filter_by(
-        preferences_id=itinerary_id).first()
-
-    if existingItinerary:
-        return {"itinerary_id": existingItinerary.id}, 200
-
     app = current_app._get_current_object()
-    Thread(target=build_itinerary_task, args=(app,itinerary_id,)).start()
-    return jsonify({"status": "processing", "itinerary_id": itinerary_id}), 200
+    Thread(target=build_itinerary_task, args=(app,itinerary_id)).start()
+    return jsonify({"status": "processing",
+                    "itinerary_id": itinerary_id}), 200
 
 @itinerary.route("/itinerary-status/<int:itinerary_id>")
 def itinerary_status(itinerary_id):
+    print("SESSION:", session.get("itinerary_id"))
     itinerary = Itinerary.query.filter_by(preferences_id=itinerary_id).first()
     if itinerary:
         return jsonify({"status": "ready", "itinerary_id": itinerary.id})
@@ -196,8 +197,9 @@ def itinerary_status(itinerary_id):
 def display_itinerary(itinerary_id):
 
     existingItinerary = Itinerary.query.get(itinerary_id)
-    existingPreferences = ItineraryPreferences.query.get(existingItinerary.preferences_id)
-    travelers = existingPreferences.numberOfTravelers if existingPreferences else 1
+
+    existingPreferences = ItineraryPreferences.query.get(itinerary_id)
+    # travelers = existingPreferences.numberOfTravelers if existingPreferences else 1
 
     # remember to come back and do something with this lol
     #scale costs
@@ -213,36 +215,4 @@ def display_itinerary(itinerary_id):
     
     itineraryData = functions.decode_unicode(existingItinerary.data)
 
-    return render_template("itinerary.html", results=itineraryData, pages=pages, googleKey=googleMapsKey, photos=unsplashPhotos)
-
-@itinerary.route("/update/<int:itinerary_id>")
-def update(itinerary_id):
-    return render_template("update_itinerary.html", itinerary_id=itinerary_id)
-
-@itinerary.route("/updateItinerary/<int:itinerary_id>", methods=["POST"])
-def update_itinerary(itinerary_id):
-
-    new_preferences = request.get_json()
-
-    existingPreferences = ItineraryPreferences.query.get(itinerary_id)
-
-    existingItinerary = Itinerary.query.filter_by(preferences_id=itinerary_id).first()
-
-    # update preferences
-    try:
-        updatedPreferences = process_preferences(new_preferences, existingPreferences)
-        db.session.commit()
-    except Exception as e:
-        print("Error updating preferences: ", e)
-        return {"error": str(e)}, 500
-    
-    # send to build new itinerary
-    try:
-        app = current_app._get_current_object()
-        Thread(target=build_itinerary_task, args=(app,itinerary_id, existingItinerary)).start()
-        return jsonify({"status": "processing", "itinerary_id": itinerary_id}), 200
-    except Exception as e:
-        print("Error rebuilding itinerary: ", e), 500
-
-
-    return 404
+    return render_template("itinerary.html", results=itineraryData, pages=pages, googleKey=googleMapsKey, photos=unsplashPhotos, existingPreferences=existingPreferences)
