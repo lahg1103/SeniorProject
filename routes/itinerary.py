@@ -2,12 +2,15 @@ from flask import Blueprint, render_template, request, session, redirect, url_fo
 from markupsafe import escape
 from datetime import datetime
 from context import fields
-from utils import functions, ai
+from utils import functions
+from utils.ai import generateItinerary
+from utils.weather import get_weather_itinerary, WeatherAPIError
 from extensions import db
 from models import ItineraryPreferences, Itinerary
 from config import Config
 from threading import Thread
-import requests, json
+import requests
+import json
 
 itinerary = Blueprint("itinerary", __name__)
 pages = fields.pages
@@ -39,25 +42,70 @@ def get_unsplash_images(query, trip_duration):
         print(f"Error fetching images from Unsplash: {e}")
         return []
 
+
 def build_itinerary_task(app, itinerary_id):
     with app.app_context():
         try:
-            print("adding to database")
-            itinerary = ItineraryPreferences.query.get_or_404(itinerary_id)
-            preferences = functions.clean_instance(itinerary)
-            itinerary_data = ai.generateItinerary(preferences)
+            print(f"Building itinerary for preferences_id={itinerary_id}")
+            itineraryPreferences = ItineraryPreferences.query.get_or_404(
+                itinerary_id)
+            itinerary = Itinerary.query.filter_by(
+                preferences_id=itinerary_id).one_or_none()
+            if not itinerary:
+                itinerary = Itinerary()
+                itinerary.preferences_id = itinerary_id
+                db.session.add(itinerary)
+
+            preferences = functions.clean_instance(itineraryPreferences)
+
+            try:
+                weather = get_weather_itinerary(
+                    destination=itineraryPreferences.destination,
+                    arrival_date=itineraryPreferences.arrivaldate,
+                    departure_date=itineraryPreferences.departuredate,
+                )
+            except WeatherAPIError as e:
+                print("Weather API error: ", e)
+                weather = None
+
+            itinerary_data = generateItinerary(preferences, weather=weather)
             destination = preferences.get("destination")
             trip_duration = preferences.get("tripDuration")
 
-            if destination:
-                itinerary_data["images"] = get_unsplash_images(destination, trip_duration + 1)
+            images = []
 
-            new_itinerary = Itinerary(preferences_id=itinerary_id, data=itinerary_data)
-            db.session.add(new_itinerary)
+            if destination:
+                images = get_unsplash_images(destination, trip_duration + 1)
+
+            itinerary.data = itinerary_data
+            itinerary.images = images
+
             db.session.commit()
+            print(
+                f"Itinerary updated: id={itinerary.id}, preferences_id={itinerary_id}")
+
         except Exception as e:
             print("Error generating itinerary: ", e)
-        
+
+
+def process_preferences(data, existing=None):
+    arrival = datetime.strptime(data["arrival_date"], "%Y-%m-%d")
+    departure = datetime.strptime(data["departure_date"], "%Y-%m-%d")
+
+    itinerary = existing if existing else ItineraryPreferences()
+    itinerary.numberOfTravelers = int(data["number_of_travelers"])
+    itinerary.budget = int(data["budget"])
+    itinerary.arrivaldate = arrival
+    itinerary.departuredate = departure
+    itinerary.destination = escape(data.get("destination", "").strip())
+    itinerary.foodBudget = int(data["foodBudget"])
+    itinerary.lodgingBudget = int(data["lodgingBudget"])
+    itinerary.transportationBudget = int(data["transportationBudget"])
+    itinerary.activityBudget = int(data["activityBudget"])
+    itinerary.tripDuration = functions.trip_duration(arrival, departure)
+
+    return itinerary
+
 
 @itinerary.route("/api/place", methods=["GET"])
 def get_place():
@@ -100,7 +148,12 @@ def get_place():
 
 @itinerary.route("/questionnaire")
 def questionnaire():
-    return render_template("questionnaire.html", pages=pages, fields=fields, current_page=request.endpoint)
+    itinerary_id = request.args.get("itinerary_id")
+    existing = None
+
+    if itinerary_id:
+        existing = ItineraryPreferences.query.get(itinerary_id)
+    return render_template("questionnaire.html", pages=pages, fields=fields, current_page=request.endpoint, existing=existing, update_mode=bool(existing))
 
 
 @itinerary.route("/process-itinerary", methods=["POST"])
@@ -109,66 +162,89 @@ def process_itinerary():
 
     try:
         data = request.get_json()
-        print(data)
+        itinerary_id = data.get("itinerary_id") or session.get("itinerary_id")
 
-        if "itinerary_id" in session:
-            existing_preferences = ItineraryPreferences.query.get(
-                session["itinerary_id"])
-            if existing_preferences:
-                return {"itinerary_id": existing_preferences.id}, 200
+        existing = None
 
-        arrival = datetime.strptime(data["arrival_date"], "%Y-%m-%d")
-        departure = datetime.strptime(data["departure_date"], "%Y-%m-%d")
+        if itinerary_id:
+            existing = ItineraryPreferences.query.get(itinerary_id)
 
-        itinerary = ItineraryPreferences(
-            numberOfTravelers=int(data["number_of_travelers"]),
-            budget=int(data["budget"]),
-            arrivaldate=arrival,
-            departuredate=departure,
-            destination=escape(data.get("destination", "").strip()),
-            foodBudget=int(data["foodBudget"]),
-            lodgingBudget=int(data["lodgingBudget"]),
-            transportationBudget=int(data["transportationBudget"]),
-            activityBudget=int(data["activityBudget"]),
-            tripDuration=functions.trip_duration(arrival, departure),
-        )
+        itinerary = process_preferences(data, existing)
 
-        db.session.add(itinerary)
+        if not existing:
+            db.session.add(itinerary)
+
         db.session.commit()
+
         session["itinerary_id"] = itinerary.id
         session.permanent = True
+
         return {"itinerary_id": itinerary.id}, 200
+
     except Exception as e:
         print(str(e))
-        return{"error": str(e)}, 500
-
+        return {"error": str(e)}, 500
 
 
 @itinerary.route("/build-itinerary/<int:itinerary_id>")
 def success(itinerary_id):
-    existingItinerary = Itinerary.query.filter_by(
-        preferences_id=itinerary_id).first()
-
-    if existingItinerary:
-        return {"itinerary_id": existingItinerary.id}, 200
-
     app = current_app._get_current_object()
-    Thread(target=build_itinerary_task, args=(app,itinerary_id,)).start()
+    Thread(target=build_itinerary_task, args=(app, itinerary_id)).start()
     return jsonify({"status": "processing", "itinerary_id": itinerary_id}), 200
+
 
 @itinerary.route("/itinerary-status/<int:itinerary_id>")
 def itinerary_status(itinerary_id):
+    print("SESSION:", session.get("itinerary_id"))
     itinerary = Itinerary.query.filter_by(preferences_id=itinerary_id).first()
-    if itinerary:
-        return jsonify({"status": "ready", "itinerary_id": itinerary.id})
+    if itinerary and itinerary.data:
+        return jsonify({"status": "completed", "itinerary_id": itinerary.id})
     return jsonify({"status": "processing"})
 
 
 @itinerary.route("/itinerary/<int:itinerary_id>")
 def display_itinerary(itinerary_id):
     existingItinerary = Itinerary.query.get(itinerary_id)
+
     if not existingItinerary:
         session.pop("itinerary_id", None)
         return redirect("/questionnaire")
+
+    existingPreferences = ItineraryPreferences.query.get(
+        existingItinerary.preferences_id)
+    # fix images
+    unsplashPhotos = existingItinerary.images
+    # remember to come back and do something with this lol
+    # scale costs
+    # travelers = existingPreferences.numberOfTravelers if existingPreferences else 1
+    weather = None
+    if existingPreferences:
+        try:
+            weather = get_weather_itinerary(
+                destination=existingPreferences.destination,
+                arrival_date=existingPreferences.arrivaldate,
+                departure_date=existingPreferences.departuredate,
+            )
+        except WeatherAPIError as e:
+            print("Weather API error: ", e)
+            weather = None
+
     itineraryData = functions.decode_unicode(existingItinerary.data)
-    return render_template("itinerary.html", results=itineraryData, pages=pages, googleKey=googleMapsKey)
+    return render_template("itinerary.html", results=itineraryData, pages=pages, googleKey=googleMapsKey, photos=unsplashPhotos, existingPreferences=existingPreferences, weather=weather)
+
+
+@itinerary.route("/itinerary/weather/<int:preferences_id>")
+def itinerary_weather(preferences_id):
+    prefs = ItineraryPreferences.query.get_or_404(preferences_id)
+
+    try:
+        weather = get_weather_itinerary(
+            destination=prefs.destination,
+            arrival_date=prefs.arrivaldate,
+            departure_date=prefs.departuredate,
+        )
+        return weather, 200
+    except WeatherAPIError as e:
+        return {"error": str(e)}, 400
+    except Exception as e:
+        return {"error": "Unexpected error fetching weather"}, 500
