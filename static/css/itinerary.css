@@ -120,3 +120,47 @@
 footer {
     margin-top: 20%;
 }
+
+/* TAB SYSTEM */
+.day-content {
+    display: none;
+}
+.day-content.active {
+    display: block;
+}
+
+.day-tab {
+    cursor: pointer;
+    padding: 0.6rem 1.2rem;
+    opacity: 0.6;
+    transition: 0.2s ease;
+}
+.day-tab.active {
+    opacity: 1;
+    border-bottom: 2px solid white;
+    font-weight: 600;
+}
+
+/* STRUCTURED BLOCKS */
+.activity-block {
+    background: rgba(255,255,255,0.04);
+    padding: 1.5rem;
+    border-radius: var(--radius-small);
+    margin-bottom: 2rem;
+    backdrop-filter: blur(3px);
+}
+.time-label {
+    font-size: 1.1rem;
+    font-weight: 700;
+    opacity: 0.9;
+    margin-bottom: 0.4rem;
+}
+.activity-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+.meal-label {
+    margin-top: 1rem;
+    font-weight: 600;
+    opacity: 0.85;
+}

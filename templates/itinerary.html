@@ -1,112 +1,144 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
-{% block head %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/itinerary.css') }}">
-{% endblock %}
+{% block content %}
 
-{% block body %}
+<section class="landing sidepage itinerary flex-column flex-center padding">
+    <h1 class="hero serif center">{{ existingPreferences.city }} Itinerary</h1>
+    <h2 class="blurb sidepage center">{{ results.promotionalblurb }}</h2>
+</section>
 
+<section class="itinerary-wrapper relative flex-column padding-2x flex-center">
 
-    {% if not results %}
-        <section>
-            <h1>Itinerary Not Found</h1>
-        </section>
-    {% else %}
-        <section class="landing sidepage itinerary flex-column flex-center padding">
-        <h1 class="hero serif center"> {{ results.city }} in {{ results.tripduration }} Days </h1>
-        <h2 class="blurb sidepage center"> {{ results.promotionalblurb }} </h2>
-        </section>
-        
-        <section class="itinerary-wrapper relative flex-column padding-2x flex-center">
-            <div class="navigation-days relative">
-                <ul class="itinerary-top-navigation uppercase padding-block gap width-100 relative">
-                    {% for i in range(0, results["tripduration"], +1) %}
-                        <a href="#day{{ i + 1 }}">
-                        <li class="{{ i + 1 }}">
-                            Day {{ i + 1 }}
-                        </li>
-                        </a>
-                    {% endfor %}
-                </ul>
-            </div>
-            <button id="updateItinerary">
-                <a href="{{ url_for('itinerary.questionnaire', itinerary_id=existingPreferences.id) }}">
-                    edit itinerary
-                </a>
-                
-            </button>
-        {% for day in results["itineraryperday"] %}
-
-            <section class="day-card margin-block center" id="day{{ loop.index }}">
-                <h3 class="itinerary-heading serif"> Day {{ loop.index }} </h3>
-                <p> {{ day["daysummary"] }} </p>
-
-                
-                {% if photos %}
-                <div class="day-img relative center justify-self margin-inline">
-                    <img src="{{ photos[loop.index] }}" alt="">
-                </div>
-                {% endif %}
-                
-
-                <h3 class="subheader">Lodging: </h3>
-                <p>{{ day["lodging"]["name"] }} &mdash; {{ day["lodging"]["address"] }} | cost: {{ day["lodging"]["cost"] }} </p>
-                <div class="google gap relative flex flex-center">
-                    <div class="map relative height-100" data-location="{{ day['lodging']['name'] }}" data-address="{{ day['lodging']['address'] }}">
-                        <iframe src="" frameborder="0"></iframe>
-                    </div><div class="img relative height-100"></div>
-                </div>
-
-                {% for activity in day["timeblocks"]["morning"] %}
-                <h3 class="subheader">{{ activity["time"] }}</h3>
-                <p>{{ activity["name"] }} &mdash; {{ activity["address"] }} | cost: {{ activity["cost"] }} </p>
-                <p>{{ activity["summary"] }}</p>
-                <p><strong>Breakfast: </strong> {{ day["food"]["breakfast"]["restaurant"] }} &mdash; {{ day["food"]["breakfast"]["address"] }} | cost: {{ day["food"]["lunch"]["cost"]}}</p>
-                <div class="google gap relative flex flex-center">
-                    <div class="map relative height-100" data-location="{{ day['food']['breakfast']['restaurant'] }}" data-address="{{ day['food']['breakfast']['address'] }}">
-                        <iframe src="" frameborder="0"></iframe>
-                    </div><div class="img relative height-100"></div>
-                </div>
-                {% endfor %}
-
-                {% for activity in day["timeblocks"]["afternoon"] %}
-                <h3 class="subheader">{{ activity["time"] }}</h3>
-                <p>{{ activity["name"] }} &mdash; {{ activity["address"] }} | cost: {{ activity["cost"] }} </p>
-                <p>{{ activity["summary"] }}</p>
-                <p><strong>Lunch: </strong> {{ day["food"]["lunch"]["restaurant"] }} &mdash; {{ day["food"]["lunch"]["address"] }} | cost: {{ day["food"]["lunch"]["cost"]}}</p>
-                <div class="google gap relative flex flex-center">
-                    <div class="map relative height-100" data-location="{{ day['food']['lunch']['restaurant'] }}" data-address="{{ day['food']['lunch']['address'] }}">
-                        <iframe src="" frameborder="0"></iframe>
-                    </div><div class="img relative height-100"></div>
-                </div>
-                {% endfor %}
-                
-                {% for activity in day["timeblocks"]["evening"] %}
-                <h3 class="subheader">{{ activity["time"] }}</h3>
-                <p>{{ activity["name"] }} &mdash; {{ activity["address"] }} | cost: {{ activity["cost"] }} </p>
-                <p>{{ activity["summary"] }}</p>
-                <p><strong>Dinner: </strong> {{ day["food"]["dinner"]["restaurant"] }} &mdash; {{ day["food"]["dinner"]["address"] }} | cost: {{ day["food"]["lunch"]["cost"]}}</p>
-                <div class="google gap relative flex flex-center">
-                    <div class="map relative height-100" data-location="{{ day['food']['dinner']['restaurant'] }}" data-address="{{ day['food']['dinner']['address'] }}">
-                        <iframe src="" frameborder="0"></iframe>
-                    </div><div class="img relative height-100"></div>
-                </div>
-                {% endfor %}
-                
-            </section>
+    <!-- TAB NAVIGATION -->
+    <ul class="itinerary-top-navigation">
+        {% for daynum in range(1, results.tripduration + 1) %}
+            <li class="day-tab {% if loop.first %}active{% endif %}" data-day="day{{ daynum }}">
+                DAY {{ daynum }}
+            </li>
         {% endfor %}
+    </ul>
+
+    <!-- DAY SECTIONS -->
+    {% for day in results.itineraryperday %}
+    <section class="day-card day-content {% if loop.first %}active{% endif %}" id="day{{ loop.index }}">
+
+        <!-- Day Heading -->
+        <h3 class="itinerary-heading serif center">Day {{ loop.index }}</h3>
+        <p class="day-summary center">{{ day.daysummary }}</p>
+
+        <!-- LODGING BLOCK -->
+        <div class="activity-block lodging-block">
+            <h4 class="time-label">Lodging</h4>
+            <p class="activity-title">{{ day.lodging.name }}</p>
+            <p>{{ day.lodging.address }} | cost: {{ day.lodging.cost }}</p>
+
+            <div class="google flex-row gap">
+                <div class="map">
+                    <iframe
+                        src="https://www.google.com/maps?q={{ day.lodging.address }}&output=embed"
+                        frameborder="0"></iframe>
+                </div>
+                <div class="img">
+                    <img src="{{ existingPreferences.photos[loop.index0].lodging }}" alt="Lodging Photo">
+                </div>
+            </div>
+        </div>
+
+        <!-- MORNING -->
+        {% set m = day.timeblocks.morning[0] %}
+        <div class="activity-block">
+            <h4 class="time-label">Morning — {{ m.time }}</h4>
+
+            <p class="activity-title">{{ m.name }}</p>
+            <p>{{ m.address }} | cost: {{ m.cost }}</p>
+            <p class="activity-summary">{{ m.summary }}</p>
+
+            <h5 class="meal-label">Breakfast</h5>
+            <p>{{ day.food.breakfast.restaurant }} — {{ day.food.breakfast.cost }}</p>
+
+            <div class="google flex-row gap">
+                <div class="map">
+                    <iframe
+                        src="https://www.google.com/maps?q={{ day.food.breakfast.address }}&output=embed"
+                        frameborder="0"></iframe>
+                </div>
+                <div class="img">
+                    <img src="{{ existingPreferences.photos[loop.index0].breakfast }}" alt="Breakfast Photo">
+                </div>
+            </div>
+        </div>
+
+        <!-- AFTERNOON -->
+        {% set a = day.timeblocks.afternoon[0] %}
+        <div class="activity-block">
+            <h4 class="time-label">Afternoon — {{ a.time }}</h4>
+
+            <p class="activity-title">{{ a.name }}</p>
+            <p>{{ a.address }} | cost: {{ a.cost }}</p>
+            <p class="activity-summary">{{ a.summary }}</p>
+
+            <h5 class="meal-label">Lunch</h5>
+            <p>{{ day.food.lunch.restaurant }} — {{ day.food.lunch.cost }}</p>
+
+            <div class="google flex-row gap">
+                <div class="map">
+                    <iframe
+                        src="https://www.google.com/maps?q={{ day.food.lunch.address }}&output=embed"
+                        frameborder="0"></iframe>
+                </div>
+                <div class="img">
+                    <img src="{{ existingPreferences.photos[loop.index0].lunch }}" alt="Lunch Photo">
+                </div>
+            </div>
+        </div>
+
+        <!-- EVENING -->
+        {% set e = day.timeblocks.evening[0] %}
+        <div class="activity-block">
+            <h4 class="time-label">Evening — {{ e.time }}</h4>
+
+            <p class="activity-title">{{ e.name }}</p>
+            <p>{{ e.address }} | cost: {{ e.cost }}</p>
+            <p class="activity-summary">{{ e.summary }}</p>
+
+            <h5 class="meal-label">Dinner</h5>
+            <p>{{ day.food.dinner.restaurant }} — {{ day.food.dinner.cost }}</p>
+
+            <div class="google flex-row gap">
+                <div class="map">
+                    <iframe
+                        src="https://www.google.com/maps?q={{ day.food.dinner.address }}&output=embed"
+                        frameborder="0"></iframe>
+                </div>
+                <div class="img">
+                    <img src="{{ existingPreferences.photos[loop.index0].dinner }}" alt="Dinner Photo">
+                </div>
+            </div>
+        </div>
+
     </section>
-    {% endif %}
-    {% if photos %}
-        <script>
-            document.addEventListener('DOMContentLoaded', ()=>{
-                const itinerary = document.querySelector('.itinerary');
-                const imgURL = ' {{ photos[0] }} ';
-                itinerary.style.setProperty('--bg-img', `url(${imgURL})`);
-            })
-        </script>
-    {% endif %}
-    <script>const apiKey= '{{ googleKey }}';</script>
-    <script src="{{ url_for('static', filename='javascript/itinerary.js') }}"></script>
+    {% endfor %}
+
+</section>
+
+<!-- TAB SWITCHING  -->
+<script>
+document.querySelectorAll('.day-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+
+        document.querySelectorAll('.day-tab')
+                .forEach(t => t.classList.remove('active'));
+
+        document.querySelectorAll('.day-content')
+                .forEach(c => c.classList.remove('active'));
+
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.day).classList.add('active');
+
+        document.querySelector('.itinerary-wrapper')
+                .scrollIntoView({ behavior: 'smooth' });
+    });
+});
+</script>
 
 {% endblock %}
