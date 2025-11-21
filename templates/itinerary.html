@@ -20,6 +20,7 @@
 {% if weather %}
 <section class="weather-section padding-2x">
     <h2 class="subheader center margin">
+<<<<<<< HEAD
         Weather Forecast for {{ weather.location or results.city }}
     </h2>
     {% if weather.source == "historical" %}
@@ -32,16 +33,38 @@
         {% for day in weather.days %}
         <article class="weather-day-card">
             <h3 class="serif">{{ day.date }}</h3>
+=======
+        Weather for {{ weather.location or results.city }}
+    </h2>
+    {% if weather.source == "historical" %}
+    <p class="weather-note center">
+        *These conditions are based on historical data because real-time forecasts are not available for the selected
+        dates.*
+    </p>
+    {% endif %}
+
+    <div class="weather-grid">
+        {% for day in weather.days %}
+        <article class="weather-day-card">
+            <h3 class="serif">{{ day.date}}</h3>
+>>>>>>> added weather data to itinerary
             <p>
                 High: {{ day.temp_max }}°C | Low: {{ day.temp_min }}°C
             </p>
             {% if day.precipitation is not none %}
+<<<<<<< HEAD
             <p>
                 Precipitation: {{ day.precipitation }} mm
             </p>
             {% endif %}
             {% if day.description %}
             <p> {{ day.description }}</p>
+=======
+            <p> Precipitation: {{ day.precipitation }} mm </p>
+            {% endif %}
+            {% if day.description %}
+            <p> {{ day.description }} </p>
+>>>>>>> added weather data to itinerary
             {% endif %}
         </article>
         {% endfor %}
@@ -50,7 +73,11 @@
     <p class="weather-disclaimer small center">
         Weather data is based on publicly available forecasts or historical averages. This feature does not predict
         extreme weather events, natural disasters, or sudden climate anomalies. Users should consult official sources
+<<<<<<< HEAD
         for real-time alers and safety information.
+=======
+        for real-time alerts and safety information
+>>>>>>> added weather data to itinerary
     </p>
 </section>
 {% endif %}
@@ -58,10 +85,17 @@
 <section class="itinerary-wrapper relative flex-column padding-2x flex-center">
     <div class="navigation-days relative">
         <ul class="itinerary-top-navigation uppercase padding-block gap width-100 relative">
+<<<<<<< HEAD
             {% for i in range(0, results["tripduration"], +1) %}
             <a href="#day{{ i + 1 }}">
                 <li class="{{ i + 1 }}">
                     Day {{ i + 1 }}
+=======
+            {% for day in results.itineraryperday %}
+            <a href="#day{{ loop.index }}">
+                <li class="{{ loop.index }}">
+                    Day {{ loop.index }}
+>>>>>>> added weather data to itinerary
                 </li>
             </a>
             {% endfor %}
