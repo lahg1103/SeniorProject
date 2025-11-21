@@ -3,6 +3,7 @@ class FormValidation {
         this.form = form;
         this.loader = loader;
         this.inputs = {
+            numberOfTravelers: form.querySelector('input[name="number_of_travelers"]'),
             budget: form.querySelector('input[name="budget"]'),
             arrival: form.querySelector('input[name="arrival_date"]'),
             departure: form.querySelector('input[name="departure_date"]'),
@@ -13,8 +14,8 @@ class FormValidation {
 
     setState(state) {
         this.currentState = state;
-        
-        switch(state) {
+
+        switch (state) {
             case 'FORM':
                 this.loader.classList.add('hidden');
                 break;
@@ -41,20 +42,37 @@ class FormValidation {
         if (!errorElement) {
             errorElement = document.createElement('div');
             errorElement.className = 'field-error';
-            errorElement.style.color = 'var(--accentTwo)';
+            errorElement.style.color = 'var(--accent-two)';
             inputElement.parentElement.appendChild(errorElement);
         }
         errorElement.textContent = message;
     }
 
     validateForm() {
-        const { budget, arrival, departure, destination } = this.inputs;
+        const { numberOfTravelers, budget, arrival, departure, destination } = this.inputs;
         let isValid = true;
         const errors = [];
 
+        // number of travelers validation
+        if (!numberOfTravelers.value) {
+            errors.push({ element: numberOfTravelers, message: 'Number of travelers is required.' });
+            isValid = false;
+        }
+        else if (numberOfTravelers.value && (parseInt(numberOfTravelers.value) <= 0 || !Number.isInteger(parseFloat(numberOfTravelers.value)))) {
+            errors.push({ element: numberOfTravelers, message: 'Number of travelers must be positive.' });
+            isValid = false;
+        }
+        else if (parseInt(numberOfTravelers.value) > 10) {
+            errors.push({ element: numberOfTravelers, message: 'Number of travelers cannot exceed 10.' });
+            isValid = false;
+        }
+        else {
+            this.clearFieldError(numberOfTravelers);
+        }
+
         // budget validation
-        if ( budget.value && parseFloat(budget.value) <= 0) {
-            errors.push({ element: budget, message: 'Budget must be greater than zero. For best results, aim for a budget in the thousands.'});
+        if (budget.value && parseFloat(budget.value) <= 0) {
+            errors.push({ element: budget, message: 'Budget must be greater than zero. For best results, aim for a budget in the thousands.' });
             isValid = false;
 
             console.log(`${budget.value} is ${isValid}`);
@@ -65,27 +83,39 @@ class FormValidation {
 
         // date validation
         let currentDate = new Date();
-        currentDate.setHours(0,0,0,0);
+        currentDate.setHours(0, 0, 0, 0);
         const arrivalDate = new Date(`${arrival.value}T00:00:00`);
         const departureDate = new Date(`${departure.value}T00:00:00`);
+        const oneDay = 24 * 60 * 60 * 1000;
 
-        
+
         if (arrivalDate.getTime() < currentDate.getTime()) {
-            errors.push({ element: arrival, message: 'Arrival must be today onwards.'});
+            errors.push({ element: arrival, message: 'Arrival must be today onwards.' });
             isValid = false;
         }
-        else{
+        else {
             this.clearFieldError(arrival);
         }
 
-        if(arrival.value && departure.value && arrivalDate >= departureDate) {
-            errors.push({ element: departure, message: 'Departure must be after arrival.'});
+        if (arrival.value && departure.value && arrivalDate >= departureDate) {
+            errors.push({ element: departure, message: 'Departure must be after arrival.' });
             isValid = false;
         }
         else {
             this.clearFieldError(departure);
         }
-        
+
+        if (arrival.value && departure.value && (Math.round((departureDate - arrivalDate) / oneDay) > 7)) {
+            console.log(Math.round((departureDate - arrivalDate) / oneDay));
+            errors.push({
+                element: departure,
+                message: 'Trip duration cannot exceed 7 days.',
+            });
+            isValid = false;
+        } else {
+            this.clearFieldError(departure);
+        }
+
 
         // update state.
         if (!isValid) {
@@ -101,7 +131,7 @@ class FormValidation {
     listenForChanges() {
         console.log(`listening for changes in form`);
         Object.values(this.inputs).forEach(input => {
-            input.addEventListener('change', ()=> {
+            input.addEventListener('change', () => {
                 const valid = this.validateForm();
                 if (valid) this.setState('FORM');
             });
@@ -113,11 +143,11 @@ class FormValidation {
 class LinkedSliders {
     constructor(sliders, totalBudget) {
         this.sliders = sliders,
-        this.slidersLength = sliders.length,
-        this.totalBudgetInput = totalBudget,
-        this.totalBudget = parseInt(totalBudget.value) || 1000,
+            this.slidersLength = sliders.length,
+            this.totalBudgetInput = totalBudget,
+            this.totalBudget = parseInt(totalBudget.value) || 1000,
 
-        this.init();
+            this.init();
     }
 
     init() {
@@ -125,12 +155,12 @@ class LinkedSliders {
         this.listenForBudget();
         this.listenForSlider();
     }
-    
+
     updateSliderLimits() {
         const min = Math.floor(this.totalBudget / 8);
         const max = Math.floor(this.slidersLength * Math.floor(this.totalBudget / 8));
 
-        Object.values(this.sliders).forEach(slider=> {
+        Object.values(this.sliders).forEach(slider => {
             slider.min = min;
             slider.max = max;
             slider.value = min;
@@ -147,15 +177,15 @@ class LinkedSliders {
     }
 
     listenForBudget() {
-        this.totalBudgetInput.addEventListener('change', ()=> {
+        this.totalBudgetInput.addEventListener('change', () => {
             this.totalBudget = parseInt(this.totalBudgetInput.value);
             this.updateSliderLimits();
         });
     }
 
     listenForSlider() {
-        Object.values(this.sliders).forEach(slider=>{ 
-            slider.addEventListener('input', ()=> this.handleSliderInput(slider));
+        Object.values(this.sliders).forEach(slider => {
+            slider.addEventListener('input', () => this.handleSliderInput(slider));
         })
     }
 
@@ -178,12 +208,15 @@ class LinkedSliders {
                 const reduceBy = Math.min(available, Math.ceil(remaining / otherSliders.length));
                 slider.value = parseInt(slider.value) - reduceBy;
 
+                slider.parentNode.style.setProperty('--value', slider.value);
+                slider.parentNode.style.setProperty('--text-value', JSON.stringify((+slider.value).toLocaleString()));
+
                 remaining -= reduceBy;
-        }
+            }
 
             let totalPostReduction = sliders.reduce((sum, s) => sum + parseInt(s.value), 0);
             while (totalPostReduction > this.totalBudget) {
-                const target = otherSliders.find(s=> parseInt(s.value) > parseInt(s.min));
+                const target = otherSliders.find(s => parseInt(s.value) > parseInt(s.min));
                 if (!target) break;
                 target.value = parseInt(target.value) - 1;
                 target.parentNode.style.setProperty('--value', target.value);
@@ -203,56 +236,68 @@ class LinkedSliders {
 }
 
 // loader
-    let textType = function(e, toRotate, period) {
-        this.toRotate = toRotate;
-        this.e = e;
-        this.loop = 0;
-        this.period = parseInt(period, 10) || 2000;
-        this.text = '';
-        this.tick();
+let textType = function (e, toRotate, period) {
+    this.toRotate = toRotate;
+    this.e = e;
+    this.loop = 0;
+    this.period = parseInt(period, 10) || 2000;
+    this.text = '';
+    this.tick();
+    this.isDeleting = false;
+};
+textType.prototype.tick = function () {
+    var i = this.loop % this.toRotate.length;
+    var fullText = this.toRotate[i];
+
+    if (this.isDeleting) {
+        this.text = fullText.substring(0, this.text.length - 1);
+    }
+    else {
+        this.text = fullText.substring(0, this.text.length + 1);
+    }
+
+    this.e.textContent = this.text;
+
+    let delta = 200 - Math.random() * 100;
+
+    if (this.isDeleting) {
+        delta /= 2;
+    }
+
+    if (!this.isDeleting && this.text === fullText) {
+        delta = this.period;
+        this.isDeleting = true;
+    } else if (this.isDeleting && this.text === '') {
         this.isDeleting = false;
-    };
-    textType.prototype.tick = function(){
-        var i = this.loop % this.toRotate.length;
-        var fullText = this.toRotate[i];
-
-        if (this.isDeleting) {
-            this.text = fullText.substring(0, this.text.length - 1);
-        }
-        else {
-            this.text = fullText.substring(0, this.text.length + 1);
-        }
-
-        this.e.textContent = this.text;
-        
-        let delta = 200 - Math.random() * 100;
-
-        if(this.isDeleting) {
-            delta /= 2;
-        }
-        
-        if(!this.isDeleting && this.text === fullText) {
-            delta = this.period;
-            this.isDeleting = true;
-        } else if (this.isDeleting && this.text === '') {
-            this.isDeleting = false;
-            this.loop++;
-            delta = 500;
-        }
-
-        setTimeout(()=>{
-            this.tick();
-        }, delta);
+        this.loop++;
+        delta = 500;
     }
 
-    const optionalFieldVisibility = function(fields, show) {
-        for (let f of fields) {
-            f.classList.toggle('hidden', !show);
-        }
+    setTimeout(() => {
+        this.tick();
+    }, delta);
+}
+
+const optionalFieldVisibility = function (fields, show) {
+    for (let f of fields) {
+        f.classList.toggle('hidden', !show);
     }
+}
+
+// loader
+let pollItineraryStatus = function(itineraryId) {
+    fetch(`/itinerary-status/${itineraryId}`).then(r => r.json()).then(data => {
+        if ( data.status === "ready" ) {
+            window.location.href = `/itinerary/${data.itinerary_id}`;
+        } else {
+            setTimeout(()=> pollItineraryStatus(itineraryId), 2500);
+        }
+    })
+    .catch(() => setTimeout(() => pollItineraryStatus(itineraryId), 2500));
+}
 
 
-document.addEventListener('DOMContentLoaded', ()=> {
+document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('itinerary-form');
     const loader = document.getElementById('loader');
     const FormValidator = new FormValidation(form, loader);
@@ -260,7 +305,7 @@ document.addEventListener('DOMContentLoaded', ()=> {
     const globalError = document.querySelector('.global-error');
 
     FormValidator.listenForChanges();
-    
+
 
     const sliders = document.querySelectorAll('input[type="range"]');
     const totalBudget = document.getElementById('budget');
@@ -271,19 +316,19 @@ document.addEventListener('DOMContentLoaded', ()=> {
     for (let t of typewritten) {
         let toRotate = t.getAttribute('data-type');
         let period = t.getAttribute('data-period');
-        if(toRotate) {
+        if (toRotate) {
             new textType(t, JSON.parse(toRotate), period);
         }
     }
-    
+
     // send stuff to Flask to add to Database
-    form.addEventListener('submit', async(e) => {
+    form.addEventListener('submit', async (e) => {
 
 
         e.preventDefault();
 
         const isValid = FormValidator.validateForm();
-        
+
 
         if (isValid) {
             FormValidator.setState('LOADING');
@@ -294,7 +339,7 @@ document.addEventListener('DOMContentLoaded', ()=> {
             try {
                 const preferencesResponse = await fetch('/process-itinerary', {
                     method: 'POST',
-                    headers: {'Content-type': 'application/json'},
+                    headers: { 'Content-type': 'application/json' },
                     body: JSON.stringify(jsonData)
                 });
                 if (!preferencesResponse.ok) throw new Error("Failed to save preferences");
@@ -302,9 +347,8 @@ document.addEventListener('DOMContentLoaded', ()=> {
 
                 const buildResponse = await fetch(`/build-itinerary/${itinerary_id}`);
                 if (!buildResponse.ok) throw new Error("Failed to build itinerary");
-                const buildData = await buildResponse.json();
-
-                window.location.href = `/itinerary/${buildData.itinerary_id}`;
+                
+                pollItineraryStatus(itinerary_id);
             }
             catch (err) {
                 console.error(err);
@@ -321,5 +365,5 @@ document.addEventListener('DOMContentLoaded', ()=> {
             globalError.textContent = "There was an error submitting your form. Please revise the highlighted fields, and try again.";
             return;
         }
-    }); 
+    });
 });

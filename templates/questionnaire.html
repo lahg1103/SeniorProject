@@ -1,53 +1,80 @@
 {% extends 'base.html' %}
 
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/questionnaire.css') }}">
+{% endblock %}
+
 {% block body %}
 
-<section class="landing sidepage {{ current_page }}">
-    <h1 class="serif hero">
+<section class="landing sidepage questionnaire flex-column flex-center">
+    <h1 class="serif hero center">
         Let's Curate Your Escape
     </h1>
-    <h2 class="subheader">Answer a few questions so we can tailor your itinerary.</h2>
+    <h2 class="subheader center">Answer a few questions so we can tailor your itinerary.</h2>
 </section>
-<section class="itinerary-form">
+<section class="itinerary-form padding-inline flex-column flex-center">
     <div class="global-error">
-        
+
     </div>
-    <form id="itinerary-form">
-        {% for field in fields %}
-            <label for="{{ field.name | lower | replace(' ', '_') }}" class="input-container"> {{ field.name }} : 
-                    <input type="{{ field.type }}" name="{{ field.name | lower | replace(' ', '_') }}" id="{{ field.name | lower | replace(' ', '_') }}" />
+    <form id="itinerary-form" class="flex-column gap padding-inline">
+        <section>
+            <label for="number_of_travelers" class="input-container flex-column gap"> 
+                Number of Travelers : 
+                <input type="number" name="number_of_travelers" id="number_of_travelers" min="1" max="10" step="1" value="{{ existing.numberOfTravelers if existing else '' }}" />
             </label>
-        {% endfor %}
-        <label class="input-container"> Preferred Budget Allocation: 
+            <label for="budget" class="input-container flex-column gap"> 
+                Budget : 
+                <input type="number" name="budget" id="budget" min="100" max="1000000" step="1" value="{{ existing.budget if existing else '' }}" />
+            </label>
+            <label for="arrival_date" class="input-container flex-column gap"> 
+                Arrival Date : 
+                <input type="date" name="arrival_date" id="arrival_date" value="{{ existing.arrivaldate if existing else '' }}"/>
+            </label>
+            <label for="departure_date" class="input-container flex-column gap"> 
+                Departure Date : 
+                <input type="date" name="departure_date" id="departure_date" value="{{ existing.departuredate if existing else '' }}" />
+            </label>
+            <label for="destination" class="input-container flex-column gap"> 
+                Destination : 
+                <input type="text" name="destination" id="destination" value="{{ existing.destination if existing else '' }}" />
+            </label>
+        </section>
+        <label class="input-container flex-column gap"> Preferred Budget Allocation:
             <h2 class="subheader" id="totalAllocated"></h2>
-            <h2 class="subheader">Food Budget:</h2>
-            <div class="slide-container range-slider gradient" style="--min:0; --max:10000; --step:100; --value:200; --text-value:'200'; --prefix:'$'">
+            <h2 class="subheader padding-block">Food Budget:</h2>
+            <div class="slide-container range-slider gradient margin-bottom"
+                style="--min:0; --max:10000; --step:100; --value:200; --text-value:'200'; --prefix:'$'">
                 <input type="range" class="slider" id="foodBudget" name="foodBudget" step="1">
                 <output></output>
                 <div class='range-slider__progress'></div>
             </div>
-            <h2 class="subheader">Lodging Budget:</h2>
-            <div class="slide-container range-slider gradient" style="--min:0; --max:10000; --step:100; --value:200; --text-value:'200'; --prefix:'$'">
+            <h2 class="subheader padding-block">Lodging Budget:</h2>
+            <div class="slide-container range-slider gradient margin-bottom"
+                style="--min:0; --max:10000; --step:100; --value:200; --text-value:'200'; --prefix:'$'">
                 <input type="range" class="slider" id="lodgingBudget" name="lodgingBudget" step="1">
                 <output></output>
                 <div class='range-slider__progress'></div>
             </div>
-            <h2 class="subheader">Activity Budget:</h2>
-            <div class="slide-container range-slider gradient" style="--min:0; --max:10000; --step:100; --value:200; --text-value:'200'; --prefix:'$'">
+            <h2 class="subheader padding-block">Activity Budget:</h2>
+            <div class="slide-container range-slider gradient margin-bottom"
+                style="--min:0; --max:10000; --step:100; --value:200; --text-value:'200'; --prefix:'$'">
                 <input type="range" class="slider" id="activityBudget" name="activityBudget" step="1">
                 <output></output>
                 <div class='range-slider__progress'></div>
             </div>
-            <h2 class="subheader">Transportation Budget:</h2>
-            <div class="slide-container range-slider gradient" style="--min:0; --max:10000; --step:100; --value:200; --text-value:'200'; --prefix:'$'">
+            <h2 class="subheader padding-block">Transportation Budget:</h2>
+            <div class="slide-container range-slider gradient margin-bottom"
+                style="--min:0; --max:10000; --step:100; --value:200; --text-value:'200'; --prefix:'$'">
                 <input type="range" class="slider" id="transportationBudget" name="transportationBudget" step="1">
                 <output></output>
                 <div class='range-slider__progress'></div>
             </div>
         </label>
-        <button type="submit" class="text-arrow-wrapper">
-            <div class="arrow-wrapper">
-                <img src="{{ url_for('static', filename='images/arrow.svg') }}" alt="arrow" class="arrow up-facing black-arrow">
+
+        <button type="submit" class="text-arrow-wrapper relative flex flex-center padding-2x gap">
+            <div class="arrow-wrapper relative">
+                <img src="{{ url_for('static', filename='images/arrow.svg') }}" alt="arrow"
+                    class="arrow up-facing black-arrow">
             </div>
             <h3 class="subheader">
                 Generate Itinerary
@@ -61,8 +88,10 @@
         <img src="{{ url_for('static', filename='images/icons/favicon.svg') }}" alt="Voyage app logo" id="loaderlogo">
     </div>
     <div class="loading-messages" style="--i: 1">
-        <h3 data-period="2000" data-type='["Shaping Your Vision...", "Your Voyage Awaits...", "Setting Your Course...", "Anchored in Intention...", "Curating Your Trip..."]' data-ghost="Anchored in Intention..." class="typewrite">Curating Your Trip...</h3>
+        <h3 data-period="2000"
+            data-type='["Shaping Your Vision...", "Your Voyage Awaits...", "Setting Your Course...", "Anchored in Intention...", "Curating Your Trip..."]'
+            data-ghost="Anchored in Intention..." class="typewrite">Curating Your Trip...</h3>
     </div>
-    
-<script src="{{ url_for('static', filename='javascript/form.js') }}"></script>
-{% endblock %}
+
+    <script src="{{ url_for('static', filename='javascript/form.js') }}"></script>
+    {% endblock %}

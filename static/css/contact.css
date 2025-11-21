@@ -1,0 +1,7 @@
+/* contact page */
+.contact-form input[type="text"] {
+    border-bottom: 1px solid var(--text-color);
+}
+.contact-form .text-arrow-wrapper {
+    margin: 0;
+}
