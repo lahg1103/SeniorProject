@@ -86,8 +86,8 @@ def weather_forecast(lat, lon, start_date, end_date):
     params = {
         "latitude": lat,
         "longitude": lon,
-        "start_date": start_date.isoformat(),
-        "end_date": end_date.isoformat(),
+       "start_date": start_date.date().isoformat(),
+        "end_date": end_date.date().isoformat(),
         "daily": ["temperature_2m_max", "temperature_2m_min", "precipitation_sum"],
         "timezone": "auto"
     }
@@ -118,8 +118,8 @@ def historical_weather(lat, lon, start_date, end_date):
     params = {
         "latitude": lat,
         "longitude": lon,
-        "start_date": shift_start_date.isoformat(),
-        "end_date": shift_end_date.isoformat(),
+        "start_date": shift_start_date.date().isoformat(),
+        "end_date": shift_end_date.date().isoformat(),
         "daily": ["temperature_2m_max", "temperature_2m_min", "precipitation_sum"],
         "timezone": "auto"
     }

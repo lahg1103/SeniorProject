@@ -88,13 +88,18 @@ def process_preferences(data, existing=None):
     weather = []
     try:
         weather = weather_api.get_weather_itinerary(
-                destination=escape(data.get("destination", "").strip()),
+                destination=data.get("destination"),
                 arrival_date=arrival,
-                departure_date=departure,
+                departure_date=departure
             )
     except Exception as e:
-            print("Weather API error:", e)
-            weather = None
+            import traceback; traceback.print_exc()
+            weather = {
+                "source": "none",
+                "days": [],
+                "location": data.get("destination")
+            }
+
     itinerary.weather=weather
 
     return itinerary
