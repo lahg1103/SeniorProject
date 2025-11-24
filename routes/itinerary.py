@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, session, redirect, url_fo
 from markupsafe import escape
 from datetime import datetime
 from context import fields
-from utils import functions, ai
+from utils import functions, ai, weather_api
 from extensions import db
 from models import ItineraryPreferences, Itinerary
 from config import Config
@@ -54,7 +54,7 @@ def build_itinerary_task(app, itinerary_id):
             itinerary_data = ai.generateItinerary(preferences)
             destination = preferences.get("destination")
             trip_duration = preferences.get("tripDuration")
-
+            
             images = []
 
             if destination:
@@ -85,6 +85,17 @@ def process_preferences(data, existing=None):
     itinerary.transportationBudget=int(data["transportationBudget"])
     itinerary.activityBudget=int(data["activityBudget"])
     itinerary.tripDuration=functions.trip_duration(arrival, departure)
+    weather = []
+    try:
+        weather = weather_api.get_weather_itinerary(
+                destination=escape(data.get("destination", "").strip()),
+                arrival_date=arrival,
+                departure_date=departure,
+            )
+    except Exception as e:
+            print("Weather API error:", e)
+            weather = None
+    itinerary.weather=weather
 
     return itinerary
         
@@ -126,7 +137,6 @@ def get_place():
         "place_id": place_id,
         "photos": photos
     }
-
 
 @itinerary.route("/questionnaire")
 def questionnaire():
@@ -207,7 +217,7 @@ def display_itinerary(itinerary_id):
 
     #fix images
     unsplashPhotos = existingItinerary.images
-
+    weatherData = existingPreferences.weather or None
 
     if not existingItinerary:
         session.pop("itinerary_id", None)
@@ -215,4 +225,4 @@ def display_itinerary(itinerary_id):
     
     itineraryData = functions.decode_unicode(existingItinerary.data)
 
-    return render_template("itinerary.html", results=itineraryData, pages=pages, googleKey=googleMapsKey, photos=unsplashPhotos, existingPreferences=existingPreferences)
+    return render_template("itinerary.html", results=itineraryData, pages=pages, googleKey=googleMapsKey, photos=unsplashPhotos, existingPreferences=existingPreferences, weather= weatherData)

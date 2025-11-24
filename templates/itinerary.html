@@ -97,6 +97,11 @@
         {% endfor %}
     </section>
     {% endif %}
+    <section>
+        {% if weather %}
+            <p>{{ weather }}</p>
+        {% endif %}
+    </section>
     {% if photos %}
         <script>
             document.addEventListener('DOMContentLoaded', ()=>{
