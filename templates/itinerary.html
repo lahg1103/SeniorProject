@@ -35,6 +35,44 @@
                 </a>
                 
             </button>
+
+        {% if weather %}
+            <section class="weather-section padding-2x">
+                <h2 class="subheader center margin">
+                    Weather for {{ weather.location or results.city }}
+                </h2>
+                {% if weather.source == "historical" %}
+                <p class="weather-note center">
+                    *These conditions are based on historical data because real-time forecasts are not available for the selected
+                    dates.*
+                </p>
+                {% endif %}
+
+                <div class="weather-grid">
+                    {% for day in weather.days %}
+                    <article class="weather-day-card">
+                        <h3 class="serif">{{ day.date}}</h3>
+                        <p>
+                            High: {{ day.temp_max }}°C | Low: {{ day.temp_min }}°C
+                        </p>
+                        {% if day.precipitation is not none %}
+                        <p> Precipitation: {{ day.precipitation }} mm </p>
+                        {% endif %}
+                        {% if day.description %}
+                        <p> {{ day.description }} </p>
+                        {% endif %}
+                    </article>
+                    {% endfor %}
+                </div>
+
+                <p class="weather-disclaimer small center">
+                    Weather data is based on publicly available forecasts or historical averages. This feature does not predict
+                    extreme weather events, natural disasters, or sudden climate anomalies. Users should consult official sources
+                    for real-time alerts and safety information
+                </p>
+            </section>
+        {% endif %}
+
         {% for day in results["itineraryperday"] %}
 
             <section class="day-card margin-block center" id="day{{ loop.index }}">
@@ -97,6 +135,11 @@
         {% endfor %}
     </section>
     {% endif %}
+    <section>
+        {% if weather %}
+            <p>{{ weather }}</p>
+        {% endif %}
+    </section>
     {% if photos %}
         <script>
             document.addEventListener('DOMContentLoaded', ()=>{

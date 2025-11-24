@@ -72,6 +72,8 @@ api_key = os.environ.get("GEMINI_KEY") or os.getenv("GEMINI_KEY")
 client = genai.Client(api_key=api_key)
 
 
+
+
 def generateItinerary(preferences):
     print("generating itinerary")
     try:
@@ -91,7 +93,9 @@ def generateItinerary(preferences):
                 "When recommending activities, focus on unique, off-the-beaten-path experiences that offer cultural immersion and authentic local interactions. Avoid generic tourist attractions or widely known landmarks unless they hold significant cultural value."
                 "Make sure that each time block (morning, afternoon, evening) has a brief, editorial description for the meal and activity planned for that specific time block."
                 "Make sure meals are allocated to their respective time block (breakfast in the morning, lunch in the afternoon, dinner in the evening) and write a brief description of their meal, validating that it is in line with their dietary needs (if they're vegetarian validate that their meal is vegetarian)."
-                "Make sure that activities are allocated to their respective time block (morning activities in the morning, afternoon activities in the afternoon, evening activities in the evening)."),
+                "Make sure that activities are allocated to their respective time block (morning activities in the morning, afternoon activities in the afternoon, evening activities in the evening)."
+                "Consider the weather provided if any for the activities suggested. If it is extremely cold or hot outside, consider recommending indoor activities."
+                ),
                 "thinking_config": {
                     "thinking_budget": 0
                 },

@@ -13,6 +13,7 @@ class ItineraryPreferences(db.Model):
     activityBudget = db.Column(db.Integer, nullable=False)
     tripDuration = db.Column(db.Integer, nullable=True)
     destination = db.Column(db.String(200), nullable=False)
+    weather = db.Column(db.JSON, nullable=True)
 
     def __repr__(self):
         return f"<Preferences {self.id}>"
