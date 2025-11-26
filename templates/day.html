@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="url_for('static', filename='css/day.css')">
+{% endblock %}
+
+{% block title %}
+{{ destination }} | Day {{ day }}
+{% endblock %}
+
+{% block body %}
+    <section class="landing">
+    </section>
+    <section class="info">
+        <h1>{{ destination }} &mdash; Day {{ day }}</h1>
+        <h4> {{ result }} </h4> <h4> {{ photo }}</h4>
+        <a href=" {{ url_for('itinerary.display_itinerary', itinerary_id=itinerary_id) }}"> back to overview </a>
+    </section>
+    <section class="list">
+
+    </section>
+    <section class="itinerary">
+
+    </section>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', ()=>{
+            const itinerary = document.querySelector('.landing');
+            const imgURL = ' {{ photo }} ';
+            itinerary.style.setProperty('--bg-img', `url(${imgURL})`);
+        })
+    </script>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

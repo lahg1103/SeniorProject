@@ -13,131 +13,53 @@
         </section>
     {% else %}
         <section class="landing sidepage itinerary flex-column flex-center padding">
-        <h1 class="hero serif center"> {{ results.city }} in {{ results.tripduration }} Days </h1>
-        <h2 class="blurb sidepage center"> {{ results.promotionalblurb }} </h2>
+            <h1 class="hero serif center"> {{ results.city }} in {{ results.tripduration }} Days </h1>
         </section>
         
-        <section class="itinerary-wrapper relative flex-column padding-2x flex-center">
-            <div class="navigation-days relative">
-                <ul class="itinerary-top-navigation uppercase padding-block gap width-100 relative">
-                    {% for i in range(0, results["tripduration"], +1) %}
-                        <a href="#day{{ i + 1 }}">
-                        <li class="{{ i + 1 }}">
-                            Day {{ i + 1 }}
-                        </li>
-                        </a>
-                    {% endfor %}
-                </ul>
+        <section class="itinerary-wrapper relative flex-column padding-2x gap">
+            <div class="flex width-100 space-between padding">
+                <h4 class="itinerary-dates"> {{ existingPreferences.arrivaldate }} &mdash; {{ existingPreferences.departuredate }} </h4>
+                <div class="buttons flex gap">
+                    <a href="{{ url_for('itinerary.questionnaire', itinerary_id=existingPreferences.id) }}">
+                        <button id="updateItinerary">
+                                edit itinerary
+                        </button>
+                    </a>
+                    <a href="{{ url_for('itinerary.questionnaire', itinerary_id=existingPreferences.id) }}">
+                        <button id="saveItinerary">
+                                save itinerary
+                        </button>
+                    </a>
+                </div>
             </div>
-            <button id="updateItinerary">
-                <a href="{{ url_for('itinerary.questionnaire', itinerary_id=existingPreferences.id) }}">
-                    edit itinerary
-                </a>
-                
-            </button>
+            
+            <h4 class="itinerary-summary"> {{ results.promotionalblurb }} </h4>
+        </section>
 
-        {% if weather %}
-            <section class="weather-section padding-2x">
-                <h2 class="subheader center margin">
-                    Weather for {{ weather.location or results.city }}
-                </h2>
-                {% if weather.source == "historical" %}
-                <p class="weather-note center">
-                    *These conditions are based on historical data because real-time forecasts are not available for the selected
-                    dates.*
-                </p>
-                {% endif %}
-
-                <div class="weather-grid">
-                    {% for day in weather.days %}
-                    <article class="weather-day-card">
-                        <h3 class="serif">{{ day.date}}</h3>
-                        <p>
-                            High: {{ day.temp_max }}°C | Low: {{ day.temp_min }}°C
-                        </p>
-                        {% if day.precipitation is not none %}
-                        <p> Precipitation: {{ day.precipitation }} mm </p>
-                        {% endif %}
-                        {% if day.description %}
-                        <p> {{ day.description }} </p>
-                        {% endif %}
-                    </article>
-                    {% endfor %}
-                </div>
-
-                <p class="weather-disclaimer small center">
-                    Weather data is based on publicly available forecasts or historical averages. This feature does not predict
-                    extreme weather events, natural disasters, or sudden climate anomalies. Users should consult official sources
-                    for real-time alerts and safety information
-                </p>
-            </section>
-        {% endif %}
-
+        <section class="itinerary-grid padding-2x">
         {% for day in results["itineraryperday"] %}
+            
+                <section class="itinerary-card" >
+                    {% if photos %}
+                    <div class="day-img relative center justify-self margin-inline width-100">
+                        <img src="{{ photos[loop.index] }}" alt="">
+                    </div>
+                    {% endif %}
+                    <div class="text padding-2x flex flex-column gap">
+                        <a href="{{ url_for('itinerary.display_itinerary', itinerary_id=existingItinerary.id, day=loop.index) }}">
+                            <h1>Day {{ loop.index }}</h1>
+                        </a>
+                        <p class="summary">{{ day["daysummary"] }}</p>
+                        <a href="{{ url_for('itinerary.display_itinerary', itinerary_id=existingItinerary.id, day=loop.index) }}" class="day-view flex flex-center relative" style="background-image: url( {{ photos[loop.index] }} )">
+                            <button class="day-view padding">
+                                Full View
+                            </button>
+                        </a>
+                    </div>
+                </section>
 
-            <section class="day-card margin-block center" id="day{{ loop.index }}">
-                <h3 class="itinerary-heading serif"> Day {{ loop.index }} </h3>
-                <p> {{ day["daysummary"] }} </p>
-
-                
-                {% if photos %}
-                <div class="day-img relative center justify-self margin-inline">
-                    <img src="{{ photos[loop.index] }}" alt="">
-                </div>
-                {% endif %}
-                
-
-                <h3 class="subheader">Lodging: </h3>
-                <p>{{ day["lodging"]["name"] }} &mdash; {{ day["lodging"]["address"] }} | cost: {{ day["lodging"]["cost"] }} </p>
-                <div class="google gap relative flex flex-center">
-                    <div class="map relative height-100" data-location="{{ day['lodging']['name'] }}" data-address="{{ day['lodging']['address'] }}">
-                        <iframe src="" frameborder="0"></iframe>
-                    </div><div class="img relative height-100"></div>
-                </div>
-
-                {% for activity in day["timeblocks"]["morning"] %}
-                <h3 class="subheader">{{ activity["time"] }}</h3>
-                <p>{{ activity["name"] }} &mdash; {{ activity["address"] }} | cost: {{ activity["cost"] }} </p>
-                <p>{{ activity["summary"] }}</p>
-                <p><strong>Breakfast: </strong> {{ day["food"]["breakfast"]["restaurant"] }} &mdash; {{ day["food"]["breakfast"]["address"] }} | cost: {{ day["food"]["lunch"]["cost"]}}</p>
-                <div class="google gap relative flex flex-center">
-                    <div class="map relative height-100" data-location="{{ day['food']['breakfast']['restaurant'] }}" data-address="{{ day['food']['breakfast']['address'] }}">
-                        <iframe src="" frameborder="0"></iframe>
-                    </div><div class="img relative height-100"></div>
-                </div>
-                {% endfor %}
-
-                {% for activity in day["timeblocks"]["afternoon"] %}
-                <h3 class="subheader">{{ activity["time"] }}</h3>
-                <p>{{ activity["name"] }} &mdash; {{ activity["address"] }} | cost: {{ activity["cost"] }} </p>
-                <p>{{ activity["summary"] }}</p>
-                <p><strong>Lunch: </strong> {{ day["food"]["lunch"]["restaurant"] }} &mdash; {{ day["food"]["lunch"]["address"] }} | cost: {{ day["food"]["lunch"]["cost"]}}</p>
-                <div class="google gap relative flex flex-center">
-                    <div class="map relative height-100" data-location="{{ day['food']['lunch']['restaurant'] }}" data-address="{{ day['food']['lunch']['address'] }}">
-                        <iframe src="" frameborder="0"></iframe>
-                    </div><div class="img relative height-100"></div>
-                </div>
-                {% endfor %}
-                
-                {% for activity in day["timeblocks"]["evening"] %}
-                <h3 class="subheader">{{ activity["time"] }}</h3>
-                <p>{{ activity["name"] }} &mdash; {{ activity["address"] }} | cost: {{ activity["cost"] }} </p>
-                <p>{{ activity["summary"] }}</p>
-                <p><strong>Dinner: </strong> {{ day["food"]["dinner"]["restaurant"] }} &mdash; {{ day["food"]["dinner"]["address"] }} | cost: {{ day["food"]["lunch"]["cost"]}}</p>
-                <div class="google gap relative flex flex-center">
-                    <div class="map relative height-100" data-location="{{ day['food']['dinner']['restaurant'] }}" data-address="{{ day['food']['dinner']['address'] }}">
-                        <iframe src="" frameborder="0"></iframe>
-                    </div><div class="img relative height-100"></div>
-                </div>
-                {% endfor %}
-                
-            </section>
         {% endfor %}
-    </section>
-    {% endif %}
-    <section>
-        {% if weather %}
-            <p>{{ weather }}</p>
+
         {% endif %}
     </section>
     {% if photos %}

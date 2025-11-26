@@ -56,8 +56,17 @@ class GoogleMap {
     }
 }
 
+let summarize = function(summaries) {
+    Object.values(summaries).forEach(s => {
+        let summary = s.textContent.split(" ", 12).join(" ") + "...";
+        s.textContent = summary;
+    });
+}
+
 document.addEventListener('DOMContentLoaded', ()=>{
     const googlePlaceholder = document.querySelectorAll('.google');
+    const summarylist = document.querySelectorAll('.summary');
+    summarize(summarylist);
 
     const googleMap = new GoogleMap(googlePlaceholder, apiKey);
 

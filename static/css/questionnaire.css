@@ -330,7 +330,7 @@ div.checkbox label, div.checkbox input {
     height: 100%;
     width: 100%;
     z-index: 999;
-    background-color: var(--background-color);
+    background-color: var(--secondary-background);
     display: grid;
     place-content: center;
     gap: 5vw;

@@ -208,19 +208,12 @@ def itinerary_status(itinerary_id):
     return jsonify({"status": "processing"})
 
 
-@itinerary.route("/itinerary/<int:itinerary_id>")
-def display_itinerary(itinerary_id):
+@itinerary.route("/itinerary/<int:itinerary_id>", defaults={"day": None})
+@itinerary.route("/itinerary/<int:itinerary_id>/day<int:day>")
+def display_itinerary(itinerary_id, day):
 
     existingItinerary = Itinerary.query.get(itinerary_id)
-
     existingPreferences = ItineraryPreferences.query.get(itinerary_id)
-    # travelers = existingPreferences.numberOfTravelers if existingPreferences else 1
-
-    # remember to come back and do something with this lol
-    #scale costs
-
-
-    #fix images
     unsplashPhotos = existingItinerary.images
     weatherData = existingPreferences.weather or None
 
@@ -230,4 +223,20 @@ def display_itinerary(itinerary_id):
     
     itineraryData = functions.decode_unicode(existingItinerary.data)
 
-    return render_template("itinerary.html", results=itineraryData, pages=pages, googleKey=googleMapsKey, photos=unsplashPhotos, existingPreferences=existingPreferences, weather= weatherData)
+
+    if day:
+        result = itineraryData["itineraryperday"][day - 1]
+        dayphoto = unsplashPhotos[day - 1]
+        return render_template("day.html",
+                               result=result,
+                               day=day,
+                               destination= existingPreferences.destination,
+                               photo = dayphoto,
+                               itinerary_id = itinerary_id)
+    else:
+        # travelers = existingPreferences.numberOfTravelers if existingPreferences else 1
+
+        # remember to come back and do something with this lol
+        #scale costs
+        #fix images
+        return render_template("itinerary.html", results=itineraryData, pages=pages, googleKey=googleMapsKey, photos=unsplashPhotos, existingPreferences=existingPreferences, existingItinerary=existingItinerary, weather= weatherData)
