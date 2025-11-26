@@ -137,8 +137,15 @@
             </div>
         </div>
 
-    </section>
-    {% endfor %}
+</section>
+{% endfor %}
+
+<!-- Timestamp / Permalink -->
+<p class="timestamp center">
+    Generated on {{ timestamp }} — ID #{{ itinerary_id }}
+    <br>
+    <a href="{{ permalink }}" class="permalink">Permalink</a>
+</p>
 
 </section>
 

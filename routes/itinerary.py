@@ -211,6 +211,8 @@ def display_itinerary(itinerary_id):
 
     itineraryData = functions.decode_unicode(existingItinerary.data)
 
+    permalink = url_for("itinerary.display_itinerary", itinerary_id=itinerary_id, _external=True)
+
     return render_template(
         "itinerary.html",
         results=itineraryData,
@@ -219,8 +221,10 @@ def display_itinerary(itinerary_id):
         photos=unsplashPhotos,
         existingPreferences=existingPreferences,
         itinerary_id=itinerary_id,
-        timestamp=current_timestamp()
+        timestamp=current_timestamp(),
+        permalink=permalink
     )
+
 
 
 @itinerary.route("/itinerary/<int:itinerary_id>/print")
