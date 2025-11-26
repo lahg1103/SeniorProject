@@ -216,3 +216,37 @@ def display_itinerary(itinerary_id):
     itineraryData = functions.decode_unicode(existingItinerary.data)
 
     return render_template("itinerary.html", results=itineraryData, pages=pages, googleKey=googleMapsKey, photos=unsplashPhotos, existingPreferences=existingPreferences)
+
+
+@itinerary.route("/itinerary/<int:itinerary_id>/print")
+def itinerary_print(itinerary_id):
+    itinerary_obj = Itinerary.query.get_or_404(itinerary_id)
+    preferences = ItineraryPreferences.query.get_or_404(itinerary_obj.preferences_id)
+
+    itinerary_data = functions.decode_unicode(itinerary_obj.data)
+    photos = itinerary_obj.images
+
+    return render_template(
+        "itinerary_print.html",
+        results=itinerary_data,
+        photos=photos,
+        existingPreferences=preferences,
+        itinerary_id=itinerary_id
+    )
+
+
+@itinerary.route("/itinerary/<int:itinerary_id>/email")
+def itinerary_email(itinerary_id):
+    itinerary_obj = Itinerary.query.get_or_404(itinerary_id)
+    preferences = ItineraryPreferences.query.get_or_404(itinerary_obj.preferences_id)
+
+    itinerary_data = functions.decode_unicode(itinerary_obj.data)
+    photos = itinerary_obj.images
+
+    return render_template(
+        "itinerary_email.html",
+        results=itinerary_data,
+        photos=photos,
+        existingPreferences=preferences,
+        itinerary_id=itinerary_id
+    )

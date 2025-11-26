@@ -164,3 +164,30 @@ footer {
     font-weight: 600;
     opacity: 0.85;
 }
+.export-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    width: 100%;
+    justify-content: center;
+}
+
+.export-btn {
+    padding: 0.6rem 1.4rem;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: white;
+    text-decoration: none;
+    border-radius: var(--radius-small);
+    backdrop-filter: blur(6px);
+    transition: 0.25s ease;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+}
+
+.export-btn:hover {
+    background: rgba(255, 255, 255, 0.20);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-2px);
+}
+
