@@ -1,89 +1,92 @@
 {% extends "base.html" %}
+
 {% block content %}
 
 <style>
-    .email-container {
-        max-width: 650px;
-        margin: auto;
-        padding: 2rem;
-        background: linear-gradient(145deg, #1a1f24, #2d333a);
-        color: white;
-        border-radius: 12px;
-    }
+.email-wrapper {
+    max-width: 700px;
+    margin: 0 auto;
+    background: #ffffff10;
+    padding: 2rem;
+    border-radius: 16px;
+}
 
-    .email-header {
-        text-align: center;
-        margin-bottom: 2rem;
-    }
+.email-header {
+    font-size: 2rem;
+    text-align: center;
+}
 
-    .email-header h1 {
-        font-size: 2rem;
-        margin-bottom: 0.25rem;
-    }
+.email-subtitle {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    text-align: center;
+    margin-bottom: 2rem;
+}
 
-    .email-day {
-        background: rgba(255,255,255,0.05);
-        padding: 1.25rem;
-        margin-bottom: 1rem;
-        border-radius: 10px;
-    }
+.email-section {
+    margin-bottom: 2rem;
+    padding: 1.2rem;
+    background: rgba(255,255,255,0.06);
+    border-radius: 12px;
+}
 
-    .email-day h2 {
-        margin-bottom: 0.3rem;
-        color: #90c8ff;
-        font-size: 1.4rem;
-    }
+.email-section h3 {
+    margin-bottom: 0.5rem;
+    color: white;
+}
 
-    .summary {
-        font-size: 0.95rem;
-        opacity: 0.85;
-        margin-bottom: 0.8rem;
-    }
-
-    .link-btn {
-        display: block;
-        width: 100%;
-        text-align: center;
-        padding: 0.9rem;
-        background: #4fa3ff;
-        color: #000;
-        font-weight: bold;
-        text-decoration: none;
-        border-radius: 8px;
-        margin-top: 2rem;
-    }
-
-    .link-btn:hover {
-        background: #77bbff;
-    }
+.email-link {
+    margin-top: 2rem;
+    font-size: 1.1rem;
+    text-align: center;
+}
+.email-link a {
+    color: #8dcaff;
+}
 </style>
 
-<div class="email-container">
+<div class="email-wrapper">
 
-    <div class="email-header">
-        <h1>Your Trip Summary</h1>
-        <p>{{ results.city }}</p>
-    </div>
+    <h1 class="email-header">{{ existingPreferences.destination }} Itinerary</h1>
+    <p class="email-subtitle">{{ results.promotionalblurb }}</p>
+
+    <p class="email-link">
+        <strong>View full online itinerary:</strong><br>
+        <a href="{{ permalink }}">{{ permalink }}</a>
+    </p>
+
+    <p class="email-link" style="opacity: 0.7;">
+        Itinerary ID: {{ itinerary_id }}<br>
+        Generated: {{ timestamp }}
+    </p>
 
     {% for day in results.itineraryperday %}
-    {% if loop.index0 < 3 %}  {# show only first 3 days #}
+    <div class="email-section">
+        <h3>Day {{ loop.index }}</h3>
+        <p>{{ day.daysummary }}</p>
 
-    <div class="email-day">
-        <h2>Day {{ loop.index }}</h2>
-        <p class="summary">{{ day.daysummary }}</p>
+        <strong>Lodging:</strong><br>
+        {{ day.lodging.name }} — {{ day.lodging.cost }}<br><br>
 
-        <p><strong>Morning:</strong> {{ day.timeblocks.morning[0].name }}</p>
-        <p><strong>Afternoon:</strong> {{ day.timeblocks.afternoon[0].name }}</p>
-        <p><strong>Evening:</strong> {{ day.timeblocks.evening[0].name }}</p>
+        {% set m = day.timeblocks.morning[0] %}
+        <strong>Morning:</strong> {{ m.name }} ({{ m.time }})<br>
+        <em>{{ m.summary }}</em><br><br>
+
+        <strong>Breakfast:</strong> {{ day.food.breakfast.restaurant }} — {{ day.food.breakfast.cost }}<br><br>
+
+        {% set a = day.timeblocks.afternoon[0] %}
+        <strong>Afternoon:</strong> {{ a.name }} ({{ a.time }})<br>
+        <em>{{ a.summary }}</em><br><br>
+
+        <strong>Lunch:</strong> {{ day.food.lunch.restaurant }} — {{ day.food.lunch.cost }}<br><br>
+
+        {% set e = day.timeblocks.evening[0] %}
+        <strong>Evening:</strong> {{ e.name }} ({{ e.time }})<br>
+        <em>{{ e.summary }}</em><br><br>
+
+        <strong>Dinner:</strong> {{ day.food.dinner.restaurant }} — {{ day.food.dinner.cost }}
     </div>
-
-    {% endif %}
     {% endfor %}
-
-    <a class="link-btn"
-       href="{{ url_for('itinerary.display_itinerary', itinerary_id=itinerary_id, _external=True) }}">
-       View Full Itinerary →
-    </a>
 
 </div>
 

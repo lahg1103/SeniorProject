@@ -1,114 +1,119 @@
 {% extends "base.html" %}
+
 {% block content %}
 
 <style>
-    /* PRINT STYLES */
-    body {
-        background: white !important;
+/* PRINT LAYOUT */
+.print-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    color: black;
+    background: white;
+}
+
+.print-wrapper h1,
+.print-wrapper h2,
+.print-wrapper h3 {
+    color: black;
+}
+
+.print-section {
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 1.5rem;
+}
+
+.print-activity {
+    margin-bottom: 1rem;
+}
+
+.print-meta {
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    opacity: 0.7;
+}
+
+@media print {
+    a {
         color: black !important;
+        text-decoration: underline !important;
     }
-
-    .print-container {
-        max-width: 800px;
-        margin: auto;
-        padding: 2rem;
-        font-family: Arial, sans-serif;
-        color: #000;
-    }
-
-    h1, h2, h3 {
-        font-weight: 700;
-        color: #000;
-        margin-bottom: 0.5rem;
-    }
-
-    .day-block {
-        border-top: 1px solid #000;
-        padding-top: 1.5rem;
-        margin-top: 2rem;
-    }
-
-    .section {
-        margin-bottom: 1.2rem;
-    }
-
-    .label {
-        font-weight: 600;
-        text-transform: uppercase;
-        font-size: 0.85rem;
-        margin-bottom: 0.2rem;
-    }
-
-    .footer-print {
-        margin-top: 3rem;
-        font-size: 0.75rem;
-        text-align: center;
-        color: #444;
-    }
-
-    @media print {
-        .no-print { display: none !important; }
-    }
+}
 </style>
 
-<div class="print-container">
+<div class="print-wrapper">
 
-    <div class="no-print" style="margin-bottom: 1rem;">
-        <a href="{{ url_for('itinerary.display_itinerary', itinerary_id=itinerary_id) }}">← Back to Full Itinerary</a>
-    </div>
+    <h1>{{ existingPreferences.destination }} Itinerary</h1>
 
-    <h1>Trip Itinerary</h1>
-    <p><strong>Generated on:</strong> {{ now().strftime("%B %d, %Y") }}</p>
-    <p><strong>Destination:</strong> {{ results.city }}</p>
+    <p class="print-meta">
+        Itinerary ID: <strong>{{ itinerary_id }}</strong><br>
+        Generated: {{ timestamp }}<br>
+        Online Version: {{ permalink }}
+    </p>
+
+    <h2>{{ results.promotionalblurb }}</h2>
 
     {% for day in results.itineraryperday %}
-    <div class="day-block">
-
-        <h2>Day {{ loop.index }}</h2>
+    <div class="print-section">
+        <h3>Day {{ loop.index }}</h3>
         <p>{{ day.daysummary }}</p>
 
-        <div class="section">
-            <div class="label">Lodging</div>
-            <div>{{ day.lodging.name }} — {{ day.lodging.address }}</div>
+        <!-- Lodging -->
+        <div class="print-activity">
+            <strong>Lodging:</strong><br>
+            {{ day.lodging.name }}<br>
+            {{ day.lodging.address }}<br>
+            Cost: {{ day.lodging.cost }}
         </div>
 
-        <div class="section">
-            <div class="label">Breakfast</div>
-            <div>{{ day.food.breakfast.restaurant }} — {{ day.food.breakfast.address }}</div>
+        <!-- Morning -->
+        {% set m = day.timeblocks.morning[0] %}
+        <div class="print-activity">
+            <strong>Morning — {{ m.time }}</strong><br>
+            {{ m.name }}<br>
+            {{ m.address }}<br>
+            Cost: {{ m.cost }}<br>
+            <em>{{ m.summary }}</em>
         </div>
 
-        <div class="section">
-            <div class="label">Morning Activity</div>
-            <div>{{ day.timeblocks.morning[0].name }}</div>
+        <div class="print-activity">
+            <strong>Breakfast:</strong><br>
+            {{ day.food.breakfast.restaurant }} — {{ day.food.breakfast.cost }}
         </div>
 
-        <div class="section">
-            <div class="label">Lunch</div>
-            <div>{{ day.food.lunch.restaurant }} — {{ day.food.lunch.address }}</div>
+        <!-- Afternoon -->
+        {% set a = day.timeblocks.afternoon[0] %}
+        <div class="print-activity">
+            <strong>Afternoon — {{ a.time }}</strong><br>
+            {{ a.name }}<br>
+            {{ a.address }}<br>
+            Cost: {{ a.cost }}<br>
+            <em>{{ a.summary }}</em>
         </div>
 
-        <div class="section">
-            <div class="label">Afternoon Activity</div>
-            <div>{{ day.timeblocks.afternoon[0].name }}</div>
+        <div class="print-activity">
+            <strong>Lunch:</strong><br>
+            {{ day.food.lunch.restaurant }} — {{ day.food.lunch.cost }}
         </div>
 
-        <div class="section">
-            <div class="label">Dinner</div>
-            <div>{{ day.food.dinner.restaurant }} — {{ day.food.dinner.address }}</div>
+        <!-- Evening -->
+        {% set e = day.timeblocks.evening[0] %}
+        <div class="print-activity">
+            <strong>Evening — {{ e.time }}</strong><br>
+            {{ e.name }}<br>
+            {{ e.address }}<br>
+            Cost: {{ e.cost }}<br>
+            <em>{{ e.summary }}</em>
         </div>
 
-        <div class="section">
-            <div class="label">Evening Activity</div>
-            <div>{{ day.timeblocks.evening[0].name }}</div>
+        <div class="print-activity">
+            <strong>Dinner:</strong><br>
+            {{ day.food.dinner.restaurant }} — {{ day.food.dinner.cost }}
         </div>
 
     </div>
     {% endfor %}
-
-    <div class="footer-print">
-        Itinerary ID: {{ itinerary_id }} •  
-        View full version at: {{ url_for('itinerary.display_itinerary', itinerary_id=itinerary_id, _external=True) }}
-    </div>
 
 </div>
 

@@ -232,13 +232,15 @@ def itinerary_print(itinerary_id):
     photos = itinerary_obj.images
 
     return render_template(
-        "itinerary_print.html",
-        results=itinerary_data,
-        photos=photos,
-        existingPreferences=preferences,
-        itinerary_id=itinerary_id,
-        timestamp=current_timestamp()
-    )
+    "itinerary_print.html",
+    results=itinerary_data,
+    photos=photos,
+    existingPreferences=preferences,
+    itinerary_id=itinerary_id,
+    timestamp=current_timestamp(),
+    permalink=url_for("itinerary.display_itinerary", itinerary_id=itinerary_id, _external=True)
+)
+
 
 
 @itinerary.route("/itinerary/<int:itinerary_id>/email")
@@ -250,10 +252,12 @@ def itinerary_email(itinerary_id):
     photos = itinerary_obj.images
 
     return render_template(
-        "itinerary_email.html",
-        results=itinerary_data,
-        photos=photos,
-        existingPreferences=preferences,
-        itinerary_id=itinerary_id,
-        timestamp=current_timestamp()
-    )
+    "itinerary_email.html",
+    results=itinerary_data,
+    photos=photos,
+    existingPreferences=preferences,
+    itinerary_id=itinerary_id,
+    timestamp=current_timestamp(),
+    permalink=url_for("itinerary.display_itinerary", itinerary_id=itinerary_id, _external=True)
+)
+
