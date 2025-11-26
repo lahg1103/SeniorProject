@@ -17,6 +17,11 @@ googleMapsKeyBackend = Config.GOOGLE_MAPS_KEY_BACKEND
 unsplashKey = Config.UNSPLASH_ACCESS_KEY
 
 
+# TIMESTAMP
+def current_timestamp():
+    return datetime.now().strftime("%B %d, %Y • %I:%M %p")
+
+
 def get_unsplash_images(query, trip_duration):
 
     if unsplashKey:
@@ -38,6 +43,7 @@ def get_unsplash_images(query, trip_duration):
     except Exception as e:
         print(f"Error fetching images from Unsplash: {e}")
         return []
+
 
 def build_itinerary_task(app, itinerary_id):
     with app.app_context():
@@ -66,28 +72,28 @@ def build_itinerary_task(app, itinerary_id):
             db.session.commit()
             print(f"Itinerary updated: id={itinerary.id}, preferences_id={itinerary_id}")
 
-
         except Exception as e:
             print("Error generating itinerary: ", e)
+
 
 def process_preferences(data, existing=None):
     arrival = datetime.strptime(data["arrival_date"], "%Y-%m-%d")
     departure = datetime.strptime(data["departure_date"], "%Y-%m-%d")
 
     itinerary = existing if existing else ItineraryPreferences()
-    itinerary.numberOfTravelers=int(data["number_of_travelers"])
-    itinerary.budget=int(data["budget"])
-    itinerary.arrivaldate=arrival
-    itinerary.departuredate=departure
-    itinerary.destination=escape(data.get("destination", "").strip())
-    itinerary.foodBudget=int(data["foodBudget"])
-    itinerary.lodgingBudget=int(data["lodgingBudget"])
-    itinerary.transportationBudget=int(data["transportationBudget"])
-    itinerary.activityBudget=int(data["activityBudget"])
-    itinerary.tripDuration=functions.trip_duration(arrival, departure)
+    itinerary.numberOfTravelers = int(data["number_of_travelers"])
+    itinerary.budget = int(data["budget"])
+    itinerary.arrivaldate = arrival
+    itinerary.departuredate = departure
+    itinerary.destination = escape(data.get("destination", "").strip())
+    itinerary.foodBudget = int(data["foodBudget"])
+    itinerary.lodgingBudget = int(data["lodgingBudget"])
+    itinerary.transportationBudget = int(data["transportationBudget"])
+    itinerary.activityBudget = int(data["activityBudget"])
+    itinerary.tripDuration = functions.trip_duration(arrival, departure)
 
     return itinerary
-        
+
 
 @itinerary.route("/api/place", methods=["GET"])
 def get_place():
@@ -153,7 +159,6 @@ def process_itinerary():
         data = request.get_json()
         itinerary_id = data.get("itinerary_id") or session.get("itinerary_id")
 
-        
         existing = None
 
         if itinerary_id:
@@ -163,26 +168,26 @@ def process_itinerary():
 
         if not existing:
             db.session.add(itinerary)
-        
+
         db.session.commit()
 
         session["itinerary_id"] = itinerary.id
         session.permanent = True
 
         return {"itinerary_id": itinerary.id}, 200
-    
+
     except Exception as e:
         print(str(e))
-        return{"error": str(e)}, 500 
-
+        return {"error": str(e)}, 500
 
 
 @itinerary.route("/build-itinerary/<int:itinerary_id>")
 def success(itinerary_id):
     app = current_app._get_current_object()
-    Thread(target=build_itinerary_task, args=(app,itinerary_id)).start()
+    Thread(target=build_itinerary_task, args=(app, itinerary_id)).start()
     return jsonify({"status": "processing",
                     "itinerary_id": itinerary_id}), 200
+
 
 @itinerary.route("/itinerary-status/<int:itinerary_id>")
 def itinerary_status(itinerary_id):
@@ -197,25 +202,25 @@ def itinerary_status(itinerary_id):
 def display_itinerary(itinerary_id):
 
     existingItinerary = Itinerary.query.get(itinerary_id)
-
     existingPreferences = ItineraryPreferences.query.get(itinerary_id)
-    # travelers = existingPreferences.numberOfTravelers if existingPreferences else 1
-
-    # remember to come back and do something with this lol
-    #scale costs
-
-
-    #fix images
     unsplashPhotos = existingItinerary.images
-
 
     if not existingItinerary:
         session.pop("itinerary_id", None)
         return redirect("/questionnaire")
-    
+
     itineraryData = functions.decode_unicode(existingItinerary.data)
 
-    return render_template("itinerary.html", results=itineraryData, pages=pages, googleKey=googleMapsKey, photos=unsplashPhotos, existingPreferences=existingPreferences)
+    return render_template(
+        "itinerary.html",
+        results=itineraryData,
+        pages=pages,
+        googleKey=googleMapsKey,
+        photos=unsplashPhotos,
+        existingPreferences=existingPreferences,
+        itinerary_id=itinerary_id,
+        timestamp=current_timestamp()
+    )
 
 
 @itinerary.route("/itinerary/<int:itinerary_id>/print")
@@ -231,7 +236,8 @@ def itinerary_print(itinerary_id):
         results=itinerary_data,
         photos=photos,
         existingPreferences=preferences,
-        itinerary_id=itinerary_id
+        itinerary_id=itinerary_id,
+        timestamp=current_timestamp()
     )
 
 
@@ -248,5 +254,6 @@ def itinerary_email(itinerary_id):
         results=itinerary_data,
         photos=photos,
         existingPreferences=preferences,
-        itinerary_id=itinerary_id
+        itinerary_id=itinerary_id,
+        timestamp=current_timestamp()
     )
