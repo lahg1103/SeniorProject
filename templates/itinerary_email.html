@@ -1,63 +1,90 @@
-<!DOCTYPE html>
-<html>
-<body style="margin:0; padding:0; background:#f7f7f7; font-family:Arial, sans-serif;">
+{% extends "base.html" %}
+{% block content %}
 
-<table width="100%" cellpadding="0" cellspacing="0" style="padding:20px;">
-<tr>
-<td align="center">
+<style>
+    .email-container {
+        max-width: 650px;
+        margin: auto;
+        padding: 2rem;
+        background: linear-gradient(145deg, #1a1f24, #2d333a);
+        color: white;
+        border-radius: 12px;
+    }
 
-    <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff; border-radius:10px; padding:20px;">
-        
-        <!-- HEADER -->
-        <tr>
-            <td style="text-align:center; padding-bottom:15px;">
-                <h2 style="margin:0; color:#4f6fff;">Your Trip Itinerary Is Ready!</h2>
-                <p style="margin:5px 0 0; color:#444;">
-                    {{ city }} • {{ tripduration }} Days
-                </p>
-            </td>
-        </tr>
+    .email-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
 
-        <!-- DAY 1 OVERVIEW -->
-        {% set first_day = results.itineraryperday[0] %}
-        <tr>
-            <td style="padding:15px;">
-                <h3 style="margin:0; color:#333;">Day 1 Snapshot</h3>
-                <p style="color:#555; margin:10px 0;">
-                    {{ first_day.daysummary[:200] }}...
-                </p>
+    .email-header h1 {
+        font-size: 2rem;
+        margin-bottom: 0.25rem;
+    }
 
-                <p style="color:#777; margin-top:10px; font-size:14px;">
-                    • Morning: <strong>{{ first_day.timeblocks.morning[0].name }}</strong><br>
-                    • Afternoon: <strong>{{ first_day.timeblocks.afternoon[0].name }}</strong><br>
-                    • Evening: <strong>{{ first_day.timeblocks.evening[0].name }}</strong>
-                </p>
-            </td>
-        </tr>
+    .email-day {
+        background: rgba(255,255,255,0.05);
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+        border-radius: 10px;
+    }
 
-        <!-- CTA BUTTON -->
-        <tr>
-            <td style="text-align:center; padding:20px;">
-                <a href="{{ permalink }}" 
-                   style="background:#4f6fff; padding:14px 28px; color:white; 
-                          text-decoration:none; border-radius:6px; font-size:16px;">
-                    View Full Itinerary
-                </a>
-            </td>
-        </tr>
+    .email-day h2 {
+        margin-bottom: 0.3rem;
+        color: #90c8ff;
+        font-size: 1.4rem;
+    }
 
-        <!-- FOOTER -->
-        <tr>
-            <td style="text-align:center; padding-top:10px; color:#999; font-size:12px;">
-                Generated on {{ timestamp }}
-            </td>
-        </tr>
+    .summary {
+        font-size: 0.95rem;
+        opacity: 0.85;
+        margin-bottom: 0.8rem;
+    }
 
-    </table>
+    .link-btn {
+        display: block;
+        width: 100%;
+        text-align: center;
+        padding: 0.9rem;
+        background: #4fa3ff;
+        color: #000;
+        font-weight: bold;
+        text-decoration: none;
+        border-radius: 8px;
+        margin-top: 2rem;
+    }
 
-</td>
-</tr>
-</table>
+    .link-btn:hover {
+        background: #77bbff;
+    }
+</style>
 
-</body>
-</html>
+<div class="email-container">
+
+    <div class="email-header">
+        <h1>Your Trip Summary</h1>
+        <p>{{ results.city }}</p>
+    </div>
+
+    {% for day in results.itineraryperday %}
+    {% if loop.index0 < 3 %}  {# show only first 3 days #}
+
+    <div class="email-day">
+        <h2>Day {{ loop.index }}</h2>
+        <p class="summary">{{ day.daysummary }}</p>
+
+        <p><strong>Morning:</strong> {{ day.timeblocks.morning[0].name }}</p>
+        <p><strong>Afternoon:</strong> {{ day.timeblocks.afternoon[0].name }}</p>
+        <p><strong>Evening:</strong> {{ day.timeblocks.evening[0].name }}</p>
+    </div>
+
+    {% endif %}
+    {% endfor %}
+
+    <a class="link-btn"
+       href="{{ url_for('itinerary.display_itinerary', itinerary_id=itinerary_id, _external=True) }}">
+       View Full Itinerary →
+    </a>
+
+</div>
+
+{% endblock %}

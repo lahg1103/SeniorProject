@@ -1,112 +1,115 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>{{ city }} Itinerary — Print Version</title>
+{% extends "base.html" %}
+{% block content %}
 
 <style>
-    /* ---------- BASE ---------- */
+    /* PRINT STYLES */
     body {
-        font-family: Georgia, serif;
-        background: white;
-        color: black;
-        margin: 40px;
-        line-height: 1.5;
+        background: white !important;
+        color: black !important;
+    }
+
+    .print-container {
+        max-width: 800px;
+        margin: auto;
+        padding: 2rem;
+        font-family: Arial, sans-serif;
+        color: #000;
     }
 
     h1, h2, h3 {
-        margin-bottom: 5px;
         font-weight: 700;
+        color: #000;
+        margin-bottom: 0.5rem;
     }
 
-    h1 {
-        font-size: 28px;
-        text-align: center;
-        margin-bottom: 20px;
-    }
-
-    h2 {
-        font-size: 20px;
-        margin-top: 25px;
-        border-bottom: 1px solid #000;
-        padding-bottom: 4px;
-    }
-
-    h3 {
-        font-size: 17px;
-        margin-top: 15px;
-    }
-
-    .timestamp, .permalink {
-        font-size: 13px;
-        color: #222;
-        margin-bottom: 5px;
+    .day-block {
+        border-top: 1px solid #000;
+        padding-top: 1.5rem;
+        margin-top: 2rem;
     }
 
     .section {
-        margin-bottom: 15px;
+        margin-bottom: 1.2rem;
     }
 
-    /* ---------- BLOCKS ---------- */
-    .block {
-        border: 1px solid #000;
-        padding: 12px;
-        border-radius: 4px;
-        margin-bottom: 15px;
-        background: #fff;
+    .label {
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        margin-bottom: 0.2rem;
     }
 
-    strong {
-        font-weight: 700;
+    .footer-print {
+        margin-top: 3rem;
+        font-size: 0.75rem;
+        text-align: center;
+        color: #444;
     }
 
-    /* ---------- PAGE BREAKS ---------- */
-    .page-break {
-        page-break-after: always;
-    }
-
-    /* ---------- REMOVE WEB-ONLY CONTENT ---------- */
     @media print {
-        a {
-            color: black !important;
-            text-decoration: underline;
-        }
+        .no-print { display: none !important; }
     }
 </style>
-</head>
 
-<body>
+<div class="print-container">
 
-<h1>{{ city }} — {{ tripduration }} Day Itinerary</h1>
+    <div class="no-print" style="margin-bottom: 1rem;">
+        <a href="{{ url_for('itinerary.display_itinerary', itinerary_id=itinerary_id) }}">← Back to Full Itinerary</a>
+    </div>
 
-<div class="timestamp">Generated on: {{ timestamp }}</div>
-<div class="permalink">Permalink: {{ permalink }}</div>
+    <h1>Trip Itinerary</h1>
+    <p><strong>Generated on:</strong> {{ now().strftime("%B %d, %Y") }}</p>
+    <p><strong>Destination:</strong> {{ results.city }}</p>
 
-{% for day in results.itineraryperday %}
-<div class="page-break"></div>
+    {% for day in results.itineraryperday %}
+    <div class="day-block">
 
-<h2>Day {{ loop.index }}</h2>
-<p>{{ day.daysummary }}</p>
+        <h2>Day {{ loop.index }}</h2>
+        <p>{{ day.daysummary }}</p>
 
-<h3>Morning</h3>
-<div class="block">
-    <strong>{{ day.timeblocks.morning[0].name }}</strong><br>
-    {{ day.timeblocks.morning[0].summary }}
+        <div class="section">
+            <div class="label">Lodging</div>
+            <div>{{ day.lodging.name }} — {{ day.lodging.address }}</div>
+        </div>
+
+        <div class="section">
+            <div class="label">Breakfast</div>
+            <div>{{ day.food.breakfast.restaurant }} — {{ day.food.breakfast.address }}</div>
+        </div>
+
+        <div class="section">
+            <div class="label">Morning Activity</div>
+            <div>{{ day.timeblocks.morning[0].name }}</div>
+        </div>
+
+        <div class="section">
+            <div class="label">Lunch</div>
+            <div>{{ day.food.lunch.restaurant }} — {{ day.food.lunch.address }}</div>
+        </div>
+
+        <div class="section">
+            <div class="label">Afternoon Activity</div>
+            <div>{{ day.timeblocks.afternoon[0].name }}</div>
+        </div>
+
+        <div class="section">
+            <div class="label">Dinner</div>
+            <div>{{ day.food.dinner.restaurant }} — {{ day.food.dinner.address }}</div>
+        </div>
+
+        <div class="section">
+            <div class="label">Evening Activity</div>
+            <div>{{ day.timeblocks.evening[0].name }}</div>
+        </div>
+
+    </div>
+    {% endfor %}
+
+    <div class="footer-print">
+        Itinerary ID: {{ itinerary_id }} •  
+        View full version at: {{ url_for('itinerary.display_itinerary', itinerary_id=itinerary_id, _external=True) }}
+    </div>
+
 </div>
 
-<h3>Afternoon</h3>
-<div class="block">
-    <strong>{{ day.timeblocks.afternoon[0].name }}</strong><br>
-    {{ day.timeblocks.afternoon[0].summary }}
-</div>
-
-<h3>Evening</h3>
-<div class="block">
-    <strong>{{ day.timeblocks.evening[0].name }}</strong><br>
-    {{ day.timeblocks.evening[0].summary }}
-</div>
-
-{% endfor %}
-
-</body>
-</html>
+{% endblock %}

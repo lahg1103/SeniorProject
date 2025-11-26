@@ -9,6 +9,27 @@
 
 <section class="itinerary-wrapper relative flex-column padding-2x flex-center">
 
+    <!-- EXPORT BUTTONS  -->
+    <div class="export-buttons" style="display:flex; gap:1rem; margin-bottom:2rem;">
+        <a class="export-btn"
+           style="padding:0.6rem 1.2rem; background:rgba(255,255,255,0.1); border-radius:8px;
+                  border:1px solid rgba(255,255,255,0.2); backdrop-filter:blur(4px); color:white;
+                  text-decoration:none;"
+           href="{{ url_for('itinerary.itinerary_print', itinerary_id=existingPreferences.id) }}"
+           target="_blank">
+           Print / PDF
+        </a>
+
+        <a class="export-btn"
+           style="padding:0.6rem 1.2rem; background:rgba(255,255,255,0.1); border-radius:8px;
+                  border:1px solid rgba(255,255,255,0.2); backdrop-filter:blur(4px); color:white;
+                  text-decoration:none;"
+           href="{{ url_for('itinerary.itinerary_email', itinerary_id=existingPreferences.id) }}"
+           target="_blank">
+           Email Summary
+        </a>
+    </div>
+
     <!-- TAB NAVIGATION -->
     <ul class="itinerary-top-navigation">
         {% for daynum in range(1, results.tripduration + 1) %}
