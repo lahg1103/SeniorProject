@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<body style="margin:0; padding:0; background:#f7f7f7; font-family:Arial, sans-serif;">
+
+<table width="100%" cellpadding="0" cellspacing="0" style="padding:20px;">
+<tr>
+<td align="center">
+
+    <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff; border-radius:10px; padding:20px;">
+        
+        <!-- HEADER -->
+        <tr>
+            <td style="text-align:center; padding-bottom:15px;">
+                <h2 style="margin:0; color:#4f6fff;">Your Trip Itinerary Is Ready!</h2>
+                <p style="margin:5px 0 0; color:#444;">
+                    {{ city }} • {{ tripduration }} Days
+                </p>
+            </td>
+        </tr>
+
+        <!-- DAY 1 OVERVIEW -->
+        {% set first_day = results.itineraryperday[0] %}
+        <tr>
+            <td style="padding:15px;">
+                <h3 style="margin:0; color:#333;">Day 1 Snapshot</h3>
+                <p style="color:#555; margin:10px 0;">
+                    {{ first_day.daysummary[:200] }}...
+                </p>
+
+                <p style="color:#777; margin-top:10px; font-size:14px;">
+                    • Morning: <strong>{{ first_day.timeblocks.morning[0].name }}</strong><br>
+                    • Afternoon: <strong>{{ first_day.timeblocks.afternoon[0].name }}</strong><br>
+                    • Evening: <strong>{{ first_day.timeblocks.evening[0].name }}</strong>
+                </p>
+            </td>
+        </tr>
+
+        <!-- CTA BUTTON -->
+        <tr>
+            <td style="text-align:center; padding:20px;">
+                <a href="{{ permalink }}" 
+                   style="background:#4f6fff; padding:14px 28px; color:white; 
+                          text-decoration:none; border-radius:6px; font-size:16px;">
+                    View Full Itinerary
+                </a>
+            </td>
+        </tr>
+
+        <!-- FOOTER -->
+        <tr>
+            <td style="text-align:center; padding-top:10px; color:#999; font-size:12px;">
+                Generated on {{ timestamp }}
+            </td>
+        </tr>
+
+    </table>
+
+</td>
+</tr>
+</table>
+
+</body>
+</html>
