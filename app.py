@@ -4,6 +4,7 @@ from extensions import db, migrate
 from routes.main import main
 from routes.itinerary import itinerary
 from context import fields
+from routes.auth import auth
 
 def create_app():
     app = Flask(__name__)
@@ -16,6 +17,7 @@ def create_app():
     # Register blueprints
     app.register_blueprint(main)
     app.register_blueprint(itinerary)
+    app.register_blueprint(auth)
 
     # CLI command for db init
     @app.cli.command("init-db")

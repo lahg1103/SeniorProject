@@ -1,6 +1,15 @@
 from datetime import date, datetime, timezone
 from extensions import db
 
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(255), unique=True, nullable=False, index=True)
+    password_hash = db.Column(db.String(255), nullable=False)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+
+    def __repr__(self):
+        return f"<User {self.email}>"
+    
 class ItineraryPreferences(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     numberOfTravelers = db.Column(db.Integer, default=1, nullable=True)
@@ -14,6 +23,8 @@ class ItineraryPreferences(db.Model):
     tripDuration = db.Column(db.Integer, nullable=True)
     destination = db.Column(db.String(200), nullable=False)
     weather = db.Column(db.JSON, nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=True)
+    user = db.relationship("User", backref="itinerary_preferences")
 
     def __repr__(self):
         return f"<Preferences {self.id}>"

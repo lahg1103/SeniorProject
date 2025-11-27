@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="landing sidepage register">
+    <div class="text-wrapper flex flex-column gap center">
+        <h1>Create an account</h1>
+        <p>Save your itineraries and revisit them anytime.</p>
+
+        {% if error %}
+        <div class="global-error">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST" action="{{ url_for('auth.register') }}" class="flex flex-column gap center">
+            <label>
+                Email<span class="required">*</span>
+                <input type="email" name="email" required>
+            </label>
+
+            <label>
+                Password<span class="required">*</span>
+                <input type="password" name="password" minlength="8" required>
+            </label>
+
+            <label>
+                Confirm password<span class="required">*</span>
+                <input type="password" name="confirm_password" minlength="8" required>
+            </label>
+
+            <button type="submit" class="cta padding-inline padding-block">
+                Sign up
+            </button>
+        </form>
+
+        <p>Already have an account? <a href="{{ url_for('auth.login') }}">Log in</a></p>
+    </div>
+</section>
+{% endblock %}

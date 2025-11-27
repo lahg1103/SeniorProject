@@ -75,6 +75,9 @@ def process_preferences(data, existing=None):
     departure = datetime.strptime(data["departure_date"], "%Y-%m-%d")
 
     itinerary = existing if existing else ItineraryPreferences()
+    user_id = session.get("user_id")
+    if user_id is not None:
+        itinerary.user_id = user_id
     itinerary.numberOfTravelers=int(data["number_of_travelers"])
     itinerary.budget=int(data["budget"])
     itinerary.arrivaldate=arrival

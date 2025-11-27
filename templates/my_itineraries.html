@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/itinerary.css') }}">
+{% endblock %}
+
+{% block body %}
+<section class="landing sidepage itinerary flex-column flex-center padding">
+    <h1 class="hero serif center">My Trips</h1>
+    <h2 class="subheader center">Revisit and refine your curated itineraries.</h2>
+</section>
+
+<section class="itinerary-wrapper relative flex-column padding-2x flex-center">
+    {% if itineraries and itineraries|length > 0 %}
+    <div class="flex flex-wrap gap">
+        {% for trip in itineraries %}
+        <article class="card stamped padding">
+            <div class="text lbox">
+                <h2 class="serif">{{ trip.destination }}</h2>
+                <p>
+                    {{ trip.arrivaldate }} – {{ trip.departuredate }}
+                </p>
+                <p>Budget: ${{ "{:,}".format(trip.budget) }}</p>
+
+                {% if trip.itinerary_id %}
+                <a href="{{ url_for('itinerary.display_itinerary', itinerary_id=trip.itinerary_id) }}"
+                    class="cta padding-inline padding-block margin-top">
+                    View itinerary
+                </a>
+                {% else %}
+                <p><em>Itinerary still generating…</em></p>
+                {% endif %}
+
+                <a href="{{ url_for('itinerary.questionnaire', itinerary_id=trip.preferences_id) }}"
+                    class="text-arrow-wrapper flex gap align-center margin-top">
+                    <h3>Edit this trip</h3>
+                    <span class="arrow-wrapper relative">
+                        <img src="{{ url_for('static', filename='images/arrow.svg') }}" alt="" class="arrow">
+                    </span>
+                </a>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="center margin-block">
+        You don’t have any saved trips yet.
+    </p>
+    <a href="{{ url_for('itinerary.questionnaire') }}" class="text-arrow-wrapper flex gap align-center">
+        <h3>Start planning your first trip</h3>
+        <span class="arrow-wrapper relative">
+            <img src="{{ url_for('static', filename='images/arrow.svg') }}" alt="" class="arrow">
+        </span>
+    </a>
+    {% endif %}
+</section>
+{% endblock %}
