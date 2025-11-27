@@ -19,6 +19,10 @@
     max-width: 100%;
     margin-bottom: calc(2 * var(--spacer));
 }
+.itinerary-summary {
+    max-width: 85%;
+    align-self: center;
+}
 .itinerary-heading {
     font-size: var(--header-font);
 }
@@ -127,6 +131,9 @@ a.day-view:hover button.day-view {
 
 @media screen and (width > 600px ) {
     .itinerary-summary {
-        max-width: 85%;
+        justify-self: center;
+        align-self: center;
+        text-align: center;
+        max-width: 75%;
     }
 } 

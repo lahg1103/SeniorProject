@@ -1,36 +1,140 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<link rel="stylesheet" href="url_for('static', filename='css/day.css')">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/day.css') }}">
 {% endblock %}
 
 {% block title %}
-{{ destination }} | Day {{ day }}
+{{ destination }} | Day {{ daynum }}
 {% endblock %}
 
 {% block body %}
-    <section class="landing">
-    </section>
-    <section class="info">
-        <h1>{{ destination }} &mdash; Day {{ day }}</h1>
-        <h4> {{ result }} </h4> <h4> {{ photo }}</h4>
-        <a href=" {{ url_for('itinerary.display_itinerary', itinerary_id=itinerary_id) }}"> back to overview </a>
-    </section>
-    <section class="list">
+    <section class="landing day sidepage flex-column flex-center padding relative">
+        <div class="text flex space-between width-100 padding">
+            <div class="flex gap">
+                <h1>{{ destination }} &mdash; Day {{ daynum }}</h1>
+                <h4 class="align-self"> {{ date }} </h4>
+            </div>
 
+            <a href=" {{ url_for('itinerary.display_itinerary', itinerary_id=itinerary_id) }}">
+                <h4>back to overview</h4>
+            </a>
+        </div>
     </section>
-    <section class="itinerary">
-
+    <section class="day-summary padding-2x">
+        <p>
+            {{ result["daysummary"] }}
+        </p>
     </section>
+    <section class="weather padding-2x">
+        {% if weather %}
+            <h2> Weather for {{ weather.location or existingItinerary.destination }}</h2>
+            {% if weather.source == "historical" %}
+                <p>
+                    *These conditions are based on historical data because real-time forecasts are not available for the selected dates.
+                </p>
+            {% endif %}
+            <p> High: {{ weather.forecast.temp_max }} °C | Low: {{ weather.forecast.temp_min }} °C</p>
+            {% if weather.forecast.precipitation is not none %}
+                <p> Precipitation: {{ weather.forecast.precipitation }} mm</p>
+            {% endif %}
+            {% if weather.forecast.description %}
+                <p> {{ weather.forecast.description }} </p>
+            {% endif %}
+        {% endif %}
+    </section>
+    <section class="hotel-info day-card flex flex-column google">
+        <div class="img relative height-100 width-100">
+        </div>
+        <div class="flex flex-column gap padding-2x">
+            <h1>Lodging Information</h1>
+            <h4>{{ result["lodging"]["name"] }}</h4>
+            <p>{{ result["lodging"]["address"] }}</p>
+        </div>
+        <div class="relative flex flex-center map-container">
+            <div class="map relative height-100" data-location="{{ result['lodging']['name'] }}" data-address="{{ result['lodging']['address'] }}">
+                <iframe src="" frameborder="0"></iframe>
+            </div>
+        </div>
+    </section>
+    <div class="itinerary-grid padding-2x">
+   
+        <section class="itinerary day-card flex flex-column flex-center">
+            <div class="text padding-2x">
+                <h1>Breakfast</h1>
+                <p>{{ result["food"]["breakfast"]["restaurant"] }} — {{ result["food"]["breakfast"]["address"] }}</p>
+                <p>Cost: {{ result["food"]["breakfast"]["cost"] }}</p>
+            </div>
+        </section>
 
+        
+        <section class="itinerary day-card flex flex-column flex-center">
+            <div class="text padding-2x">
+                <h1 >Lunch</h1>
+                <p>{{ result["food"]["lunch"]["restaurant"] }} — {{ result["food"]["lunch"]["address"] }}</p>
+                <p>Cost: {{ result["food"]["lunch"]["cost"] }}</p>
+            </div>
+        </section>
+
+        
+        <section class="itinerary day-card flex flex-column flex-center">
+            <div class="text padding-2x">
+                <h1 >Dinner</h1>
+                <p>{{ result["food"]["dinner"]["restaurant"] }} — {{ result["food"]["dinner"]["address"] }}</p>
+                <p>Cost: {{ result["food"]["dinner"]["cost"] }}</p>
+            </div>
+        </section>
+
+
+        
+        {% for activity in result["timeblocks"]["morning"] %}
+        <section class="itinerary day-card flex flex-column flex-center">
+            <div class="text padding-2x">
+                <h1 >Morning — {{ activity["time"] }}</h1>
+
+                <p>{{ activity["name"] }} — {{ activity["address"] }}</p>
+                <p>Cost: {{ activity["cost"] }}</p>
+                <p>{{ activity["summary"] }}</p>
+            </div>
+        </section>
+        {% endfor %}
+
+        
+        {% for activity in result["timeblocks"]["afternoon"] %}
+        <section class="itinerary day-card flex flex-column flex-center">
+            <div class="text padding-2x">
+                <h1 >Afternoon — {{ activity["time"] }}</h1>
+
+                <p>{{ activity["name"] }} — {{ activity["address"] }}</p>
+                <p>Cost: {{ activity["cost"] }}</p>
+                <p>{{ activity["summary"] }}</p>
+            </div>
+        </section>
+        {% endfor %}
+
+        
+        {% for activity in result["timeblocks"]["evening"] %}
+        <section class="itinerary day-card flex flex-column flex-center">
+            <div class="text padding-2x">
+                <h1 >Evening — {{ activity["time"] }}</h1>
+
+                <p>{{ activity["name"] }} — {{ activity["address"] }}</p>
+                <p>Cost: {{ activity["cost"] }}</p>
+                <p>{{ activity["summary"] }}</p>
+            </div>
+        </section>
+        {% endfor %}
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', ()=>{
             const itinerary = document.querySelector('.landing');
-            const imgURL = ' {{ photo }} ';
-            itinerary.style.setProperty('--bg-img', `url(${imgURL})`);
+            const imgURL = '{{ photo }}';
+            itinerary.style.setProperty('--bg-img', `url("${imgURL}")`);
         })
     </script>
+    <script>const apiKey= '{{ googleKey }}';</script>
+    <script src="{{ url_for('static', filename='javascript/itinerary.js') }}"></script>
 {% endblock %}
 
 {% block footer %}

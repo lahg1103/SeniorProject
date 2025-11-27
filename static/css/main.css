@@ -326,6 +326,9 @@ main {
 .itinerary::before {
     background-image: var(--bg-img);
 }
+.day::before {
+    background-image: var(--bg-img);
+}
 
 .landing.error-page::before {
     background-image: none;

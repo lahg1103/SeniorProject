@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, session, redirect, url_for, jsonify, current_app
 from markupsafe import escape
-from datetime import datetime
+from datetime import datetime, timedelta
 from context import fields
 from utils import functions, ai, weather_api
 from extensions import db
@@ -216,6 +216,9 @@ def display_itinerary(itinerary_id, day):
     existingPreferences = ItineraryPreferences.query.get(itinerary_id)
     unsplashPhotos = existingItinerary.images
     weatherData = existingPreferences.weather or None
+    duration =(existingPreferences.departuredate - existingPreferences.arrivaldate).days
+    dateList = [ existingPreferences.arrivaldate + timedelta(days=i)
+                for i in range (duration + 1)]
 
     if not existingItinerary:
         session.pop("itinerary_id", None)
@@ -226,10 +229,27 @@ def display_itinerary(itinerary_id, day):
 
     if day:
         result = itineraryData["itineraryperday"][day - 1]
-        dayphoto = unsplashPhotos[day - 1]
+        dayphoto = unsplashPhotos[day]
+
+        weather_for_day = None
+
+        if weatherData:
+            try:
+                day_forecast = weatherData["days"][day - 1]
+                weather_for_day = {
+                    "source": weatherData.get("source"),
+                    "location": weatherData.get("location"),
+                    "forecast": day_forecast,
+                }
+            except IndexError:
+                weather_for_day = None
+
         return render_template("day.html",
                                result=result,
-                               day=day,
+                               googleKey=googleMapsKey,
+                               daynum=day,
+                               weather=weather_for_day,
+                               date=dateList[day - 1],
                                destination= existingPreferences.destination,
                                photo = dayphoto,
                                itinerary_id = itinerary_id)
