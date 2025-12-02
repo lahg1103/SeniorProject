@@ -285,15 +285,15 @@ const optionalFieldVisibility = function (fields, show) {
 }
 
 // loader
-let pollItineraryStatus = function(itineraryId) {
+let pollItineraryStatus = function (itineraryId) {
     fetch(`/itinerary-status/${itineraryId}`).then(r => r.json()).then(data => {
-        if ( data.status === "ready" ) {
+        if (data.status === "ready") {
             window.location.href = `/itinerary/${data.itinerary_id}`;
         } else {
-            setTimeout(()=> pollItineraryStatus(itineraryId), 2500);
+            setTimeout(() => pollItineraryStatus(itineraryId), 2500);
         }
     })
-    .catch(() => setTimeout(() => pollItineraryStatus(itineraryId), 2500));
+        .catch(() => setTimeout(() => pollItineraryStatus(itineraryId), 2500));
 }
 
 
@@ -321,6 +321,198 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // creating the multi-step form functionality
+    const steps = Array.from(document.querySelectorAll('.form-step'));
+    const wizardSteps = Array.from(document.querySelectorAll('.wizard-step'));
+    let currentStep = 0;
+
+    // function to move between steps, show a specific step, and hide others to reduce cluttering
+    function showStep(index) {
+        if (!steps.length)
+            return;
+
+        steps.forEach((step, i) => {
+            step.hidden = i !== index;
+        });
+
+        wizardSteps.forEach((wizardStep, i) => {
+            wizardStep.classList.toggle('active', i === index);
+            wizardStep.classList.toggle('completed', i < index);
+        });
+        currentStep = index;
+
+        const lastStepIndex = steps.length - 1;
+        if (index === lastStepIndex) {
+            updateReviewSection();
+        }
+    }
+
+    function nextStep() {
+        if (currentStep < steps.length - 1) {
+            showStep(currentStep + 1);
+        }
+    }
+    function previousStep() {
+        if (currentStep > 0) {
+            showStep(currentStep - 1);
+        }
+    }
+    // function to update the review section with user inputs
+    function updateReviewSection() {
+        const reviewContainer = document.querySelector('.review-info');
+        if (!reviewContainer || !form) {
+            return;
+        }
+        const getVal = (selector) => {
+            const el = form.querySelector(selector);
+            return el && el.value ? el.value.trim() : '';
+        };
+        const getRadioVal = (name) => {
+            const checked = form.querySelector(`input[name="${name}"]:checked`);
+            return checked ? checked.value : '';
+        };
+
+        // first step
+        const travelers = getVal('input[name="number_of_travelers"]');
+        const budget = getVal('input[name="budget"]');
+        // second step
+        const destination = getVal('input[name="destination"]');
+        const arrival = getVal('input[name="arrival_date"]');
+        const departure = getVal('input[name="departure_date"]');
+        // third step
+        const foodBudget = getVal('input[name="foodBudget"]');
+        const lodgingBudget = getVal('input[name="lodgingBudget"]');
+        const activitiesBudget = getVal('input[name="activityBudget"]');
+        const transportationBudget = getVal('input[name="transportationBudget"]');
+        const foodRestriction = getRadioVal('food_restriction');
+        const foodRestrictionType = getRadioVal('food_restriction_type');
+        const otherFood = getVal('input[name="other_food_restriction"]');
+
+        const formatCurrency = (value) => {
+            const num = Number(value);
+            if (!num) return '-';
+            return num.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+        };
+
+        let foodSummary = 'None';
+        // food restrictions summary
+        if (foodRestriction === 'yes') {
+            if (foodRestrictionType === 'other' && otherFood) {
+                foodSummary = `Other - ${otherFood}`;
+            }
+            else if (foodRestrictionType) {
+                let labelText = foodRestrictionType;
+                const typeRadioEl = form.querySelector(`input[name="food_restriction_type"][value="${foodRestrictionType}"]`);
+                if (typeRadioEl) {
+                    const labelEl = typeRadioEl.closest('label');
+                    if (labelEl) {
+                        labelText = labelEl.textContent.trim();
+                    }
+                }
+                foodSummary = labelText;
+            }
+            else {
+                foodSummary = 'Yes (not specified)';
+            }
+        }
+        // populate review section
+        reviewContainer.innerHTML = `
+        <p><strong>Number of Travelers:</strong> ${travelers || '-'}</p>
+        <p><strong>Budget:</strong> ${formatCurrency(budget)}</p>
+        <p><strong>Destination:</strong> ${destination || '-'}</p>
+        <p><strong>Dates:</strong> ${arrival || '-'} to ${departure || '-'}</p>
+
+        <p><strong>Budget Allocation:</strong></p>
+        <ul class= "review-list">
+            <li>Food: ${formatCurrency(foodBudget)}</li>
+            <li>Lodging: ${formatCurrency(lodgingBudget)}</li>
+            <li>Activities: ${formatCurrency(activitiesBudget)}</li>
+            <li>Transportation: ${formatCurrency(transportationBudget)}</li>
+        </ul>
+
+        <p><strong>Food Restrictions:</strong> ${foodSummary}</p>
+    `;
+    }
+
+    // next button, event listeners to guarantee user has filled required fields
+    document.querySelectorAll('.wizard-next').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            const allFields = steps[currentStep].querySelectorAll("input, textarea, select");
+
+            const fields = [...allFields].filter(input => {
+                if (input.hidden) return false;
+
+                const parentHidden = input.closest('[hidden]');
+                if (parentHidden) return false;
+
+                return true;
+            });
+
+            let filled = [...fields].every(input => {
+                if (input.type === 'radio') {
+                    const group = form.querySelectorAll(`input[name="${input.name}"]`);
+                    return [...group].some(radio => radio.checked);
+                }
+                return input.value.trim() !== '';
+            });
+            if (!filled) {
+                globalError.textContent = "Please fill in all required fields before proceeding.";
+                return;
+            }
+            nextStep();
+        });
+    });
+    // back buttons
+    document.querySelectorAll('.wizard-back').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            previousStep();
+        });
+    });
+
+    showStep(0);
+
+    // food restriction logic
+    const foodRestrictionRadios = document.querySelectorAll('input[name="food_restriction"]');
+    const foodDetailsWrapper = document.getElementById('food_restriction_details');
+    const foodTypeRadios = document.querySelectorAll('input[name="food_restriction_type"]');
+    const otherFoodWrapper = document.getElementById('other_food_restriction_wrapper');
+    const otherFoodInput = document.getElementById('other_food_restriction');
+    // function to sync food restriction details visibility
+    function syncFoodRestrictionDetails() {
+        if (!foodDetailsWrapper || !foodRestrictionRadios.length || !foodTypeRadios.length || !otherFoodWrapper) {
+            return;
+        }
+        const checkedRestriction = document.querySelector('input[name="food_restriction"]:checked');
+        const hasRestriction = checkedRestriction && checkedRestriction.value === 'yes';
+
+        foodDetailsWrapper.hidden = !hasRestriction;
+
+        if (!hasRestriction) {
+            foodTypeRadios.forEach(radio => radio.checked = false);
+            otherFoodWrapper.hidden = true;
+            if (otherFoodInput) otherFoodInput.value = '';
+            return;
+        }
+
+        const checkedType = document.querySelector('input[name="food_restriction_type"]:checked');
+        const isOther = checkedType && checkedType.value === 'other';
+
+        otherFoodWrapper.hidden = !isOther;
+        if (!isOther && otherFoodInput) {
+            otherFoodInput.value = '';
+        }
+    }
+    foodRestrictionRadios.forEach(radio => {
+        radio.addEventListener('change', syncFoodRestrictionDetails);
+    });
+    foodTypeRadios.forEach(radio => {
+        radio.addEventListener('change', syncFoodRestrictionDetails);
+    });
+    syncFoodRestrictionDetails();
+
     // send stuff to Flask to add to Database
     form.addEventListener('submit', async (e) => {
 
@@ -347,7 +539,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const buildResponse = await fetch(`/build-itinerary/${itinerary_id}`);
                 if (!buildResponse.ok) throw new Error("Failed to build itinerary");
-                
+
                 pollItineraryStatus(itinerary_id);
             }
             catch (err) {
