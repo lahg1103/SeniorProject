@@ -12,77 +12,193 @@
     </h1>
     <h2 class="subheader center">Answer a few questions so we can tailor your itinerary.</h2>
 </section>
+
 <section class="itinerary-form padding-inline flex-column flex-center">
-    <div class="global-error">
+    <div class="global-error"></div>
 
-    </div>
+    <nav class="wizard-nav">
+        <div class="wizard-step active" data-step="1">
+            <div class="wizard-circle">1</div>
+            <span class="wizard-label uppercase">Basics</span>
+        </div>
+        <div class="wizard-line"></div>
+        <div class="wizard-step" data-step="2">
+            <div class="wizard-circle">2</div>
+            <span class="wizard-label uppercase">Trip details</span>
+        </div>
+        <div class="wizard-line"></div>
+        <div class="wizard-step" data-step="3">
+            <div class="wizard-circle">3</div>
+            <span class="wizard-label uppercase">Preferences</span>
+        </div>
+        <div class="wizard-line"></div>
+        <div class="wizard-step" data-step="4">
+            <div class="wizard-circle">4</div>
+            <span class="wizard-label uppercase">Review</span>
+        </div>
+    </nav>
+
+
+
+
     <form id="itinerary-form" class="flex-column gap padding-inline">
-        <section>
-            <label for="number_of_travelers" class="input-container flex-column gap"> 
-                Number of Travelers : 
-                <input type="number" name="number_of_travelers" id="number_of_travelers" min="1" max="10" step="1" value="{{ existing.numberOfTravelers if existing else '' }}" />
+        <section class="form-step" data-step="1">
+            <h2 class="subheader padding-block">Travelers & Budget</h2>
+
+            <label for="number_of_travelers" class="input-container flex-column gap">
+                Number of Travelers :
+                <input type="number" name="number_of_travelers" id="number_of_travelers" min="1" max="10" step="1"
+                    value="{{ existing.numberOfTravelers if existing else '' }}" />
             </label>
-            <label for="budget" class="input-container flex-column gap"> 
-                Budget : 
-                <input type="number" name="budget" id="budget" min="100" max="1000000" step="1" value="{{ existing.budget if existing else '' }}" />
+
+            <label for="budget" class="input-container flex-column gap">
+                Budget :
+                <input type="number" name="budget" id="budget" min="100" max="1000000" step="1"
+                    value="{{ existing.budget if existing else '' }}" />
             </label>
-            <label for="arrival_date" class="input-container flex-column gap"> 
-                Arrival Date : 
-                <input type="date" name="arrival_date" id="arrival_date" value="{{ existing.arrivaldate if existing else '' }}"/>
-            </label>
-            <label for="departure_date" class="input-container flex-column gap"> 
-                Departure Date : 
-                <input type="date" name="departure_date" id="departure_date" value="{{ existing.departuredate if existing else '' }}" />
-            </label>
-            <label for="destination" class="input-container flex-column gap"> 
-                Destination : 
-                <input type="text" name="destination" id="destination" value="{{ existing.destination if existing else '' }}" />
-            </label>
+
+            <div class="wizard-buttons flex gap margin-block">
+                <button type="button" class="wizard-btn wizard-next">Next</button>
+            </div>
         </section>
-        <label class="input-container flex-column gap"> Preferred Budget Allocation:
-            <h2 class="subheader" id="totalAllocated"></h2>
-            <h2 class="subheader padding-block">Food Budget:</h2>
-            <div class="slide-container range-slider gradient margin-bottom"
-                style="--min:0; --max:10000; --step:100; --value:200; --text-value:'200'; --prefix:'$'">
-                <input type="range" class="slider" id="foodBudget" name="foodBudget" step="1">
-                <output></output>
-                <div class='range-slider__progress'></div>
-            </div>
-            <h2 class="subheader padding-block">Lodging Budget:</h2>
-            <div class="slide-container range-slider gradient margin-bottom"
-                style="--min:0; --max:10000; --step:100; --value:200; --text-value:'200'; --prefix:'$'">
-                <input type="range" class="slider" id="lodgingBudget" name="lodgingBudget" step="1">
-                <output></output>
-                <div class='range-slider__progress'></div>
-            </div>
-            <h2 class="subheader padding-block">Activity Budget:</h2>
-            <div class="slide-container range-slider gradient margin-bottom"
-                style="--min:0; --max:10000; --step:100; --value:200; --text-value:'200'; --prefix:'$'">
-                <input type="range" class="slider" id="activityBudget" name="activityBudget" step="1">
-                <output></output>
-                <div class='range-slider__progress'></div>
-            </div>
-            <h2 class="subheader padding-block">Transportation Budget:</h2>
-            <div class="slide-container range-slider gradient margin-bottom"
-                style="--min:0; --max:10000; --step:100; --value:200; --text-value:'200'; --prefix:'$'">
-                <input type="range" class="slider" id="transportationBudget" name="transportationBudget" step="1">
-                <output></output>
-                <div class='range-slider__progress'></div>
-            </div>
-        </label>
 
-        <button type="submit" class="text-arrow-wrapper relative flex flex-center padding-2x gap">
-            <div class="arrow-wrapper relative">
-                <img src="{{ url_for('static', filename='images/arrow.svg') }}" alt="arrow"
-                    class="arrow up-facing black-arrow">
+        <section class="form-step" data-step="2">
+            <h2 class="subheader padding-block">Trip Details</h2>
+
+            <label for="destination" class="input-container flex-column gap">
+                Destination :
+                <input type="text" name="destination" id="destination"
+                    value="{{ existing.destination if existing else '' }}" />
+            </label>
+            <label for="arrival_date" class="input-container flex-column gap">
+                Arrival Date :
+                <input type="date" name="arrival_date" id="arrival_date"
+                    value="{{ existing.arrivaldate if existing else '' }}" />
+            </label>
+            <label for="departure_date" class="input-container flex-column gap">
+                Departure Date :
+                <input type="date" name="departure_date" id="departure_date"
+                    value="{{ existing.departuredate if existing else '' }}" />
+            </label>
+
+            <div class="wizard-buttons flex gap margin-block">
+                <button type="button" class="wizard-btn wizard-back">Back</button>
+                <button type="button" class="wizard-btn wizard-next">Next</button>
             </div>
-            <h3 class="subheader">
-                Generate Itinerary
-            </h3>
-        </button>
+        </section>
+
+        <section class="form-step" data-step="3">
+            <h2 class="subheader padding-block">Preferences</h2>
+
+            <div class="input-container flex-column gap"> Preferred Budget Allocation:
+                <h2 class="subheader" id="totalAllocated"></h2>
+                <h2 class="subheader padding-block">Food Budget:</h2>
+                <div class="slide-container range-slider gradient margin-bottom"
+                    style="--min:0; --max:10000; --step:100; --value:200; --text-value:'200'; --prefix:'$'">
+                    <input type="range" class="slider" id="foodBudget" name="foodBudget" step="1">
+                    <output></output>
+                    <div class='range-slider__progress'></div>
+                </div>
+                <h2 class="subheader padding-block">Lodging Budget:</h2>
+                <div class="slide-container range-slider gradient margin-bottom"
+                    style="--min:0; --max:10000; --step:100; --value:200; --text-value:'200'; --prefix:'$'">
+                    <input type="range" class="slider" id="lodgingBudget" name="lodgingBudget" step="1">
+                    <output></output>
+                    <div class='range-slider__progress'></div>
+                </div>
+                <h2 class="subheader padding-block">Activity Budget:</h2>
+                <div class="slide-container range-slider gradient margin-bottom"
+                    style="--min:0; --max:10000; --step:100; --value:200; --text-value:'200'; --prefix:'$'">
+                    <input type="range" class="slider" id="activityBudget" name="activityBudget" step="1">
+                    <output></output>
+                    <div class='range-slider__progress'></div>
+                </div>
+                <h2 class="subheader padding-block">Transportation Budget:</h2>
+                <div class="slide-container range-slider gradient margin-bottom"
+                    style="--min:0; --max:10000; --step:100; --value:200; --text-value:'200'; --prefix:'$'">
+                    <input type="range" class="slider" id="transportationBudget" name="transportationBudget" step="1">
+                    <output></output>
+                    <div class='range-slider__progress'></div>
+                </div>
+            </div>
+
+            <div class="input-container flex-column gap">
+                <span> Do you have a food restriction?</span>
+                <div class="flex gap">
+                    <label class="radio-option">
+                        <input type="radio" name="food_restriction" value="no" {% if existing and
+                            existing.hasFoodRestriction=='no' %}checked{% endif %}> No
+                    </label>
+                </div>
+                <div class="flex gap">
+                    <label class="radio-option">
+                        <input type="radio" name="food_restriction" value="yes" {% if existing and
+                            existing.hasFoodRestriction=='yes' %}checked{% endif %}> Yes
+                    </label>
+                </div>
+            </div>
+
+            <div id="food_restriction_details" class="input-container flex-column gap" hidden>
+                <span>Please specify your food restriction:</span>
+                <div class="flex-column gap">
+                    <label class="radio-option">
+                        <input type="radio" name="food_restriction_type" value="vegan"> Vegan
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="food_restriction_type" value="vegetarian"> Vegetarian
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="food_restriction_type" value="gluten_free"> Gluten-Free
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="food_restriction_type" value="nut_allergy"> Nut Allergy
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="food_restriction_type" value="dairy_free"> Dairy-Free
+                    </label>
+                    <label class="radio-option flex-column gap">
+                        <span>
+                            <input type="radio" name="food_restriction_type" value="other"> Other
+                        </span>
+
+                        <div id="other_food_restriction_wrapper" class="flex-column gap" hidden>
+                            <input type="text" name="other_food_restriction" id="other_food_restriction"
+                                placeholder="Please specify" />
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="wizard-buttons flex gap margin-block">
+                <button type="button" class="wizard-btn wizard-back">Back</button>
+                <button type="button" class="wizard-btn wizard-next">Next</button>
+            </div>
+        </section>
+
+        <section class="form-step" data-step="4">
+            <h2 class="subheader padding-block">Review Your Information</h2>
+            <div class="review-info flex-column gap">
+                <!-- Review information will be populated here via JavaScript -->
+            </div>
+
+            <button type="submit" class="text-arrow-wrapper relative flex flex-center padding-2x gap">
+                <div class="arrow-wrapper relative">
+                    <img src="{{ url_for('static', filename='images/arrow.svg') }}" alt="arrow"
+                        class="arrow up-facing black-arrow">
+                </div>
+                <h3 class="subheader">
+                    Generate Itinerary
+                </h3>
+            </button>
+
+            <div class="wizard-buttons flex gap margin-block">
+                <button type="button" class="wizard-btn wizard-back">Back</button>
+            </div>
+
+        </section>
     </form>
-
 </section>
+
 <section id="loader" class="stagger-fade-in hidden">
     <div style="--i: 0">
         <img src="{{ url_for('static', filename='images/icons/favicon.svg') }}" alt="Voyage app logo" id="loaderlogo">
@@ -92,6 +208,7 @@
             data-type='["Shaping Your Vision...", "Your Voyage Awaits...", "Setting Your Course...", "Anchored in Intention...", "Curating Your Trip..."]'
             data-ghost="Anchored in Intention..." class="typewrite">Curating Your Trip...</h3>
     </div>
+</section>
 
-    <script src="{{ url_for('static', filename='javascript/form.js') }}"></script>
-    {% endblock %}
+<script src="{{ url_for('static', filename='javascript/form.js') }}"></script>
+{% endblock %}
