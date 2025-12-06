@@ -2,6 +2,22 @@
 
 {% block head %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/itinerary.css') }}">
+<style>
+    .map-actions {
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+
+    .map-button {
+        border: 1px solid #222;
+        padding: 0.4rem 0.9rem;
+        border-radius: 999px;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 0.08em;
+        text-decoration: none;
+    }
+</style>
 {% endblock %}
 
 {% block body %}
@@ -12,6 +28,12 @@
 
 <section class="itinerary-wrapper relative flex-column padding-2x flex-center">
     {% if itineraries and itineraries|length > 0 %}
+    <div class="map-actions">
+        <a href="{{ url_for('auth.my_itineraries_map') }}" class="map-button">
+            View All Trips on Map
+        </a>
+    </div>
+
     <div class="flex flex-wrap gap">
         {% for trip in itineraries %}
         <article class="card stamped padding">
