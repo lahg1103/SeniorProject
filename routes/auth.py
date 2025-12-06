@@ -3,7 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from extensions import db
 from models import User, ItineraryPreferences, Itinerary
-
+from config import Config
 
 auth = Blueprint("auth", __name__)
 
@@ -84,3 +84,32 @@ def my_itineraries():
         })
 
     return render_template("my_itineraries.html", itineraries=itineraries)
+
+@auth.route("/my-itineraries/map")
+def my_itineraries_map():
+    user_id = session.get("user_id")
+    if not user_id:
+        return redirect(url_for("auth.login"))
+
+    prefs = (
+        ItineraryPreferences.query
+        .filter_by(user_id=user_id)
+        .order_by(ItineraryPreferences.arrivaldate.desc())
+        .all()
+    )
+
+    trips = []
+    for pref in prefs:
+        trips.append({
+            "preferences_id": pref.id,
+            "itinerary_id": pref.itinerary.id if pref.itinerary else None,
+            "destination": pref.destination,
+            "arrivaldate": pref.arrivaldate.isoformat() if pref.arrivaldate else None,
+            "departuredate": pref.departuredate.isoformat() if pref.departuredate else None,
+        })
+
+    return render_template(
+        "my_itineraries_map.html",
+        trips=trips,
+        googleKey=Config.GOOGLE_MAPS_KEY,
+    )
