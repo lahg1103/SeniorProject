@@ -36,6 +36,26 @@
                 
             </button>
 
+            {% if session.get("user_id") %}
+            <div class="save-itinerary-wrapper">
+                <button class="save-itinerary-button" type="button">
+                    ✓ Saved to My Trips
+                </button>
+                <p class="small center">
+                    This itinerary is automatically saved to your account.
+                </p>
+            </div>
+            {% else %}
+            <div class="save-itinerary-wrapper">
+                <a class="save-itinerary-button" href="{{ url_for('auth.login') }}">
+                    Log in to save this itinerary
+                </a>
+                <p class="small center">
+                    Once logged in, your itineraries will appear on your My Trips page.
+                </p>
+            </div>
+            {% endif %}           
+
         {% if weather %}
             <section class="weather-section padding-2x">
                 <h2 class="subheader center margin">
