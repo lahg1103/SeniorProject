@@ -1,32 +1,39 @@
 {% extends "base.html" %}
 
-{% block content %}
-<section class="landing sidepage login">
-    <div class="text-wrapper flex flex-column gap center">
-        <h1>Welcome back</h1>
-        <p>Log in to view and manage your saved trips.</p>
+{% block title %} | Log In {% endblock %}
 
-        {% if error %}
-        <div class="global-error">{{ error }}</div>
-        {% endif %}
+{% block body %}
+<section class="landing sidepage flex-column flex-center padding">
+    <h1 class="hero serif center">Welcome back</h1>
+    <p class="blurb sidepage center">
+        Log in to view your saved itineraries.
+    </p>
+</section>
 
-        <form method="POST" action="{{ url_for('auth.login') }}" class="flex flex-column gap center">
-            <label>
-                Email<span class="required">*</span>
-                <input type="email" name="email" required>
-            </label>
+<section class="padding flex-column flex-center">
+    {% if error %}
+    <p class="error center">{{ error }}</p>
+    {% endif %}
 
-            <label>
-                Password<span class="required">*</span>
-                <input type="password" name="password" required>
-            </label>
+    <form class="auth-form flex-column gap" method="post" action="{{ url_for('auth.login') }}">
+        <label class="flex-column">
+            <span class="subheader">Email</span>
+            <input type="email" name="email" required>
+        </label>
 
-            <button type="submit" class="cta padding-inline padding-block">
-                Log in
-            </button>
-        </form>
+        <label class="flex-column">
+            <span class="subheader">Password</span>
+            <input type="password" name="password" required>
+        </label>
 
-        <p>New here? <a href="{{ url_for('auth.register') }}">Create an account</a></p>
-    </div>
+        <button type="submit" class="primary-btn">
+            Log In
+        </button>
+    </form>
+
+    <p class="small center margin-block">
+        New to Voyage?
+        <a href="{{ url_for('auth.register') }}">Create an account</a>
+    </p>
 </section>
 {% endblock %}

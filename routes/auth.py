@@ -4,6 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from extensions import db
 from models import User, ItineraryPreferences, Itinerary
 
+
 auth = Blueprint("auth", __name__)
 
 @auth.route("/register", methods=["GET", "POST"])
