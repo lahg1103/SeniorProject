@@ -5,17 +5,36 @@
 <style>
     .map-actions {
         text-align: center;
-        margin-bottom: 1rem;
+        margin-bottom: 1.5rem;
     }
 
     .map-button {
-        border: 1px solid #222;
-        padding: 0.4rem 0.9rem;
+        display: inline-block;
+        border: 1px solid #fff;
+        padding: 0.4rem 1.2rem;
         border-radius: 999px;
         text-transform: uppercase;
         font-size: 0.8rem;
         letter-spacing: 0.08em;
         text-decoration: none;
+        color: #fff;
+    }
+
+    .map-button:hover {
+        background: #fff;
+        color: #111;
+    }
+
+    .trip-actions {
+        margin-top: 0.75rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
+    }
+
+    .trip-actions .map-button {
+        font-size: 0.75rem;
     }
 </style>
 {% endblock %}
@@ -44,22 +63,21 @@
                 </p>
                 <p>Budget: ${{ "{:,}".format(trip.budget) }}</p>
 
-                {% if trip.itinerary_id %}
-                <a href="{{ url_for('itinerary.display_itinerary', itinerary_id=trip.itinerary_id) }}"
-                    class="cta padding-inline padding-block margin-top">
-                    View itinerary
-                </a>
-                {% else %}
-                <p><em>Itinerary still generating…</em></p>
-                {% endif %}
+                <div class="trip-actions">
+                    {% if trip.itinerary_id %}
+                    <a href="{{ url_for('itinerary.display_itinerary', itinerary_id=trip.itinerary_id) }}"
+                        class="map-button">
+                        View itinerary
+                    </a>
+                    {% else %}
+                    <p><em>Itinerary still generating…</em></p>
+                    {% endif %}
 
-                <a href="{{ url_for('itinerary.questionnaire', itinerary_id=trip.preferences_id) }}"
-                    class="text-arrow-wrapper flex gap align-center margin-top">
-                    <h3>Edit this trip</h3>
-                    <span class="arrow-wrapper relative">
-                        <img src="{{ url_for('static', filename='images/arrow.svg') }}" alt="" class="arrow">
-                    </span>
-                </a>
+                    <a href="{{ url_for('itinerary.questionnaire', itinerary_id=trip.preferences_id) }}"
+                        class="map-button">
+                        Edit this trip
+                    </a>
+                </div>
             </div>
         </article>
         {% endfor %}
