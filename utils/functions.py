@@ -1,5 +1,9 @@
-import json
+import json, requests, colorsys
+from PIL import Image
+from io import BytesIO
+from collections import Counter
 from datetime import datetime
+
 
 
 def clean_instance(instance) :
@@ -47,6 +51,27 @@ def scale_itinerary_costs(itinerary: dict, travelers: int) -> dict:
 
     return recurse(itinerary)
 
+def pick_color(url, resize=100):
+    response = requests.get(url)
+    response.raise_for_status()
+
+    img = Image.open(BytesIO(response.content)).convert("RGB")
+
+    img = img.resize((resize, resize))
+
+    pixels = list(img.getdata())
+
+    bright_pixels = []
+
+    for r, g, b in pixels:
+        h, l, s = colorsys.rgb_to_hls(r/255, g/255, b/255)
+        if 0.7 > l > 0.5 and s > 0.5:
+            bright_pixels.append((r, g, b))
+
+    if not bright_pixels:
+        return max(set(pixels), key=pixels.count)
+    
+    return Counter(bright_pixels).most_common(1)[0][0]
 
 
 

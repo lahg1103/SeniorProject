@@ -50,7 +50,7 @@
                             <h1>Day {{ loop.index }}</h1>
                         </a>
                         <p class="summary">{{ day["daysummary"] }}</p>
-                        <a href="{{ url_for('itinerary.display_itinerary', itinerary_id=existingItinerary.id, day=loop.index) }}" class="day-view flex flex-center relative" style="background-image: url( {{ photos[loop.index] }} )">
+                        <a href="{{ url_for('itinerary.display_itinerary', itinerary_id=existingItinerary.id, day=loop.index) }}" class="day-view flex flex-center relative" style="background-color: rgb{{ accents[loop.index] }}">
                             <button class="day-view padding">
                                 Full View
                             </button>
@@ -62,6 +62,7 @@
 
         {% endif %}
     </section>
+
     {% if photos %}
         <script>
             document.addEventListener('DOMContentLoaded', ()=>{

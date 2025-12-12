@@ -53,3 +53,11 @@
     border-top-left-radius: var(--radius);
     border-top-right-radius: var(--radius);
 }
+.breadcrumb {
+    color: rgba(230, 238, 245, 0.75);
+}
+.breadcrumb a {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-decoration-color: rgba(230, 238, 245, 0.75);
+}

@@ -118,7 +118,6 @@ a.day-view {
     justify-self: end;
     border-radius: var(--radius-small);
     overflow: clip;
-    background-size: 75555%;
 }
 button.day-view {
     backdrop-filter: blur(14px);

@@ -163,7 +163,8 @@ def questionnaire():
 @itinerary.route("/process-itinerary", methods=["POST"])
 def process_itinerary():
     print("processing itinerary preferences")
-
+    itinerary_id = []
+    
     try:
         data = request.get_json()
         itinerary_id = data.get("itinerary_id") or session.get("itinerary_id")
@@ -184,7 +185,7 @@ def process_itinerary():
         session["itinerary_id"] = itinerary.id
         session.permanent = True
 
-        return {"itinerary_id": itinerary.id}, 200
+        return jsonify({"itinerary_id": itinerary.id}), 200
     
     except Exception as e:
         print(str(e))
@@ -214,7 +215,8 @@ def display_itinerary(itinerary_id, day):
 
     existingItinerary = Itinerary.query.get(itinerary_id)
     existingPreferences = ItineraryPreferences.query.get(itinerary_id)
-    unsplashPhotos = existingItinerary.images
+    unsplashPhotos = existingItinerary.images or []
+    unsplashColors = [functions.pick_color(url) for url in unsplashPhotos]
     weatherData = existingPreferences.weather or None
     duration =(existingPreferences.departuredate - existingPreferences.arrivaldate).days
     dateList = [ existingPreferences.arrivaldate + timedelta(days=i)
@@ -259,4 +261,4 @@ def display_itinerary(itinerary_id, day):
         # remember to come back and do something with this lol
         #scale costs
         #fix images
-        return render_template("itinerary.html", results=itineraryData, pages=pages, googleKey=googleMapsKey, photos=unsplashPhotos, existingPreferences=existingPreferences, existingItinerary=existingItinerary, weather= weatherData)
+        return render_template("itinerary.html", results=itineraryData, pages=pages, googleKey=googleMapsKey, photos=unsplashPhotos, existingPreferences=existingPreferences, existingItinerary=existingItinerary, weather= weatherData, accents=unsplashColors)

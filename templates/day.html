@@ -21,6 +21,9 @@
             </a>
         </div>
     </section>
+    <section class="breadcrumb padding">
+        <a href="{{ url_for('itinerary.display_itinerary', itinerary_id=itinerary_id) }}"> {{ destination }} Itinerary </a> / <a href="{{ url_for(request.endpoint, **request.view_args) }}"> Day {{ daynum }} </a>
+    </section>
     <section class="day-summary padding-2x">
         <p>
             {{ result["daysummary"] }}
@@ -43,50 +46,39 @@
             {% endif %}
         {% endif %}
     </section>
-    <section class="hotel-info day-card flex flex-column google">
-        <div class="img relative height-100 width-100">
-        </div>
-        <div class="flex flex-column gap padding-2x">
-            <h1>Lodging Information</h1>
-            <h4>{{ result["lodging"]["name"] }}</h4>
-            <p>{{ result["lodging"]["address"] }}</p>
-        </div>
-        <div class="relative flex flex-center map-container">
-            <div class="map relative height-100" data-location="{{ result['lodging']['name'] }}" data-address="{{ result['lodging']['address'] }}">
-                <iframe src="" frameborder="0"></iframe>
-            </div>
-        </div>
-    </section>
+    
     <div class="itinerary-grid padding-2x">
-   
-        <section class="itinerary day-card flex flex-column flex-center">
+        
+        <section class="hotel-info day-card flex flex-column google">
+            <div class="img relative height-100 width-100">
+            </div>
+            <div class="flex flex-column gap padding-2x">
+                <h1>Lodging Information</h1>
+                <h4>{{ result["lodging"]["name"] }}</h4>
+                <p>{{ result["lodging"]["address"] }}</p>
+            </div>
+            <div class="relative flex flex-center map-container">
+                <div class="map relative height-100" data-location="{{ result['lodging']['name'] }}" data-address="{{ result['lodging']['address'] }}">
+                    <iframe src="" frameborder="0"></iframe>
+                </div>
+            </div>
+        </section>
+
+        <section class="itinerary day-card flex flex-column flex-center google">
+            <div class="img relative height-100 width-100">
+            </div>
             <div class="text padding-2x">
                 <h1>Breakfast</h1>
                 <p>{{ result["food"]["breakfast"]["restaurant"] }} — {{ result["food"]["breakfast"]["address"] }}</p>
                 <p>Cost: {{ result["food"]["breakfast"]["cost"] }}</p>
             </div>
-        </section>
-
-        
-        <section class="itinerary day-card flex flex-column flex-center">
-            <div class="text padding-2x">
-                <h1 >Lunch</h1>
-                <p>{{ result["food"]["lunch"]["restaurant"] }} — {{ result["food"]["lunch"]["address"] }}</p>
-                <p>Cost: {{ result["food"]["lunch"]["cost"] }}</p>
+            <div class="relative flex flex-center map-container">
+                <div class="map relative height-100" data-location="{{ result['food']['breakfast']['restaurant'] }}" data-address="{{ result['food']['breakfast']['address'] }}">
+                    <iframe src="" frameborder="0"></iframe>
+                </div>
             </div>
         </section>
 
-        
-        <section class="itinerary day-card flex flex-column flex-center">
-            <div class="text padding-2x">
-                <h1 >Dinner</h1>
-                <p>{{ result["food"]["dinner"]["restaurant"] }} — {{ result["food"]["dinner"]["address"] }}</p>
-                <p>Cost: {{ result["food"]["dinner"]["cost"] }}</p>
-            </div>
-        </section>
-
-
-        
         {% for activity in result["timeblocks"]["morning"] %}
         <section class="itinerary day-card flex flex-column flex-center">
             <div class="text padding-2x">
@@ -100,6 +92,21 @@
         {% endfor %}
 
         
+        <section class="itinerary day-card flex flex-column flex-center google">
+            <div class="img relative height-100 width-100">
+            </div>
+            <div class="text padding-2x">
+                <h1 >Lunch</h1>
+                <p>{{ result["food"]["lunch"]["restaurant"] }} — {{ result["food"]["lunch"]["address"] }}</p>
+                <p>Cost: {{ result["food"]["lunch"]["cost"] }}</p>
+            </div>
+            <div class="relative flex flex-center map-container">
+                <div class="map relative height-100" data-location="{{ result['food']['lunch']['restaurant'] }}" data-address="{{ result['food']['lunch']['address'] }}">
+                    <iframe src="" frameborder="0"></iframe>
+                </div>
+            </div>
+        </section>
+
         {% for activity in result["timeblocks"]["afternoon"] %}
         <section class="itinerary day-card flex flex-column flex-center">
             <div class="text padding-2x">
@@ -111,7 +118,21 @@
             </div>
         </section>
         {% endfor %}
-
+        
+        <section class="itinerary day-card flex flex-column flex-center google">
+            <div class="img relative height-100 width-100">
+            </div>
+            <div class="text padding-2x">
+                <h1 >Dinner</h1>
+                <p>{{ result["food"]["dinner"]["restaurant"] }} — {{ result["food"]["dinner"]["address"] }}</p>
+                <p>Cost: {{ result["food"]["dinner"]["cost"] }}</p>
+            </div>
+            <div class="relative flex flex-center map-container">
+                <div class="map relative height-100" data-location="{{ result['food']['dinner']['restaurant'] }}" data-address="{{ result['food']['dinner']['address'] }}">
+                    <iframe src="" frameborder="0"></iframe>
+                </div>
+            </div>
+        </section>
         
         {% for activity in result["timeblocks"]["evening"] %}
         <section class="itinerary day-card flex flex-column flex-center">
